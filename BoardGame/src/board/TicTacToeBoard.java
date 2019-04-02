@@ -1,6 +1,6 @@
 package board;
 
-public class TicTacToeBoard extends StandardBoard {
+public class TicTacToeBoard extends Board {
 
     public TicTacToeBoard() {
         super(3);

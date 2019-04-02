@@ -1,84 +1,91 @@
 package game;
 
-import board.Board;
 import display.Display;
 import exceptions.IllegalMoveException;
 import player.Player;
 import ruleset.Ruleset;
 
-import java.util.Random;
-
 public class Game {
 
-    Board board;
-    Ruleset ruleset;
-    Player player1;
-    Player player2;
-    Player currentPlayer;
-    boolean started = false;
-    int lastSet;
+    private int[][] board;
+    private int boardSize;
 
-    Display display;
+    private Player[] players;
 
-    public Game(Board board, Ruleset ruleset, Display display, Player player1, Player player2) {
-        this.board = board;
+    private Ruleset ruleset;
+    private Player currentPlayer;
+
+    private int lastSet;
+    private Display display;
+    private boolean started;
+
+    public Game(int boardSize, Ruleset ruleset, Display display) {
+        this.board = new int[boardSize][boardSize];
+        this.boardSize = boardSize;
         this.ruleset = ruleset;
-        this.player1 = player1;
-        this.player1.setId(1);
-        this.player2 = player2;
-        this.player2.setId(2);
         this.display = display;
+
+        players = new Player[2];
     }
 
     public void start() {
         started = true;
-        //currentPlayer = new Random().nextInt(2) == 1 ? player1 : player2;
-        currentPlayer = player1;
+        currentPlayer = players[0];
     }
 
-    public void move(Player player, int x, int y) throws IllegalMoveException {
-        if (started) {
-            if (player == currentPlayer) {
-                if(ruleset.legalMove(board.getAll(), x, y)) {
-                    board.put(x, y, player.getId());
-                    lastSet = x * board.getSize() + y;
-                    switch(ruleset.gameEnded(board.getAll())) {
-                        case 0:
-                            switchPlayers();
-                            break;
-                        case 1:
-                            endGame(player1);
-                            break;
-                        case 2:
-                            endGame(player2);
-                            break;
-                        case -1:
-                            endGame(new Player("Nobody"));
-                            break;
-                    }
-                } else {
-                    throw new IllegalMoveException("Illegal move");
-                }
-            } else {
-                throw new IllegalMoveException("It was not your turn");
-            }
+    public void register(Player player) {
+        if (players[0] == null) {
+            players[0] = player;
+            player.setId(1);
+        } else if (players[1] == null) {
+            players[1] = player;
+            player.setId(2);
         } else {
-            throw new IllegalMoveException("Game has not started yet");
+            // TODO: Handle player overflow
         }
     }
 
+    public void move(Player player, int x, int y) throws IllegalMoveException {
+        if (!started) {
+            throw new IllegalMoveException("Game has not started yet");
+        }
+        if (player != currentPlayer) {
+            throw new IllegalMoveException("It was not your turn");
+        }
+        if (!ruleset.legalMove(board, x, y)) {
+            throw new IllegalMoveException("Illegal move");
+        }
+
+        board[x][y] = player.getId();
+        lastSet = x * boardSize + y;
+        display.update(board);
+        switch(ruleset.gameEnded(board)) {
+            case 0:
+                switchPlayers();
+                break;
+            case 1:
+                endGame(players[0]);
+                break;
+            case 2:
+                endGame(players[1]);
+                break;
+            case -1:
+                endGame(new Player("Nobody"));
+                break;
+        }
+    }
+
+    public void move(Player player, int target) throws IllegalMoveException {
+        move(player, Math.floorDiv(target, boardSize), target % boardSize);
+    }
+
     private void switchPlayers() {
-        currentPlayer = currentPlayer == player1 ? player2 : player1;
+        currentPlayer = currentPlayer == players[0] ? players[1] : players[0];
         currentPlayer.updateTurn(lastSet);
     }
 
     private void endGame(Player winner) {
-        started = false;
         System.out.println(winner.getName() + " has won!");
-    }
-
-    public boolean isStarted() {
-        return started;
     }
 
     public Display getDisplay() {

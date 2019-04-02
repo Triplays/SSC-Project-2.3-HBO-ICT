@@ -11,18 +11,20 @@ public class LocalTicTacToeController {
     Game game;
 
     public LocalTicTacToeController() {
+        this.game = new TicTacToeGame();
         this.player1 = new Player("Player 1");
         this.player2 = new Player("Player 2");
-        this.game = new TicTacToeGame(player1, player2);
+        player1.setGame(game);
+        player2.setGame(game);
 
         game.start();
 
         try {
-            game.move(player1, 2, 2);
-            game.move(player2, 1, 2);
-            game.move(player1, 2, 1);
-            game.move(player2, 1, 1);
-            game.move(player1, 2, 0);
+            player1.move(2, 2);
+            player2.move(5);
+            player1.move(2, 1);
+            player2.move(4);
+            player1.move(2, 0);
         }
         catch (Exception e) {
             e.printStackTrace();

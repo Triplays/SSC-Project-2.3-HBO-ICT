@@ -2,7 +2,6 @@ package display;
 
 import javafx.application.Platform;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
@@ -31,8 +30,8 @@ public class TicTacToeDisplay implements Display {
                 Rectangle box = new Rectangle();
                 box.widthProperty().bind(board.widthProperty().divide(boardSize));
                 box.heightProperty().bind(board.heightProperty().divide(boardSize));
-                box.xProperty().bind(board.widthProperty().divide(boardSize).multiply(j));
-                box.yProperty().bind(board.heightProperty().divide(boardSize).multiply(i));
+                box.xProperty().bind(board.widthProperty().divide(boardSize).multiply(i));
+                box.yProperty().bind(board.heightProperty().divide(boardSize).multiply(j));
                 if((i%2==0 && j%2==1) || (i%2==1 && j%2==0)){
                     box.setFill(Color.WHITE);
                 }else{
@@ -50,19 +49,20 @@ public class TicTacToeDisplay implements Display {
         Platform.runLater(() -> {
 
             pieces.getChildren().clear();
-
             for (int i = 0; i < boardSize; i++){
                 for (int j = 0; j < boardSize; j++){
-                    Circle circle = new Circle();
-                    circle.radiusProperty().bind(board.widthProperty().divide(boardSize / 2));
-                    circle.centerXProperty().bind(board.widthProperty().divide(boardSize).multiply(j));
-                    circle.centerYProperty().bind(board.heightProperty().divide(boardSize).multiply(i));
-                    if (field[i][j] == 1) {
-                        circle.setFill(Color.WHITE);
-                    } else if (field[i][j] == 2) {
-                        circle.setFill(Color.GREEN);
+                    if (field[i][j] != 0) {
+                        Circle circle = new Circle();
+                        circle.radiusProperty().bind(board.widthProperty().divide(boardSize * 3));
+                        circle.centerXProperty().bind(board.widthProperty().divide(boardSize).multiply(i + 0.5));
+                        circle.centerYProperty().bind(board.heightProperty().divide(boardSize).multiply(j + 0.5));
+                        if (field[i][j] == 1) {
+                            circle.setFill(Color.RED);
+                        } else if (field[i][j] == 2) {
+                            circle.setFill(Color.ORANGE);
+                        }
+                        pieces.getChildren().add(circle);
                     }
-                    pieces.getChildren().add(circle);
                 }
             }
 
