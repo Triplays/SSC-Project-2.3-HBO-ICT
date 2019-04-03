@@ -8,7 +8,7 @@ import javafx.scene.shape.Rectangle;
 
 public class ReversiDisplay extends Display {
 
-    final int boardSize = 8;
+    private final int boardSize = 8;
 
     public ReversiDisplay() {
         super();

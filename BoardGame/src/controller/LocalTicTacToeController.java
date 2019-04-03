@@ -33,7 +33,6 @@ public class LocalTicTacToeController implements Runnable {
 
             Scanner scanner = new Scanner(System.in);
             while (active) {
-                game.printAllMoves(game.getCurrentPlayer().getColor());
                 game.getCurrentPlayer().move(scanner.nextInt());
             }
         }
