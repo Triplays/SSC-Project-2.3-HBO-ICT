@@ -5,7 +5,7 @@ import game.Field;
 public class TicTacToeRuleset extends Ruleset {
 
     @Override
-    public boolean legalMove(Field[][] board, int size, Field field, int x, int y) {
+    public boolean legalMove(Field[][] board, Field field, int x, int y) {
         return board[x][y] == Field.EMPTY;
     }
 

@@ -5,8 +5,10 @@ import game.Field;
 
 public class ReversiRuleset extends Ruleset {
 
+    private final int size = 8;
+
     @Override
-    public boolean legalMove(Field[][] board, int size, Field field, int x, int y) {
+    public boolean legalMove(Field[][] board, Field field, int x, int y) {
 
         // Loop through all adjacent fields
         for (int i = -1; i < 2; i++) {
@@ -34,6 +36,11 @@ public class ReversiRuleset extends Ruleset {
 
         }
 
+        return false;
+    }
+
+    public boolean directionalHelper(Field[][] board, Field field, int x, int y) {
+        if (x < 0 || x >= size || y < 0 || y >= size) return false;
         return false;
     }
 

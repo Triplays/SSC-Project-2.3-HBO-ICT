@@ -64,7 +64,7 @@ public class Game {
         if (player != currentPlayer) {
             throw new IllegalMoveException("It was not your turn");
         }
-        if (!ruleset.legalMove(board, boardSize, player.getColor(), x, y)) {
+        if (!ruleset.legalMove(board, player.getColor(), x, y)) {
             throw new IllegalMoveException("Illegal move");
         }
 
