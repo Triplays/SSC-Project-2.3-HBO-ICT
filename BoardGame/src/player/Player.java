@@ -1,10 +1,11 @@
 package player;
 
 import exceptions.IllegalMoveException;
+import game.Field;
 import game.Game;
 
 public class Player {
-    private int id = 0;
+    private Field color;
     private String name;
     private Game game;
 
@@ -12,12 +13,12 @@ public class Player {
         this.name = name;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setColor(Field color) {
+        this.color = color;
     }
 
-    public int getId() {
-        return id;
+    public Field getColor() {
+        return color;
     }
 
     public String getName() {

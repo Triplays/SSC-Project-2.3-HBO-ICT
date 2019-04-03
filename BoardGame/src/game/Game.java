@@ -5,22 +5,24 @@ import exceptions.IllegalMoveException;
 import player.Player;
 import ruleset.Ruleset;
 
+import java.util.Arrays;
+
 public class Game {
 
-    private int[][] board;
+    private Field[][] board;
     private int boardSize;
-
-    private Player[] players;
 
     private Ruleset ruleset;
     private Player currentPlayer;
+    private Player[] players;
 
-    private int lastSet;
     private Display display;
     private boolean started;
 
     public Game(int boardSize, Ruleset ruleset, Display display) {
-        this.board = new int[boardSize][boardSize];
+        this.board = new Field[boardSize][boardSize];
+        for (Field[] row : board) Arrays.fill(row, Field.EMPTY);
+        System.out.println(board[1][1]);
         this.boardSize = boardSize;
         this.ruleset = ruleset;
         this.display = display;
@@ -36,12 +38,22 @@ public class Game {
     public void register(Player player) {
         if (players[0] == null) {
             players[0] = player;
-            player.setId(1);
+            player.setColor(Field.WHITE);
         } else if (players[1] == null) {
             players[1] = player;
-            player.setId(2);
+            player.setColor(Field.BLACK);
         } else {
             // TODO: Handle player overflow
+        }
+    }
+
+    public void deregister(Player player) {
+        if (players[0] == player) {
+            players[0] = null;
+        } else if (players[1] == player) {
+            players[1] = null;
+        } else {
+            // TODO: Handle unknown player
         }
     }
 
@@ -52,24 +64,23 @@ public class Game {
         if (player != currentPlayer) {
             throw new IllegalMoveException("It was not your turn");
         }
-        if (!ruleset.legalMove(board, x, y)) {
+        if (!ruleset.legalMove(board, boardSize, player.getColor(), x, y)) {
             throw new IllegalMoveException("Illegal move");
         }
 
-        board[x][y] = player.getId();
-        lastSet = x * boardSize + y;
+        board[x][y] = player.getColor();
         display.update(board);
         switch(ruleset.gameEnded(board)) {
-            case 0:
+            case EMPTY:
                 switchPlayers();
                 break;
-            case 1:
+            case WHITE:
                 endGame(players[0]);
                 break;
-            case 2:
+            case BLACK:
                 endGame(players[1]);
                 break;
-            case -1:
+            case LEGAL:
                 endGame(new Player("Nobody"));
                 break;
         }
@@ -79,9 +90,19 @@ public class Game {
         move(player, Math.floorDiv(target, boardSize), target % boardSize);
     }
 
+    public void put(Field field, int x, int y) {
+        board[x][y] = field;
+        display.update(board);
+    }
+
+    public void printAllMoves() {
+        for (Field[] row : ruleset.allLegalMoves(board, Field.WHITE, boardSize)) {
+            System.out.println(Arrays.toString(row));
+        }
+    }
+
     private void switchPlayers() {
         currentPlayer = currentPlayer == players[0] ? players[1] : players[0];
-        currentPlayer.updateTurn(lastSet);
     }
 
     private void endGame(Player winner) {

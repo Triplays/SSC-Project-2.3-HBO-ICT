@@ -2,23 +2,22 @@ package display;
 
 import game.Field;
 import javafx.application.Platform;
-import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 
-public class TicTacToeDisplay extends Display {
+public class ReversiDisplay extends Display {
 
-    final int boardSize = 3;
+    final int boardSize = 8;
 
-    public TicTacToeDisplay() {
+    public ReversiDisplay() {
         super();
         initiateComponents();
     }
 
     private void initiateComponents() {
-        boardPane.setPrefSize(300, 300);
-        wrapperPane.setPrefSize(300, 300);
+        boardPane.setPrefSize(600, 600);
+        wrapperPane.setPrefSize(600, 600);
 
         for (int i = 0; i < boardSize; i++){
             for (int j = 0; j < boardSize; j++){
@@ -38,7 +37,6 @@ public class TicTacToeDisplay extends Display {
         wrapperPane.getChildren().add(boardPane);
         wrapperPane.getChildren().add(piecesPane);
     }
-
     @Override
     public void update(Field[][] board) {
         Platform.runLater(() -> {
@@ -52,9 +50,9 @@ public class TicTacToeDisplay extends Display {
                         circle.centerXProperty().bind(boardPane.widthProperty().divide(boardSize).multiply(i + 0.5));
                         circle.centerYProperty().bind(boardPane.heightProperty().divide(boardSize).multiply(j + 0.5));
                         if (board[i][j] == Field.WHITE) {
-                            circle.setFill(Color.RED);
+                            circle.setFill(Color.WHITE);
                         } else if (board[i][j] == Field.BLACK) {
-                            circle.setFill(Color.ORANGE);
+                            circle.setFill(Color.BLACK);
                         }
                         piecesPane.getChildren().add(circle);
                     }
@@ -62,10 +60,5 @@ public class TicTacToeDisplay extends Display {
             }
 
         });
-    }
-
-    @Override
-    public Pane getWrapperPane() {
-        return wrapperPane;
     }
 }
