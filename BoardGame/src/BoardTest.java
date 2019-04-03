@@ -14,6 +14,8 @@ public class BoardTest extends Application {
     public void start(Stage primaryStage) {
         LocalTicTacToeController controller = new LocalTicTacToeController();
         //LocalReversiContoller controller = new LocalReversiContoller();
+        Thread thread = new Thread(controller);
+        thread.start();
         Scene scene = new Scene(controller.getGame().getDisplay().getWrapperPane());
         primaryStage.setScene(scene);
         primaryStage.show();

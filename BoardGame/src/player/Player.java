@@ -1,5 +1,6 @@
 package player;
 
+import exceptions.IllegalGamePlayerException;
 import exceptions.IllegalMoveException;
 import game.Field;
 import game.Game;
@@ -25,7 +26,7 @@ public class Player {
         return name;
     }
 
-    public void setGame(Game game) {
+    public void setGame(Game game) throws IllegalGamePlayerException {
         this.game = game;
         game.register(this);
     }
@@ -34,13 +35,9 @@ public class Player {
         this.name = name;
     }
 
-    public void updateTurn(int lastSet) {
+    public void notifyPlayer() {
         // TODO: Proper implementation
-        System.out.println("My turn, last set is " + lastSet +", my set: ");
-    }
-
-    public void move(int x, int y) throws IllegalMoveException {
-        game.move(this, x, y);
+        System.out.println("It is " + name + "\'s turn. (Color " + color + ")");
     }
 
     public void move(int target) throws IllegalMoveException {

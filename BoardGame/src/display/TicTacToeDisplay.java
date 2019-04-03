@@ -40,24 +40,21 @@ public class TicTacToeDisplay extends Display {
     }
 
     @Override
-    public void update(Field[][] board) {
+    public void update(Field[] board) {
         Platform.runLater(() -> {
-
             piecesPane.getChildren().clear();
-            for (int i = 0; i < boardSize; i++){
-                for (int j = 0; j < boardSize; j++){
-                    if (board[i][j] != Field.EMPTY) {
-                        Circle circle = new Circle();
-                        circle.radiusProperty().bind(boardPane.widthProperty().divide(boardSize * 3));
-                        circle.centerXProperty().bind(boardPane.widthProperty().divide(boardSize).multiply(i + 0.5));
-                        circle.centerYProperty().bind(boardPane.heightProperty().divide(boardSize).multiply(j + 0.5));
-                        if (board[i][j] == Field.WHITE) {
-                            circle.setFill(Color.RED);
-                        } else if (board[i][j] == Field.BLACK) {
-                            circle.setFill(Color.ORANGE);
-                        }
-                        piecesPane.getChildren().add(circle);
+            for (int i = 0; i < boardSize*boardSize; i++){
+                if (board[i] != Field.EMPTY) {
+                    Circle circle = new Circle();
+                    circle.radiusProperty().bind(boardPane.widthProperty().divide(boardSize * 3));
+                    circle.centerXProperty().bind(boardPane.widthProperty().divide(boardSize).multiply(i%boardSize + 0.5));
+                    circle.centerYProperty().bind(boardPane.heightProperty().divide(boardSize).multiply( Math.floorDiv(i, boardSize) + 0.5));
+                    if (board[i] == Field.WHITE) {
+                        circle.setFill(Color.WHITE);
+                    } else if (board[i] == Field.BLACK) {
+                        circle.setFill(Color.BLACK);
                     }
+                    piecesPane.getChildren().add(circle);
                 }
             }
 

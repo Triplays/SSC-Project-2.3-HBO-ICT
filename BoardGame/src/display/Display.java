@@ -15,7 +15,7 @@ public abstract class Display {
         piecesPane = new Pane();
     }
 
-    public abstract void update(Field[][] board);
+    public abstract void update(Field[] board);
 
     public Pane getWrapperPane() {
         return wrapperPane;

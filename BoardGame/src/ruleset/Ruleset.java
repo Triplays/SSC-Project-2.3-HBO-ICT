@@ -1,20 +1,33 @@
 package ruleset;
 
 import game.Field;
+import game.Gamestate;
+import player.Player;
+
+import java.util.HashSet;
 
 public abstract class Ruleset {
 
-    public abstract boolean legalMove(Field[][] board, Field field, int x, int y);
+    public abstract HashSet<Integer> legalMove(Field[] board, Field field, int target);
 
-    public abstract Field gameEnded(Field[][] board);
+    public abstract Gamestate checkWinCondition(Field[] board, Field field);
 
-    public Field[][] allLegalMoves(Field[][] board, Field field, int size) {
-        Field[][] possibilities = new Field[size][size];
-        for(int i = 0; i < size; i++) {
-            for (int j = 0; j < size; j++) {
-                possibilities[i][j] = legalMove(board, field, i, j) ? Field.LEGAL : Field.EMPTY;
-            }
+    public int[] allLegalMoves(Field[] board, Field field, int size) {
+        int[] possibilities = new int[size*size];
+        for(int i = 0; i < size*size; i++) {
+                possibilities[i] = legalMove(board, field, i).size();
         }
         return possibilities;
+    }
+
+    Gamestate fieldToGamestate(Field field) {
+        switch (field) {
+            case WHITE:
+                return Gamestate.WINWHITE;
+            case BLACK:
+                return Gamestate.WINBLACK;
+            default:
+                return null;
+        }
     }
 }

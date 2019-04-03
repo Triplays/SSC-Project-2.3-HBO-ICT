@@ -2,50 +2,67 @@ package ruleset;
 
 import game.Direction;
 import game.Field;
+import game.Gamestate;
+
+import java.util.Arrays;
+import java.util.HashSet;
 
 public class ReversiRuleset extends Ruleset {
 
-    private final int size = 8;
+    private HashSet<Integer> capture;
 
     @Override
-    public boolean legalMove(Field[][] board, Field field, int x, int y) {
+    public HashSet<Integer> legalMove(Field[] board, Field field, int target) {
+        capture = new HashSet<>();
+        if (board[target] != Field.EMPTY) return capture;
+        for (Direction direction : Direction.values()) {
+            directionalHelper(board, field, target, direction);
+        }
+        return capture;
+    }
 
-        // Loop through all adjacent fields
-        for (int i = -1; i < 2; i++) {
-            for (int j = -1; j < 2; j++) {
-                // Skip if:
-                // - current is field itself
-                // - if x/y is on an edge while i/j is pointing towards that edge
-                if (!(i==0 && j==0) && (x == 0 && i == -1) && (x + i < size && y + j < size)) {
-                    // Skip if the field is empty
-                    if (board[x + i][y + j] == Field.EMPTY) {
-                        int n = 2;
-                        while (x + i*n >= 0 && x + i*n < size && y + j*n >= 0 && y + j*n < size && n != -1) {
-                            if (board[x + i*n][y + j*n] == field)  n= -1;
-                            if (board[x + i][y + j] == Field.EMPTY) return true;
-                            n++;
-                        }
-                    }
-                }
-
-
+    public void directionalHelper(Field[] board, Field field, int target, Direction direction) {
+        if (direction.limit(target)) return;
+        int next = target + direction.dir;
+        if (board[next] == Field.EMPTY || board[next] == field) return;
+        HashSet<Integer> temp = new HashSet<>();
+        temp.add(target);
+        while (!direction.limit(next)) {
+            temp.add(next);
+            next += direction.dir;
+            if (board[next] == Field.EMPTY) return;
+            if (board[next] == field) {
+                capture.addAll(temp);
+                return;
             }
         }
-
-        for (Direction dir : Direction.values()) {
-
-        }
-
-        return false;
-    }
-
-    public boolean directionalHelper(Field[][] board, Field field, int x, int y) {
-        if (x < 0 || x >= size || y < 0 || y >= size) return false;
-        return false;
     }
 
     @Override
-    public Field gameEnded(Field[][] board) {
-        return Field.EMPTY;
+    public Gamestate checkWinCondition(Field[] board, Field opponent) {
+        if ((Arrays.stream(allLegalMoves(board, opponent, 8)).sum()) > 0) return Gamestate.SWAP;
+
+        Field field = opponent == Field.BLACK ? Field.WHITE : Field.BLACK;
+        if ((Arrays.stream(allLegalMoves(board, field, 8)).sum()) > 0)  return Gamestate.STAY;
+
+        return countFields(board);
+    }
+
+    private Gamestate countFields(Field[] board) {
+        int white = 0;
+        int black = 0;
+        for (Field field : board) {
+            switch (field) {
+                case WHITE:
+                    white++;
+                case BLACK:
+                    black++;
+                default:
+                    break;
+            }
+        }
+        if (white > black) return Gamestate.WINWHITE;
+        else if (black > white) return Gamestate.WINBLACK;
+        else return Gamestate.DRAW;
     }
 }
