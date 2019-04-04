@@ -2,8 +2,8 @@ package ruleset;
 
 import game.Field;
 import game.Gamestate;
-import player.Player;
 
+import java.util.Arrays;
 import java.util.HashSet;
 
 public abstract class Ruleset {
@@ -17,6 +17,7 @@ public abstract class Ruleset {
         for(int i = 0; i < size*size; i++) {
                 possibilities[i] = legalMove(board, field, i).size();
         }
+        System.out.println("Possibilities: " + Arrays.toString(possibilities));
         return possibilities;
     }
 

@@ -21,10 +21,12 @@ public class Game {
 
     private Display display;
     private boolean started;
+    private String name;
 
     private Random random = new Random();
 
-    public Game(int boardSize, Ruleset ruleset, Display display) {
+    public Game(String name, int boardSize, Ruleset ruleset, Display display) {
+        this.name = name;
         this.board = new Field[boardSize*boardSize];
         Arrays.fill(board, Field.EMPTY);
         this.boardSize = boardSize;

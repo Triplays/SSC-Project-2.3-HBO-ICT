@@ -97,4 +97,17 @@ public class ServerWorker implements Runnable {
             ioe.printStackTrace();
         }
     }
+
+
+    public void loginPlayer(String playerName) {
+        sendMessage("login " + playerName);
+    }
+
+    public void subscribeToGame(String gameName) {
+        sendMessage("subscribe " + gameName);
+    }
+
+    public void sendMove(int pos) {
+        sendMessage("move " + pos);
+    }
 }

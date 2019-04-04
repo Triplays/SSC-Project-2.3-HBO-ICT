@@ -1,7 +1,6 @@
 package controller;
 
 import game.Game;
-import game.ReversiGame;
 import game.TicTacToeGame;
 import player.Player;
 
