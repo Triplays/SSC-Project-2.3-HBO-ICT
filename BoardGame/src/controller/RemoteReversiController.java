@@ -50,9 +50,8 @@ public class RemoteReversiController implements Runnable, Controller {
                 synchronized (waitForServerResponse) { waitForServerResponse.wait(); }
             }
             confirm = false;
-            player = new Player(name, this);
             while (!confirm) {
-                worker.subscribeToGame(game.getName());
+                worker.subscribeToGame(game.getGameName());
                 synchronized (waitForServerResponse) { waitForServerResponse.wait(); }
             }
             confirm = false;
@@ -94,9 +93,13 @@ public class RemoteReversiController implements Runnable, Controller {
 
     @Override
     public void matchStart(String opponentName, boolean myTurn) {
-
-
-        opponent = new Player(opponentName, this);
+        if (myTurn) {
+            player = new Player(name, Field.BLACK, this);
+            opponent = new Player(opponentName, Field.WHITE, this);
+        } else {
+            player = new Player(name, Field.WHITE, this);
+            opponent = new Player(opponentName, Field.BLACK, this);
+        }
         synchronized (waitForServerResponse) { waitForServerResponse.notifyAll(); }
     }
 }

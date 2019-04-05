@@ -5,18 +5,20 @@ import game.Game;
 import game.TicTacToeGame;
 import player.Player;
 
-import java.util.Scanner;
+public class LocalTicTacToeController  implements Runnable, Controller {
 
-public class LocalTicTacToeController implements Runnable, Controller {
     private Player player1;
     private Player player2;
+    private Player activePlayer;
     private Game game;
     private boolean active = true;
+    private boolean pending = false;
+    private final Object o = new Object();
 
     public LocalTicTacToeController() {
         this.game = new TicTacToeGame();
-        this.player1 = new Player("Player 1", this);
-        this.player2 = new Player("Player 2", this);
+        this.player1 = new Player("Henk de Vries", Field.BLACK, this);
+        this.player2 = new Player("Kees van Bommel", Field.WHITE, this);
     }
 
     public Game getGame() {
@@ -26,14 +28,18 @@ public class LocalTicTacToeController implements Runnable, Controller {
     @Override
     public void run() {
         try {
+
             player1.setGame(game);
             player2.setGame(game);
 
             game.start();
-
-            Scanner scanner = new Scanner(System.in);
             while (active) {
-                game.getCurrentPlayer().move(scanner.nextInt());
+                if (pending) {
+                    pending = false;
+                    activePlayer.move(game.giveMove(activePlayer.getColor()));
+                } else {
+                    synchronized (o) { o.wait(); }
+                }
             }
         }
         catch (Exception e) {
@@ -43,7 +49,9 @@ public class LocalTicTacToeController implements Runnable, Controller {
 
     @Override
     public void requestInput(Player player) {
-
+        activePlayer = player;
+        pending = true;
+        synchronized (o) { o.notify(); }
     }
 
     @Override

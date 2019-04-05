@@ -12,9 +12,10 @@ public class Player {
     private Game game;
     private Controller controller;
 
-    public Player(String name, Controller controller) {
+    public Player(String name, Field color,  Controller controller) {
         this.name = name;
         this.controller = controller;
+        this.color = color;
     }
 
     public void setColor(Field color) {

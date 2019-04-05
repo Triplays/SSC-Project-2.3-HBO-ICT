@@ -1,5 +1,6 @@
 package controller;
 
+import game.Field;
 import game.Game;
 import game.ReversiGame;
 import player.Player;
@@ -16,8 +17,8 @@ public class LocalReversiContoller implements Runnable, Controller {
 
     public LocalReversiContoller() {
         this.game = new ReversiGame();
-        this.player1 = new Player("Henk de Vries", this);
-        this.player2 = new Player("Kees van Bommel", this);
+        this.player1 = new Player("Henk de Vries", Field.BLACK, this);
+        this.player2 = new Player("Kees van Bommel", Field.WHITE, this);
     }
 
     public Game getGame() {
@@ -35,6 +36,7 @@ public class LocalReversiContoller implements Runnable, Controller {
             while (active) {
                 if (pending) {
                     pending = false;
+                    synchronized (o) { o.wait(100); }
                     activePlayer.move(game.giveMove(activePlayer.getColor()));
                 } else {
                     synchronized (o) { o.wait(); }

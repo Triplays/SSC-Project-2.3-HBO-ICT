@@ -23,12 +23,12 @@ public class Game {
     private Display display;
     private boolean started;
 
-    private String name;
+    private String gameName;
 
     private Random random = new Random();
 
     public Game(String name, int boardSize, Ruleset ruleset, Display display) {
-        this.name = name;
+        this.gameName = name;
         this.board = new Field[boardSize*boardSize];
         Arrays.fill(board, Field.EMPTY);
         this.boardSize = boardSize;
@@ -166,6 +166,6 @@ public class Game {
         return currentPlayer;
     }
 
-    public String getName() { return name; }
+    public String getGameName() { return gameName; }
 
 }

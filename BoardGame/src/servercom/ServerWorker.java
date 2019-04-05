@@ -115,7 +115,7 @@ public class ServerWorker implements Runnable {
             }
         }
         myTurn = playerToMove != opponentName;
-        controller.matchStart(opponentName, );
+        controller.matchStart(opponentName, myTurn);
     }
 
     public void sendMessage(String s) {
