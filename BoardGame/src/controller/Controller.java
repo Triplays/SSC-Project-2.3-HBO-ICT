@@ -6,7 +6,11 @@ public interface Controller {
 
     void requestInput(Player player);
 
-    void confirmation (boolean result);
+    void requestInput();
 
-    void matchStart (String opponentName, boolean myTurn);
+    void confirmation(boolean result);
+
+    void matchStart(String opponentName, boolean myTurn);
+
+    void performMove(String playerName, int target);
 }

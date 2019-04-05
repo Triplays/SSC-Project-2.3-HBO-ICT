@@ -55,12 +55,22 @@ public class LocalTicTacToeController  implements Runnable, Controller {
     }
 
     @Override
+    public void requestInput() {
+
+    }
+
+    @Override
     public void confirmation(boolean result) {
 
     }
 
     @Override
     public void matchStart(String opponentName, boolean myTurn) {
+
+    }
+
+    @Override
+    public void performMove(String playerName, int target) {
 
     }
 }

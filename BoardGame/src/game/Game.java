@@ -43,8 +43,7 @@ public class Game {
      */
     public void start() {
         started = true;
-        currentPlayer = players[random.nextInt(2)];
-        //currentPlayer = players[0];
+        currentPlayer = players[0];
         currentPlayer.notifyPlayer();
     }
 
@@ -54,12 +53,10 @@ public class Game {
      * @throws IllegalGamePlayerException if there are alreadt two Player Objects registered to this Game
      */
     public void register(Player player) throws IllegalGamePlayerException {
-        if (players[0] == null) {
+        if (player.getColor() == Field.BLACK && players[0] == null) {
             players[0] = player;
-            player.setColor(Field.WHITE);
-        } else if (players[1] == null) {
+        } else if (player.getColor() == Field.WHITE && players[1] == null) {
             players[1] = player;
-            player.setColor(Field.BLACK);
         } else {
             throw new IllegalGamePlayerException("There are already two players registered to this game.");
         }

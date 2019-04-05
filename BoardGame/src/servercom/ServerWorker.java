@@ -1,10 +1,14 @@
 package servercom;
 
 import controller.Controller;
+import game.Field;
+import player.Player;
 
 import java.io.*;
 import java.net.Socket;
 import java.util.Arrays;
+
+import static java.lang.Integer.parseInt;
 
 public class ServerWorker implements Runnable {
 
@@ -44,7 +48,6 @@ public class ServerWorker implements Runnable {
     }
 
     private void handleResponse(String[] response) {
-        System.out.println(response[0].length());
         if (response[0].startsWith("OK")) {
             System.out.println("Confirmed");
             controller.confirmation(true);
@@ -75,8 +78,10 @@ public class ServerWorker implements Runnable {
                 handleMatchStart(response[3]);
                 break;
             case "MOVE":
+                handleMove((response[3]));
                 break;
             case "YOURTURN":
+                handleYourTurn(response[3]);
                 break;
             default:
                 // TODO: Handle unknown response
@@ -93,6 +98,30 @@ public class ServerWorker implements Runnable {
         System.out.println("Panic Help");
     }
 
+    private void handleYourTurn(String response) {
+        controller.requestInput();
+    }
+
+    private void handleMove(String response) {
+        String[] arguments = response.substring(response.indexOf("{") + 1, response.lastIndexOf("}")).split(", ");
+        String playerName = "";
+        int target = 0;
+
+        for (String arg : arguments) {
+            if (arg.startsWith("PLAYER")) {
+                int index = arg.indexOf("\"", arg.indexOf("PLAYER") + 6);
+                playerName = arg.substring(index + 1, arg.indexOf("\"", index + 2));
+            } else if (arg.startsWith("MOVE")) {
+                int index = arg.indexOf("\"", arg.indexOf("MOVE") + 4);
+                target = parseInt(arg.substring(index + 1, arg.indexOf("\"", index + 2)));
+            } else {
+                // TODO: Handle the unknown
+            }
+        }
+
+        controller.performMove(playerName, target);
+    }
+
     private void handleMatchStart(String response) {
         String[] arguments = response.substring(response.indexOf("{") + 1, response.lastIndexOf("}")).split(", ");
         String opponentName = "";
@@ -103,18 +132,19 @@ public class ServerWorker implements Runnable {
         for (String arg : arguments) {
             if (arg.startsWith("PLAYERTOMOVE")) {
                 int index = arg.indexOf("\"", arg.indexOf("PLAYERTOMOVE") + 12);
-                playerToMove = arg.substring(index, arg.indexOf("\"", index + 1));
-            }
-            if (arg.startsWith("OPPONENT")) {
+                playerToMove = arg.substring(index + 1, arg.indexOf("\"", index + 2));
+            } else if (arg.startsWith("OPPONENT")) {
                 int index = arg.indexOf("\"", arg.indexOf("OPPONENT") + 8);
-                opponentName = arg.substring(index, arg.indexOf("\"", index + 1));
-            }
-            if (arg.startsWith("GAMETYPE")) {
+                opponentName = arg.substring(index + 1, arg.indexOf("\"", index + 2));
+            } else if (arg.startsWith("GAMETYPE")) {
                 int index = arg.indexOf("\"", arg.indexOf("GAMETYPE") + 8);
-                opponentName = arg.substring(index, arg.indexOf("\"", index + 1));
+                gameName = arg.substring(index + 1, arg.indexOf("\"", index + 2));
+            } else {
+                // TODO: Handle the unknown
             }
         }
-        myTurn = playerToMove != opponentName;
+        System.out.println("p2m: " + playerToMove + ", on: " + opponentName);
+        myTurn = !playerToMove.equals(opponentName);
         controller.matchStart(opponentName, myTurn);
     }
 

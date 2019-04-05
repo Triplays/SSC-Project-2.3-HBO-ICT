@@ -12,7 +12,6 @@ public class RemoteReversiController implements Runnable, Controller {
 
     private Player player;
     private Player opponent;
-    private Player activePlayer;
     private Game game;
     private boolean active = true;
     private boolean pending = false;
@@ -58,7 +57,6 @@ public class RemoteReversiController implements Runnable, Controller {
             while (!confirm) {
                 synchronized (waitForServerResponse) { waitForServerResponse.wait(); }
             }
-            /*
             player.setGame(game);
             opponent.setGame(game);
 
@@ -66,12 +64,13 @@ public class RemoteReversiController implements Runnable, Controller {
             while (active) {
                 if (pending) {
                     pending = false;
-                    activePlayer.move(game.giveMove(activePlayer.getColor()));
+                    int move = game.giveMove(player.getColor());
+                    System.out.println("SENDING MOVE: " + move);
+                    worker.sendMove(move);
                 } else {
                     synchronized (waitForPlayerInput) { waitForPlayerInput.wait(); }
                 }
             }
-            */
         }
         catch (Exception e) {
             e.printStackTrace();
@@ -80,9 +79,13 @@ public class RemoteReversiController implements Runnable, Controller {
 
     @Override
     public void requestInput(Player player) {
-        activePlayer = player;
         pending = true;
-        synchronized (waitForPlayerInput) { waitForPlayerInput.notify(); }
+        synchronized (waitForPlayerInput) { waitForPlayerInput.notifyAll(); }
+    }
+
+    @Override
+    public void requestInput() {
+        this.requestInput(player);
     }
 
     @Override
@@ -93,6 +96,8 @@ public class RemoteReversiController implements Runnable, Controller {
 
     @Override
     public void matchStart(String opponentName, boolean myTurn) {
+        confirm = true;
+        System.out.println(opponentName);
         if (myTurn) {
             player = new Player(name, Field.BLACK, this);
             opponent = new Player(opponentName, Field.WHITE, this);
@@ -101,5 +106,17 @@ public class RemoteReversiController implements Runnable, Controller {
             opponent = new Player(opponentName, Field.BLACK, this);
         }
         synchronized (waitForServerResponse) { waitForServerResponse.notifyAll(); }
+    }
+
+    @Override
+    public void performMove(String playerName, int target) {
+        try {
+            if (name.equals(playerName)) {
+                game.move(player, target);
+            } else {
+                game.move(opponent, target);
+            }
+        }
+        catch (Exception e) { e.printStackTrace(); }
     }
 }
