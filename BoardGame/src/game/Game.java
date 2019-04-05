@@ -6,6 +6,7 @@ import exceptions.IllegalMoveException;
 import player.Player;
 import ruleset.Ruleset;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Random;
@@ -21,6 +22,7 @@ public class Game {
 
     private Display display;
     private boolean started;
+
     private String name;
 
     private Random random = new Random();
@@ -95,11 +97,10 @@ public class Game {
         if (result.size() == 0) {
             throw new IllegalMoveException("Illegal move");
         }
-        for (Integer integer : result) System.out.println("Taken field " + integer);
         for (Integer integer : result) board[integer] = player.getColor();
         display.update(board);
         switchPlayers();
-        switch(ruleset.checkWinCondition(board, player.getColor())) {
+        switch(ruleset.checkWinCondition(board, currentPlayer.getColor())) {
             case SWAP:
                 currentPlayer.notifyPlayer();
                 break;
@@ -108,14 +109,14 @@ public class Game {
                 currentPlayer.notifyPlayer();
                 break;
             case WINWHITE:
-                endGame(players[0]);
+                endGame(players[0].getName());
                 break;
             case WINBLACK:
-                endGame(players[1]);
+                endGame(players[1].getName());
                 break;
             case DRAW:
                 // TODO: Proper implementation of draw
-                endGame(new Player("Nobody"));
+                endGame("Nobody");
                 break;
             default:
                 break;
@@ -132,6 +133,16 @@ public class Game {
         display.update(board);
     }
 
+
+    public int giveMove(Field field) {
+        int[] moves = ruleset.allLegalMoves(board, field, boardSize);
+        ArrayList<Integer> temp = new ArrayList<>();
+        for (int i = 0; i < boardSize*boardSize; i++) {
+            if (moves[i] != 0) temp.add(i);
+        }
+        return temp.get(random.nextInt(temp.size()));
+    }
+
     public void printAllMoves(Field field) {
         int[] moves = ruleset.allLegalMoves(board, field, boardSize);
         for (int i = 0; i < boardSize*boardSize; i++) {
@@ -143,8 +154,8 @@ public class Game {
         currentPlayer = currentPlayer == players[0] ? players[1] : players[0];
     }
 
-    private void endGame(Player winner) {
-        System.out.println(winner.getName() + " has won!");
+    private void endGame(String winner) {
+        System.out.println(winner + " has won!");
     }
 
     public Display getDisplay() {
@@ -154,4 +165,7 @@ public class Game {
     public Player getCurrentPlayer() {
         return currentPlayer;
     }
+
+    public String getName() { return name; }
+
 }

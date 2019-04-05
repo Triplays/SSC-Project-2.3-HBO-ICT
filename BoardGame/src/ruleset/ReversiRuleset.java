@@ -55,12 +55,18 @@ public class ReversiRuleset extends Ruleset {
             switch (field) {
                 case WHITE:
                     white++;
+                    break;
                 case BLACK:
                     black++;
+                    break;
                 default:
                     break;
             }
         }
+
+        System.out.println(white);
+        System.out.println(black);
+
         if (white > black) return Gamestate.WINWHITE;
         else if (black > white) return Gamestate.WINBLACK;
         else return Gamestate.DRAW;

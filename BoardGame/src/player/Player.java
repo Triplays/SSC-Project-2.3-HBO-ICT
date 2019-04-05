@@ -1,5 +1,6 @@
 package player;
 
+import controller.Controller;
 import exceptions.IllegalGamePlayerException;
 import exceptions.IllegalMoveException;
 import game.Field;
@@ -9,9 +10,11 @@ public class Player {
     private Field color;
     private String name;
     private Game game;
+    private Controller controller;
 
-    public Player(String name) {
+    public Player(String name, Controller controller) {
         this.name = name;
+        this.controller = controller;
     }
 
     public void setColor(Field color) {
@@ -36,7 +39,7 @@ public class Player {
     }
 
     public void notifyPlayer() {
-        // TODO: Proper implementation
+        controller.requestInput(this);
         System.out.println("It is " + name + "\'s turn. (Color " + color + ")");
     }
 

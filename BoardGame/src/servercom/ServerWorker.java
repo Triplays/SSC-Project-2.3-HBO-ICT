@@ -1,5 +1,7 @@
 package servercom;
 
+import controller.Controller;
+
 import java.io.*;
 import java.net.Socket;
 import java.util.Arrays;
@@ -13,10 +15,12 @@ public class ServerWorker implements Runnable {
 
     private byte[] bytes = new byte[3200];
     private int count;
+    private Controller controller;
 
-    public ServerWorker(String address, int port) {
+    public ServerWorker(String address, int port, Controller controller) {
         this.address = address;
         this.port = port;
+        this.controller = controller;
     }
 
     @Override
@@ -40,21 +44,22 @@ public class ServerWorker implements Runnable {
     }
 
     private void handleResponse(String[] response) {
-        switch (response[0]) {
-            case "OK":
-                // TODO: Do something with confirmation?
-                System.out.println("Confirmed");
-                break;
-            case "SVR":
-                if (response[1].equals("GAME")) {
-                    handleGameResponse(response);
-                } else {
-                    // TODO: Handle unknown response (help should not be called here)
-                }
-                break;
-            default:
-                // TODO: Handle unknown response
-                break;
+        System.out.println(response[0].length());
+        if (response[0].startsWith("OK")) {
+            System.out.println("Confirmed");
+            controller.confirmation(true);
+        }
+        if (response[0].startsWith("ERR")) {
+            System.out.println("Denied");
+            controller.confirmation(false);
+        }
+        if (response[0].startsWith("SVR")) {
+            if (response[1].equals("GAME")) {
+                handleGameResponse(response);
+            } else {
+                // TODO: Handle unknown response (help should not be called here)
+                System.out.println("Send help");
+            }
         }
     }
 
@@ -62,11 +67,12 @@ public class ServerWorker implements Runnable {
         switch (response[2]) {
             case "WIN":
                 break;
-            case "LOSE":
+            case "LOSS":
                 break;
             case "DRAW":
                 break;
             case "MATCH":
+                handleMatchStart(response[3]);
                 break;
             case "MOVE":
                 break;
@@ -87,6 +93,31 @@ public class ServerWorker implements Runnable {
         System.out.println("Panic Help");
     }
 
+    private void handleMatchStart(String response) {
+        String[] arguments = response.substring(response.indexOf("{") + 1, response.lastIndexOf("}")).split(", ");
+        String opponentName = "";
+        String playerToMove = "";
+        String gameName = "";
+        boolean myTurn;
+
+        for (String arg : arguments) {
+            if (arg.startsWith("PLAYERTOMOVE")) {
+                int index = arg.indexOf("\"", arg.indexOf("PLAYERTOMOVE") + 12);
+                playerToMove = arg.substring(index, arg.indexOf("\"", index + 1));
+            }
+            if (arg.startsWith("OPPONENT")) {
+                int index = arg.indexOf("\"", arg.indexOf("OPPONENT") + 8);
+                opponentName = arg.substring(index, arg.indexOf("\"", index + 1));
+            }
+            if (arg.startsWith("GAMETYPE")) {
+                int index = arg.indexOf("\"", arg.indexOf("GAMETYPE") + 8);
+                opponentName = arg.substring(index, arg.indexOf("\"", index + 1));
+            }
+        }
+        myTurn = playerToMove != opponentName;
+        controller.matchStart(opponentName, );
+    }
+
     public void sendMessage(String s) {
         try {
             out.write(s.getBytes());
@@ -98,9 +129,9 @@ public class ServerWorker implements Runnable {
         }
     }
 
-
     public void loginPlayer(String playerName) {
         sendMessage("login " + playerName);
+
     }
 
     public void subscribeToGame(String gameName) {

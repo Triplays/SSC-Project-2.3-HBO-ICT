@@ -58,4 +58,6 @@ public class ReversiDisplay extends Display {
 
         });
     }
+
+
 }
