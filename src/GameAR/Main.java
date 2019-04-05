@@ -1,11 +1,14 @@
 package GameAR;
 
+import GameAR.Algorithm.Algorithm;
+import GameAR.Config.IndicatorSet;
+import GameAR.Engine.Board;
+
 public class Main
 {
 
     public static void main(String[] args)
     {
-        Integer simulationAmount = 100;
         Integer depth = 5;
 
         IndicatorSet indicatorSet = new IndicatorSet();

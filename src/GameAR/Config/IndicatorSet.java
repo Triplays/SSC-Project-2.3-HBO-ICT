@@ -1,4 +1,4 @@
-package GameAR;
+package GameAR.Config;
 
 public class IndicatorSet
 {

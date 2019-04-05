@@ -1,4 +1,7 @@
-package GameAR;
+package GameAR.Algorithm;
+
+import GameAR.Engine.Board;
+import GameAR.Engine.BoardPosition;
 
 import java.util.function.Function;
 

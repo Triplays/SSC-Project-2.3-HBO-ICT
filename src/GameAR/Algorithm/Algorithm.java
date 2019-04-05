@@ -1,6 +1,10 @@
-package GameAR;
+package GameAR.Algorithm;
 
-import java.sql.Timestamp;
+import GameAR.Engine.Board;
+import GameAR.Engine.BoardPosition;
+import GameAR.Config.IndicatorSet;
+import GameAR.Engine.Ruler;
+
 import java.util.ArrayList;
 
 public class Algorithm
