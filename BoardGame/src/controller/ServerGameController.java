@@ -29,7 +29,6 @@ public class ServerGameController implements Runnable, GameController, ServerCon
     private final Object waitForPlayerInput = new Object();
     private final Object waitForServerConfirmation = new Object();
     private final Object waitForGameStart = new Object();
-    private final Object delay = new Object();
 
     public ServerGameController() {
         pane = new Pane();
@@ -47,7 +46,6 @@ public class ServerGameController implements Runnable, GameController, ServerCon
         thread.start();
 
         try {
-            //synchronized (delay) { delay.wait(1000); }
             Scanner scanner = new Scanner(System.in);
             while (!confirm) {
                 // TODO: Obtain input on what name to use
@@ -152,5 +150,12 @@ public class ServerGameController implements Runnable, GameController, ServerCon
         System.out.println("Comment: " + comment);
 
         synchronized (waitForPlayerInput) { waitForPlayerInput.notifyAll(); }
+    }
+
+    public void closeController() {
+        active = false;
+        synchronized (waitForGameStart) { waitForGameStart.notifyAll(); }
+        synchronized (waitForPlayerInput) { waitForPlayerInput.notifyAll(); }
+        synchronized (waitForServerConfirmation) { waitForServerConfirmation.notifyAll(); }
     }
 }

@@ -17,7 +17,6 @@ public class ServerWorker implements Runnable {
     private OutputStream out;
 
     private byte[] bytes = new byte[3200];
-    private int count;
     private ServerController controller;
 
     public ServerWorker(String address, int port, ServerController controller) {
@@ -32,7 +31,7 @@ public class ServerWorker implements Runnable {
             Socket connection = new Socket(address, port);
             in = connection.getInputStream();
             out = connection.getOutputStream();
-
+            int count;
             while ((count = in.read(bytes)) > 0) {
                 String[] lines = new String((Arrays.copyOfRange(bytes, 0, count))).split("\n");
                 for (String line : lines) if (line.length() > 0) handleResponse(line.split(" ", 4));
@@ -146,7 +145,6 @@ public class ServerWorker implements Runnable {
                 System.out.println("move err: " + arg);
             }
         }
-
         controller.performMove(playerName, target, details);
     }
 
@@ -186,7 +184,6 @@ public class ServerWorker implements Runnable {
 
     public void loginPlayer(String playerName) {
         sendMessage("login " + playerName);
-
     }
 
     public void subscribeToGame(String gameName) {

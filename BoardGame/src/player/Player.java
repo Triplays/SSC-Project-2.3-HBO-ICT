@@ -12,13 +12,9 @@ public class Player {
     private Game game;
     private GameController gameController;
 
-    public Player(String name, Field color,  GameController gameController) {
+    public Player(String name, Field color, GameController gameController) {
         this.name = name;
         this.gameController = gameController;
-        this.color = color;
-    }
-
-    public void setColor(Field color) {
         this.color = color;
     }
 
@@ -33,10 +29,6 @@ public class Player {
     public void setGame(Game game) throws IllegalGamePlayerException {
         this.game = game;
         game.register(this);
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     public void notifyPlayer() {
