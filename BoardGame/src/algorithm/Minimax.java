@@ -8,9 +8,13 @@ import java.util.HashSet;
 
 public abstract class Minimax {
 
-    GameInfo gameInfo;
-    Field self;
-    Field opponent;
+    private GameInfo gameInfo;
+    private Field self;
+    private Field opponent;
+
+    private final long timelimit = 6000;
+    private long timestamp;
+    private int count;
 
     public Minimax(GameInfo gameInfo, Field self) {
         this.gameInfo = gameInfo;
@@ -19,13 +23,20 @@ public abstract class Minimax {
     }
 
     public int minimax(Field[] board, int max) {
-        return minimax(board, 0, max, Integer.MIN_VALUE, Integer.MAX_VALUE, true);
+        timestamp = System.currentTimeMillis();
+        count = 0;
+        int result = minimax(board, 0, max, Integer.MIN_VALUE, Integer.MAX_VALUE, true);
+        System.out.println("Depth " + max + " took " + (System.currentTimeMillis() - timestamp) + "ms to analyse " + count + " possible moves.");
+        return result;
     }
 
     public int minimax(Field[] board, int depth, int max, int alpha, int beta, boolean maximizing) {
 
+        // Stop the recursion if time runs out
+        if ((System.currentTimeMillis() - timestamp) > timelimit) return calculateScore(board, self);
+
         // Calculate the score when max depth has been reached
-        if (depth > max) return calculateScore(board);
+        if (depth > max) return calculateScore(board, self);
 
         // Get all possible moves with the corresponding captured fields
         HashMap<Integer, HashSet<Integer>> moves = gameInfo.ruleset.allLegalMovesNew(board, maximizing ? self : opponent);
@@ -34,19 +45,14 @@ public abstract class Minimax {
         if (moves.size() == 0) {
             switch(gameInfo.ruleset.checkWinCondition(board, maximizing ? self : opponent)){
                 case WINWHITE:
-                    return self == Field.WHITE ? 64 : -64;
+                    return self == Field.WHITE ? 1024 : -1024;
                 case WINBLACK:
-                    return self == Field.BLACK ? 64 : -64;
+                    return self == Field.BLACK ? 1024 : -1024;
                 case DRAW:
                     return 0;
-                case SWAP:
-                    // Cannot be true, moves would be greater than 0
-                    return 0;
                 case STAY:
-                    // TODO: continue recursion
-                    return 0;
-                default:
-                    break;
+                    // TODO: continue recursion?
+                    return 5;
             }
         }
 
@@ -57,7 +63,7 @@ public abstract class Minimax {
                 Field[] newBoard = board.clone();
                 for (Integer loc : move.getValue()) newBoard[loc] = self;
                 int result = minimax(newBoard, depth + 1, max, alpha, beta, false);
-
+                count++;
                 // Update alpha if the result is the new high, and store the move
                 if (result > alpha) {
                     alpha = result;
@@ -75,7 +81,7 @@ public abstract class Minimax {
                 Field[] newBoard = board.clone();
                 for (Integer loc : move.getValue()) newBoard[loc] = opponent;
                 int result = minimax(newBoard, depth + 1, max, alpha, beta, true);
-
+                count++;
                 // Update beta if the result is the new low
                 if (result < beta) beta = result;
 
@@ -86,5 +92,5 @@ public abstract class Minimax {
         }
     }
 
-    abstract int calculateScore(Field[] board);
+    abstract int calculateScore(Field[] board, Field self);
 }

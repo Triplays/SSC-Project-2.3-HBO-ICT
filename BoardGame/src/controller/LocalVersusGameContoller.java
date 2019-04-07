@@ -46,7 +46,7 @@ public class LocalVersusGameContoller implements Runnable, GameController {
                     if (activePlayer.getColor() == Field.BLACK)
                         activePlayer.move(minimaxBlack.minimax(game.getBoard(), 7));
                     else {
-                        activePlayer.move(minimaxWhite.minimax(game.getBoard(), 6));
+                        activePlayer.move(minimaxWhite.minimax(game.getBoard(), 7));
                     }
                 } else {
                     synchronized (o) { o.wait(); }

@@ -1,5 +1,7 @@
 package controller;
 
+import algorithm.Minimax;
+import algorithm.ReversiMinimax;
 import exceptions.IllegalGamePlayerException;
 import game.Field;
 import game.Game;
@@ -29,6 +31,8 @@ public class ServerGameController implements Runnable, GameController, ServerCon
     private final Object waitForPlayerInput = new Object();
     private final Object waitForServerConfirmation = new Object();
     private final Object waitForGameStart = new Object();
+
+    private Minimax minimax;
 
     public ServerGameController() {
         pane = new Pane();
@@ -69,8 +73,7 @@ public class ServerGameController implements Runnable, GameController, ServerCon
                 while (playing) {
                     if (pending) {
                         pending = false;
-                        int move = game.giveMove(player.getColor());
-                        worker.sendMove(move);
+                        worker.sendMove(minimax.minimax(game.getBoard(), 8));
                     } else {
                         synchronized (waitForPlayerInput) { waitForPlayerInput.wait(); }
                     }
@@ -119,9 +122,11 @@ public class ServerGameController implements Runnable, GameController, ServerCon
         if (myTurn) {
             player = new Player(name, Field.BLACK, this);
             opponent = new Player(opponentName, Field.WHITE, this);
+            minimax = new ReversiMinimax(Field.BLACK);
         } else {
             player = new Player(name, Field.WHITE, this);
             opponent = new Player(opponentName, Field.BLACK, this);
+            minimax = new ReversiMinimax(Field.WHITE);
         }
         synchronized (waitForGameStart) { waitForGameStart.notifyAll(); }
     }

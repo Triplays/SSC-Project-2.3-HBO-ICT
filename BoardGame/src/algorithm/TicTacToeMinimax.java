@@ -8,7 +8,7 @@ public class TicTacToeMinimax extends Minimax {
     public TicTacToeMinimax(Field field){ super(GameInfo.TICTACTOE, field); }
 
     @Override
-    int calculateScore(Field[] board) {
+    int calculateScore(Field[] board, Field self) {
         switch(GameInfo.TICTACTOE.ruleset.checkWinCondition(board, self)){
             case WINWHITE:
                 return self == Field.WHITE ? 64 : -64;
