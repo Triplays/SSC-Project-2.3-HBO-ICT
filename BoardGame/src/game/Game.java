@@ -123,7 +123,7 @@ public class Game {
     }
 
     public int giveMove(Field field) {
-        int[] moves = gameInfo.ruleset.allLegalMoves(board, field, gameInfo.boardSize);
+        int[] moves = gameInfo.ruleset.allLegalMoves(board, field);
         ArrayList<Integer> temp = new ArrayList<>();
         for (int i = 0; i < gameInfo.boardSize*gameInfo.boardSize; i++) {
             if (moves[i] != 0) temp.add(i);
@@ -132,10 +132,14 @@ public class Game {
     }
 
     public void printAllMoves(Field field) {
-        int[] moves = gameInfo.ruleset.allLegalMoves(board, field, gameInfo.boardSize);
+        int[] moves = gameInfo.ruleset.allLegalMoves(board, field);
         for (int i = 0; i < gameInfo.boardSize*gameInfo.boardSize; i++) {
             if (moves[i] != 0) System.out.println("Index " + i + " captures " + moves[i]);
         }
+    }
+
+    public Field[] getBoard() {
+        return board;
     }
 
     private void switchPlayers() {

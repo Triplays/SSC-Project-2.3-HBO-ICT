@@ -21,7 +21,7 @@ public class TicTacToeRuleset extends Ruleset {
             if (board[i] != Field.EMPTY && board[i] == board[i+3] && board[i+3] == board[i+6])
                 return fieldToGamestate(board[i]);
         }
-        for(int i = 0; i < 3; i+=3) {
+        for(int i = 0; i < 8; i+=3) {
             if (board[i] != Field.EMPTY && board[i] == board[i+1] && board[i+1] == board[i+2])
                 return fieldToGamestate(board[i]);
         }

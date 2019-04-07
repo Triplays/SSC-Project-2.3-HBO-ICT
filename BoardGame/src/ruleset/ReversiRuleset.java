@@ -40,10 +40,10 @@ public class ReversiRuleset extends Ruleset {
 
     @Override
     public Gamestate checkWinCondition(Field[] board, Field opponent) {
-        if ((Arrays.stream(allLegalMoves(board, opponent, 8)).sum()) > 0) return Gamestate.SWAP;
+        if ((Arrays.stream(allLegalMoves(board, opponent)).sum()) > 0) return Gamestate.SWAP;
 
         Field field = opponent == Field.BLACK ? Field.WHITE : Field.BLACK;
-        if ((Arrays.stream(allLegalMoves(board, field, 8)).sum()) > 0)  return Gamestate.STAY;
+        if ((Arrays.stream(allLegalMoves(board, field)).sum()) > 0)  return Gamestate.STAY;
 
         return countFields(board);
     }
@@ -52,16 +52,8 @@ public class ReversiRuleset extends Ruleset {
         int white = 0;
         int black = 0;
         for (Field field : board) {
-            switch (field) {
-                case WHITE:
-                    white++;
-                    break;
-                case BLACK:
-                    black++;
-                    break;
-                default:
-                    break;
-            }
+            if(field == Field.WHITE) white++;
+            if(field == Field.BLACK) black++;
         }
 
         if (white > black) return Gamestate.WINWHITE;

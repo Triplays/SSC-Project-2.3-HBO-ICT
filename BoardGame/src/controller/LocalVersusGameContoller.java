@@ -1,5 +1,8 @@
 package controller;
 
+import algorithm.Minimax;
+import algorithm.ReversiMinimax;
+import algorithm.TicTacToeMinimax;
 import game.Field;
 import game.Game;
 import game.GameInfo;
@@ -14,6 +17,9 @@ public class LocalVersusGameContoller implements Runnable, GameController {
     private boolean active = true;
     private boolean pending = false;
     private final Object o = new Object();
+
+    private Minimax minimaxBlack = new ReversiMinimax(Field.BLACK);
+    private Minimax minimaxWhite = new ReversiMinimax(Field.WHITE);
 
     public LocalVersusGameContoller() {
         this.game = new Game(GameInfo.REVERSI);
@@ -36,8 +42,12 @@ public class LocalVersusGameContoller implements Runnable, GameController {
             while (active) {
                 if (pending) {
                     pending = false;
-                    synchronized (o) { o.wait(100); }
-                    activePlayer.move(game.giveMove(activePlayer.getColor()));
+                    //synchronized (o) { o.wait(100); }
+                    if (activePlayer.getColor() == Field.BLACK)
+                        activePlayer.move(minimaxBlack.minimax(game.getBoard(), 7));
+                    else {
+                        activePlayer.move(minimaxWhite.minimax(game.getBoard(), 6));
+                    }
                 } else {
                     synchronized (o) { o.wait(); }
                 }
