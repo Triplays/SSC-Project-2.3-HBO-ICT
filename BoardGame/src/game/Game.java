@@ -4,37 +4,29 @@ import display.Display;
 import exceptions.IllegalGamePlayerException;
 import exceptions.IllegalMoveException;
 import player.Player;
-import ruleset.Ruleset;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Random;
 
 public class Game {
 
     private Field[] board;
-    private int boardSize;
 
-    private Ruleset ruleset;
+    private GameInfo gameInfo;
+
     private Player currentPlayer;
     private Player[] players;
 
     private Display display;
     private boolean started;
 
-    private String gameName;
-
     private Random random = new Random();
 
-    public Game(String name, int boardSize, Ruleset ruleset, Display display) {
-        this.gameName = name;
-        this.board = new Field[boardSize*boardSize];
-        Arrays.fill(board, Field.EMPTY);
-        this.boardSize = boardSize;
-        this.ruleset = ruleset;
-        this.display = display;
-
+    public Game(GameInfo gameInfo) {
+        this.gameInfo = gameInfo;
+        this.board = gameInfo.getInitialBoard();
+        this.display = gameInfo.getDisplay();
         players = new Player[2];
     }
 
@@ -90,14 +82,14 @@ public class Game {
         if (player != currentPlayer) {
             throw new IllegalMoveException("It was not your turn");
         }
-        HashSet<Integer> result = ruleset.legalMove(board, player.getColor(), target);
+        HashSet<Integer> result = gameInfo.ruleset.legalMove(board, player.getColor(), target);
         if (result.size() == 0) {
             throw new IllegalMoveException("Illegal move");
         }
         for (Integer integer : result) board[integer] = player.getColor();
         display.update(board);
         switchPlayers();
-        switch(ruleset.checkWinCondition(board, currentPlayer.getColor())) {
+        switch(gameInfo.ruleset.checkWinCondition(board, currentPlayer.getColor())) {
             case SWAP:
                 currentPlayer.notifyPlayer();
                 break;
@@ -106,13 +98,12 @@ public class Game {
                 currentPlayer.notifyPlayer();
                 break;
             case WINWHITE:
-                endGame(players[0].getName());
-                break;
-            case WINBLACK:
                 endGame(players[1].getName());
                 break;
+            case WINBLACK:
+                endGame(players[0].getName());
+                break;
             case DRAW:
-                // TODO: Proper implementation of draw
                 endGame("Nobody");
                 break;
             default:
@@ -121,6 +112,7 @@ public class Game {
     }
 
     /**
+     * DEPRECATED
      * Force an index on the board to the given Field. Performs no validity checks. Useful for initiation
      * @param field the Field value to be set
      * @param target the target location on the board
@@ -130,19 +122,18 @@ public class Game {
         display.update(board);
     }
 
-
     public int giveMove(Field field) {
-        int[] moves = ruleset.allLegalMoves(board, field, boardSize);
+        int[] moves = gameInfo.ruleset.allLegalMoves(board, field, gameInfo.boardSize);
         ArrayList<Integer> temp = new ArrayList<>();
-        for (int i = 0; i < boardSize*boardSize; i++) {
+        for (int i = 0; i < gameInfo.boardSize*gameInfo.boardSize; i++) {
             if (moves[i] != 0) temp.add(i);
         }
         return temp.get(random.nextInt(temp.size()));
     }
 
     public void printAllMoves(Field field) {
-        int[] moves = ruleset.allLegalMoves(board, field, boardSize);
-        for (int i = 0; i < boardSize*boardSize; i++) {
+        int[] moves = gameInfo.ruleset.allLegalMoves(board, field, gameInfo.boardSize);
+        for (int i = 0; i < gameInfo.boardSize*gameInfo.boardSize; i++) {
             if (moves[i] != 0) System.out.println("Index " + i + " captures " + moves[i]);
         }
     }
@@ -152,17 +143,11 @@ public class Game {
     }
 
     private void endGame(String winner) {
+        // TODO: Proper closure
         System.out.println(winner + " has won!");
     }
 
     public Display getDisplay() {
         return display;
     }
-
-    public Player getCurrentPlayer() {
-        return currentPlayer;
-    }
-
-    public String getGameName() { return gameName; }
-
 }

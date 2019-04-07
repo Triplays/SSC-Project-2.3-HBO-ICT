@@ -64,9 +64,6 @@ public class ReversiRuleset extends Ruleset {
             }
         }
 
-        System.out.println(white);
-        System.out.println(black);
-
         if (white > black) return Gamestate.WINWHITE;
         else if (black > white) return Gamestate.WINBLACK;
         else return Gamestate.DRAW;

@@ -2,10 +2,10 @@ package controller;
 
 import game.Field;
 import game.Game;
-import game.ReversiGame;
+import game.GameInfo;
 import player.Player;
 
-public class LocalReversiContoller implements Runnable, Controller {
+public class LocalVersusGameContoller implements Runnable, GameController {
 
     private Player player1;
     private Player player2;
@@ -15,8 +15,8 @@ public class LocalReversiContoller implements Runnable, Controller {
     private boolean pending = false;
     private final Object o = new Object();
 
-    public LocalReversiContoller() {
-        this.game = new ReversiGame();
+    public LocalVersusGameContoller() {
+        this.game = new Game(GameInfo.REVERSI);
         this.player1 = new Player("Henk de Vries", Field.BLACK, this);
         this.player2 = new Player("Kees van Bommel", Field.WHITE, this);
     }
@@ -53,25 +53,5 @@ public class LocalReversiContoller implements Runnable, Controller {
         activePlayer = player;
         pending = true;
         synchronized (o) { o.notify(); }
-    }
-
-    @Override
-    public void requestInput() {
-
-    }
-
-    @Override
-    public void confirmation(boolean result) {
-
-    }
-
-    @Override
-    public void matchStart(String opponentName, boolean myTurn) {
-
-    }
-
-    @Override
-    public void performMove(String playerName, int target) {
-
     }
 }

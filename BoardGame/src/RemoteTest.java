@@ -1,4 +1,4 @@
-import controller.RemoteReversiController;
+import controller.ServerGameController;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
@@ -11,10 +11,10 @@ import javafx.stage.Stage;
 
         @Override
         public void start(Stage primaryStage) {
-            RemoteReversiController controller = new RemoteReversiController();
+            ServerGameController controller = new ServerGameController();
             Thread thread = new Thread(controller);
             thread.start();
-            Scene scene = new Scene(controller.getGame().getDisplay().getWrapperPane());
+            Scene scene = new Scene(controller.getPane());
             primaryStage.setScene(scene);
             primaryStage.show();
         }

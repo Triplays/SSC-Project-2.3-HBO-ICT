@@ -1,6 +1,6 @@
 package player;
 
-import controller.Controller;
+import controller.GameController;
 import exceptions.IllegalGamePlayerException;
 import exceptions.IllegalMoveException;
 import game.Field;
@@ -10,11 +10,11 @@ public class Player {
     private Field color;
     private String name;
     private Game game;
-    private Controller controller;
+    private GameController gameController;
 
-    public Player(String name, Field color,  Controller controller) {
+    public Player(String name, Field color,  GameController gameController) {
         this.name = name;
-        this.controller = controller;
+        this.gameController = gameController;
         this.color = color;
     }
 
@@ -40,8 +40,7 @@ public class Player {
     }
 
     public void notifyPlayer() {
-        controller.requestInput(this);
-        System.out.println("It is " + name + "\'s turn. (Color " + color + ")");
+        gameController.requestInput(this);
     }
 
     public void move(int target) throws IllegalMoveException {

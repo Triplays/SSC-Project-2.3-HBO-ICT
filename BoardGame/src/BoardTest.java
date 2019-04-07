@@ -1,5 +1,4 @@
-import controller.LocalReversiContoller;
-import controller.LocalTicTacToeController;
+import controller.LocalVersusGameContoller;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
@@ -12,8 +11,7 @@ public class BoardTest extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-        //LocalTicTacToeController controller = new LocalTicTacToeController();
-        LocalReversiContoller controller = new LocalReversiContoller();
+        LocalVersusGameContoller controller = new LocalVersusGameContoller();
         Thread thread = new Thread(controller);
         thread.start();
         Scene scene = new Scene(controller.getGame().getDisplay().getWrapperPane());
