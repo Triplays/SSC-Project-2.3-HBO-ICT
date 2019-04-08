@@ -1,4 +1,5 @@
 .btn-primary {
     -fx-background-color: #440E0E;
     -fx-background-radius: 50;
+    -fx-fill: #440E0E;
 }

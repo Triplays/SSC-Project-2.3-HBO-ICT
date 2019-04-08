@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.Circle?>
+<?import javafx.scene.shape.Rectangle?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="550.0" prefWidth="825.0" style="-fx-background-color: #6FB06E;" stylesheets="@../css/app.css" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.OponentController">
+   <children>
+      <Rectangle fx:id="heading" arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="133.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="${heading.parent.width}" />
+      <Label fx:id="title" alignment="CENTER" contentDisplay="CENTER" layoutY="39.0" style="-fx-background-color: #FFF;" text="Tegen wie wil je spelen?" textAlignment="CENTER" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0">
+         <font>
+            <Font size="39.0" />
+         </font>
+      </Label>
+      <VBox alignment="CENTER" layoutY="209.0" prefHeight="78.0" prefWidth="138.0" spacing="20.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+         <children>
+            <Button alignment="CENTER" maxWidth="250.0" mnemonicParsing="false" onAction="#game_start" prefHeight="37.0" prefWidth="241.0" styleClass="btn-primary" text="Tegen andere speler" textFill="WHITE">
+               <padding>
+                  <Insets bottom="10.0" left="65.0" right="65.0" top="10.0" />
+               </padding>
+            </Button>
+            <Button alignment="CENTER" mnemonicParsing="false" prefHeight="37.0" onAction="#game_start" prefWidth="251.0" styleClass="btn-primary" text="Tegen een computer" textFill="WHITE">
+               <padding>
+                  <Insets bottom="10.0" left="60.0" right="60.0" top="10.0" />
+               </padding>
+            </Button>
+         </children>
+      </VBox>
+      <Circle fill="#343536" layoutX="89.0" layoutY="490.0" radius="28.0" smooth="false" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" styleClass="btn-primary" />
+      <Label layoutX="75.0" layoutY="461.0" text="&lt;" textFill="WHITE">
+         <font>
+            <Font size="40.0" />
+         </font>
+      </Label>
+   </children>
+</AnchorPane>
