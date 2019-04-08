@@ -16,8 +16,8 @@ public class ReversiDisplay extends Display {
     }
 
     private void initiateComponents() {
-        boardPane.setPrefSize(600, 600);
-        wrapperPane.setPrefSize(600, 600);
+        boardPane.setPrefSize(300, 300);
+        wrapperPane.setPrefSize(300, 300);
 
         for (int i = 0; i < boardSize; i++){
             for (int j = 0; j < boardSize; j++){
