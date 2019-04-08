@@ -10,13 +10,13 @@ public class BorderFirstWeight
 
     private Double indicator;
 
-    private Game game;
+    private Algorithm algorithm;
 
     private Player me;
 
-    public BorderFirstWeight(Game game, Player me)
+    public BorderFirstWeight(Algorithm algorithm, Player me)
     {
-        this.game = game;
+        this.algorithm = algorithm;
         this.me = me;
     }
 
@@ -46,22 +46,22 @@ public class BorderFirstWeight
             try {
                 pos = PositionHelper.upFrom(pos);
 
-                if (this.game.getBoard()[pos] == Field.EMPTY) {
+                if (this.algorithm.getBoard()[pos] == Field.EMPTY) {
                     break;
                 }
 
-                if (this.game.getBoard()[pos] == this.game.getOpponent(this.me).getColor()) {
+                if (this.algorithm.getBoard()[pos] == algorithm.getGame().getOpponent(this.me).getColor()) {
                     pos = field;
 
                     while (PositionHelper.hasDownFrom(pos)) {
                         try {
                             pos = PositionHelper.downFrom(pos);
 
-                            if (this.game.getBoard()[pos] == Field.EMPTY) {
+                            if (algorithm.getGame().getBoard()[pos] == Field.EMPTY) {
                                 break;
                             }
 
-                            if (this.game.getBoard()[pos] == this.game.getOpponent(this.me).getColor()) {
+                            if (algorithm.getGame().getBoard()[pos] == algorithm.getGame().getOpponent(this.me).getColor()) {
                                 valid = false;
                             }
 
@@ -89,22 +89,22 @@ public class BorderFirstWeight
             try {
                 pos = PositionHelper.leftFrom(pos);
 
-                if (this.game.getBoard()[pos] == Field.EMPTY) {
+                if (algorithm.getBoard()[pos] == Field.EMPTY) {
                     break;
                 }
 
-                if (this.game.getBoard()[pos] == this.game.getOpponent(this.me).getColor()) {
+                if (algorithm.getBoard()[pos] == algorithm.getGame().getOpponent(this.me).getColor()) {
                     pos = field;
 
                     while (PositionHelper.hasRightFrom(pos)) {
                         try {
                             pos = PositionHelper.rightFrom(pos);
 
-                            if (this.game.getBoard()[pos] == Field.EMPTY) {
+                            if (algorithm.getBoard()[pos] == Field.EMPTY) {
                                 break;
                             }
 
-                            if (this.game.getBoard()[pos] == this.game.getOpponent(this.me).getColor()) {
+                            if (algorithm.getBoard()[pos] == algorithm.getGame().getOpponent(this.me).getColor()) {
                                 valid = false;
                             }
 

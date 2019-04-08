@@ -69,8 +69,14 @@ public class ReversiRuleset extends Ruleset {
             }
         }
 
-        System.out.println(white);
-        System.out.println(black);
+        int ownedPositionsWinner;
+        if (white > black) {
+            ownedPositionsWinner = white;
+        } else {
+            ownedPositionsWinner = black;
+        }
+
+        System.out.println((double) ownedPositionsWinner / 64 * 100 + " %");
 
         if (white > black) return Gamestate.WINWHITE;
         else if (black > white) return Gamestate.WINBLACK;

@@ -9,13 +9,13 @@ public class CornerWeight
 
     private Double indicator;
 
-    private Game game;
+    private Algorithm algorithm;
 
     private Player me;
 
-    public CornerWeight(Game game, Player me)
+    public CornerWeight(Algorithm algorithm, Player me)
     {
-        this.game = game;
+        this.algorithm = algorithm;
         this.me = me;
     }
 

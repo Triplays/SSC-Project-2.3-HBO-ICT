@@ -12,9 +12,13 @@ public class ArPlayer extends Player
 
     private Algorithm algorithm;
 
-    public ArPlayer(Field color)
+    private IndicatorSet indicatorSet;
+
+    public ArPlayer(IndicatorSet indicatorSet)
     {
-        super("Computer", color);
+        super("Computer");
+
+        this.indicatorSet = indicatorSet;
     }
 
     @Override
@@ -22,18 +26,16 @@ public class ArPlayer extends Player
     {
         super.setController(controller);
 
-        IndicatorSet indicatorSet = new IndicatorSet(5);
-        indicatorSet.setLineIndicator(0.8);
-        indicatorSet.setCornerIndicator(4.0);
-        indicatorSet.setBorderFirstIndicator(2.0);
-
-        this.algorithm = new Algorithm(controller.getGame(), indicatorSet, this);
+        this.algorithm = new Algorithm(controller.getGame().getBoard(), this.indicatorSet, this);
+        this.algorithm.setGame(controller.getGame());
     }
 
     public Integer getMove() throws Exception
     {
-        Integer move = this.algorithm.getMove(this.getColor(), 5);
+        Long tmp = System.currentTimeMillis();
+        Integer move = this.algorithm.getMove();
 
+        System.out.println("Calculation time: " + (System.currentTimeMillis() - tmp) + " ms");
         System.out.println("Move: x-" + PositionHelper.getX(move) + ", y-" + PositionHelper.getY(move));
 
         return move;

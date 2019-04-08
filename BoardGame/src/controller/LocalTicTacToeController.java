@@ -18,8 +18,10 @@ public class LocalTicTacToeController  implements Runnable, Controller {
 
     public LocalTicTacToeController() {
         this.game = new TicTacToeGame();
-        this.player1 = new UiPlayer("Henk de Vries", Field.BLACK);
-        this.player2 = new UiPlayer("Kees van Bommel", Field.WHITE);
+        this.player1 = new UiPlayer("Henk de Vries");
+        this.player1.setColor(Field.BLACK);
+        this.player2 = new UiPlayer("Kees van Bommel");
+        this.player2.setColor(Field.WHITE);
     }
 
     public Game getGame() {

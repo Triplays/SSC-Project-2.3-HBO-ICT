@@ -12,7 +12,7 @@ public class LineWeight
 
     private Double indicator;
 
-    private Game game;
+    private Algorithm algorithm;
 
     private Player me;
 
@@ -21,9 +21,9 @@ public class LineWeight
     private Function<Integer, Boolean> inversedHasFrom;
     private Function<Integer, Integer> inversedFrom;
 
-    public LineWeight(Game game, Player me)
+    public LineWeight(Algorithm algorithm, Player me)
     {
-        this.game = game;
+        this.algorithm = algorithm;
         this.me = me;
     }
 
@@ -127,18 +127,18 @@ public class LineWeight
         while(this.hasFrom.apply(pos)) {
             pos = this.from.apply(pos);
 
-            if (this.game.getBoard()[pos].equals(Field.EMPTY)) {
+            if (this.algorithm.getBoard()[pos].equals(Field.EMPTY)) {
                 break;
             }
 
             if (! valid) {
-                if (this.game.getBoard()[pos].equals(this.me.getColor())) {
+                if (this.algorithm.getBoard()[pos].equals(this.me.getColor())) {
                     valid = true;
                     break;
                 }
             }
 
-            if (this.game.getBoard()[pos].equals(this.game.getOpponent(this.me).getColor())) {
+            if (this.algorithm.getBoard()[pos].equals(this.algorithm.getGame().getOpponent(this.me).getColor())) {
                 valid = false;
             }
         }
@@ -147,11 +147,11 @@ public class LineWeight
             while (this.inversedHasFrom.apply(pos)) {
                 pos = this.inversedFrom.apply(pos);
 
-                if (this.game.getBoard()[pos].equals(this.game.getOpponent(this.me).getColor())) {
+                if (this.algorithm.getBoard()[pos].equals(this.algorithm.getGame().getOpponent(this.me).getColor())) {
                     break;
                 }
 
-                if (this.game.getBoard()[pos].equals(Field.EMPTY)) {
+                if (this.algorithm.getBoard()[pos].equals(Field.EMPTY)) {
                     return this.indicator;
                 }
             }

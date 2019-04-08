@@ -23,8 +23,13 @@ public class Main extends Application
     {
         try {
 
-            Player player1 = new UiPlayer("Henk de Vries", Field.BLACK);
-            Player player2 = new ArPlayer(Field.WHITE);
+            IndicatorSet indicatorSet = new IndicatorSet(6);
+            indicatorSet.setLineIndicator(0.35);
+            indicatorSet.setCornerIndicator(4.0);
+            indicatorSet.setBorderFirstIndicator(3.5);
+
+            Player player1 = new ArPlayer(indicatorSet); // Black
+            Player player2 = new ArPlayer(indicatorSet); // White
 
             //LocalTicTacToeController controller = new LocalTicTacToeController();
             LocalReversiContoller controller = new LocalReversiContoller(player1, player2);

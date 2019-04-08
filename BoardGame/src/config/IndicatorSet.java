@@ -45,4 +45,8 @@ public class IndicatorSet
         this.borderFirstIndicator = borderFirstIndicator;
     }
 
+    public Integer getDepth()
+    {
+        return depth;
+    }
 }

@@ -6,9 +6,9 @@ import game.Field;
 public class UiPlayer extends Player
 {
 
-    public UiPlayer(String name, Field color)
+    public UiPlayer(String name)
     {
-        super(name, color);
+        super(name);
     }
 
     public Integer getMove()

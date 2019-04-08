@@ -14,9 +14,8 @@ public abstract class Player implements Cloneable
     protected Game game;
     protected Controller controller;
 
-    public Player(String name, Field color) {
+    public Player(String name) {
         this.name = name;
-        this.color = color;
     }
 
     public void setColor(Field color) {
@@ -54,8 +53,6 @@ public abstract class Player implements Cloneable
 
     public void move() throws IllegalMoveException, Exception
     {
-        System.out.println(this.getMove());
-        System.out.println("test");
         game.move(this, this.getMove());
     }
 

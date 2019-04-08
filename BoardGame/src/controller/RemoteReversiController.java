@@ -97,11 +97,15 @@ public class RemoteReversiController implements Runnable, Controller {
     public void matchStart(String opponentName, boolean myTurn) throws IllegalGamePlayerException
     {
         if (myTurn) {
-            player = new UiPlayer(name, Field.BLACK);
-            opponent = new UiPlayer(opponentName, Field.WHITE);
+            player = new UiPlayer(name);
+            player.setColor(Field.BLACK);
+            opponent = new UiPlayer(opponentName);
+            opponent.setColor(Field.WHITE);
         } else {
-            player = new UiPlayer(name, Field.WHITE);
-            opponent = new UiPlayer(opponentName, Field.BLACK);
+            player = new UiPlayer(name);
+            player.setColor(Field.WHITE);
+            opponent = new UiPlayer(opponentName);
+            opponent.setColor(Field.BLACK);
         }
 
         player.setController(this);

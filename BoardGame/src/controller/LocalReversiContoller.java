@@ -25,7 +25,9 @@ public class LocalReversiContoller implements Runnable, Controller
         this.game = new ReversiGame();
 
         this.player1 = player1;
+        this.player1.setColor(Field.BLACK);
         this.player2 = player2;
+        this.player2.setColor(Field.WHITE);
     }
 
     public Game getGame() {
@@ -42,8 +44,6 @@ public class LocalReversiContoller implements Runnable, Controller
             game.start();
 
             while (active) {
-                TimeUnit.SECONDS.sleep(1);
-
                 if (pending) {
                     pending = false;
 

@@ -4,9 +4,11 @@ import display.Display;
 import engine.BoardPosition;
 import exceptions.IllegalGamePlayerException;
 import exceptions.IllegalMoveException;
+import helper.PositionHelper;
 import player.Player;
 import ruleset.Ruleset;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -44,8 +46,8 @@ public class Game implements Cloneable {
      */
     public void start() {
         started = true;
-        currentPlayer = players[random.nextInt(2)];
-        //currentPlayer = players[0];
+        //currentPlayer = players[random.nextInt(2)];
+        currentPlayer = players[0];
         currentPlayer.notifyPlayer();
     }
 
@@ -57,10 +59,10 @@ public class Game implements Cloneable {
     public void register(Player player) throws IllegalGamePlayerException {
         if (players[0] == null) {
             players[0] = player;
-            player.setColor(Field.WHITE);
+            player.setColor(Field.BLACK);
         } else if (players[1] == null) {
             players[1] = player;
-            player.setColor(Field.BLACK);
+            player.setColor(Field.WHITE);
         } else {
             throw new IllegalGamePlayerException("There are already two players registered to this game.");
         }
@@ -98,7 +100,8 @@ public class Game implements Cloneable {
      * @throws IllegalMoveException when the Game has not started, when it was not your turn, when the move was illegal
      * @return int Amount of the fields that were taken over
      */
-    public int move(Player player, int target) throws IllegalMoveException {
+    public int move(Player player, int target) throws IllegalMoveException
+    {
         if (!started) {
             throw new IllegalMoveException("Game has not started yet");
         }
@@ -106,6 +109,7 @@ public class Game implements Cloneable {
             throw new IllegalMoveException("It was not your turn");
         }
         HashSet<Integer> result = ruleset.legalMove(board, player.getColor(), target);
+
         if (result.size() == 0) {
             throw new IllegalMoveException("Illegal move");
         }
@@ -121,10 +125,10 @@ public class Game implements Cloneable {
                 currentPlayer.notifyPlayer();
                 break;
             case WINWHITE:
-                endGame(players[0].getName());
+                endGame(players[1].getName() + " (WHITE)");
                 break;
             case WINBLACK:
-                endGame(players[1].getName());
+                endGame(players[0].getName() + " (BLACK)");
                 break;
             case DRAW:
                 // TODO: Proper implementation of draw
@@ -190,18 +194,6 @@ public class Game implements Cloneable {
     public Player getOpponent(Player player)
     {
         return player.equals(players[0]) ? players[1] : players[0];
-    }
-
-    public Game getClone() throws IllegalGamePlayerException, CloneNotSupportedException
-    {
-        return (Game) this.clone();
-
-//        for (int i = 0; i < players.length; i ++) {
-//            players[i] = players[i].clone();
-//            players[i].setGame(this);
-//        }
-//
-//        return clone;
     }
 
 }
