@@ -1,8 +1,7 @@
 package models.controller;
 
-import models.algorithm.Minimax;
-import models.algorithm.ReversiMinimax;
-import models.algorithm.TicTacToeMinimax;
+import models.minimax.Minimax;
+import models.minimax.ReversiMinimax;
 import models.game.Field;
 import models.game.Game;
 import models.game.GameInfo;

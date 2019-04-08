@@ -1,4 +1,4 @@
-package models.algorithm;
+package models.minimax;
 
 import models.game.Field;
 import models.game.GameInfo;

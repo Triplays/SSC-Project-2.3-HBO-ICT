@@ -1,7 +1,7 @@
 package models.controller;
 
-import models.algorithm.Minimax;
-import models.algorithm.ReversiMinimax;
+import models.minimax.Minimax;
+import models.minimax.ReversiMinimax;
 import models.exceptions.IllegalGamePlayerException;
 import models.game.Field;
 import models.game.Game;
