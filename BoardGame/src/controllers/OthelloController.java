@@ -13,7 +13,7 @@ public class OthelloController extends Controller {
     void show(ActionEvent event) {
         Stage stage = get_stage(event);
         try {
-            stage.setScene(new_scene("othello"));
+            stage.setScene(new_scene("othello", event));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -30,7 +30,7 @@ public class OthelloController extends Controller {
     }
 
     public void home_start(ActionEvent event) throws IOException {
-        get_stage(event).setScene(new_scene("home"));
+        get_stage(event).setScene(new_scene("home", event));
     }
 
 

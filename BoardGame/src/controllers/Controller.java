@@ -28,10 +28,11 @@ class Controller {
      *
      * Method for going to a new scene
      */
-    Scene new_scene(String view) throws IOException {
+    Scene new_scene(String view, ActionEvent event) throws IOException {
         Parent root = FXMLLoader.load(getClass().getResource("/resources/Views/" + view + ".fxml"));
+        Scene scene = ((Node)event.getSource()).getScene();
 
-        return new Scene(root, 826, 551);
+        return new Scene(root, scene.getWidth(), scene.getHeight());
     }
 
     /**
@@ -43,6 +44,6 @@ class Controller {
      * Show new view
      */
     void show(ActionEvent event, String view) throws IOException {
-        get_stage(event).setScene(new_scene(view));
+        get_stage(event).setScene(new_scene(view, event));
     }
 }
