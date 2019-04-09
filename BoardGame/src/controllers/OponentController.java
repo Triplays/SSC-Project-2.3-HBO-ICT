@@ -21,4 +21,8 @@ public class OponentController extends Controller {
             new OthelloController().show(event);
         }
     }
+
+    public void back(ActionEvent event) throws IOException{
+        get_stage(event).setScene(new_scene("home"));
+    }
 }
