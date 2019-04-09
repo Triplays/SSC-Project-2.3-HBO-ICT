@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Random;
 
-public class Game {
+public class Game implements Cloneable {
 
     private Field[] board;
 
@@ -122,6 +122,8 @@ public class Game {
         display.update(board);
     }
 
+
+
     public int giveMove(Field field) {
         int[] moves = gameInfo.ruleset.allLegalMoves(board, field);
         ArrayList<Integer> temp = new ArrayList<>();
@@ -129,13 +131,6 @@ public class Game {
             if (moves[i] != 0) temp.add(i);
         }
         return temp.get(random.nextInt(temp.size()));
-    }
-
-    public void printAllMoves(Field field) {
-        int[] moves = gameInfo.ruleset.allLegalMoves(board, field);
-        for (int i = 0; i < gameInfo.boardSize*gameInfo.boardSize; i++) {
-            if (moves[i] != 0) System.out.println("Index " + i + " captures " + moves[i]);
-        }
     }
 
     public Field[] getBoard() {
@@ -153,5 +148,16 @@ public class Game {
 
     public Display getDisplay() {
         return display;
+    }
+
+    public String getGameName() { return gameInfo.gameName; }
+
+    public Player getOpponent(Player player)
+    {
+        return player.equals(players[0]) ? players[1] : players[0];
+    }
+
+    public GameInfo getGameInfo() {
+        return gameInfo;
     }
 }

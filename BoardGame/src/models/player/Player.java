@@ -6,11 +6,11 @@ import models.exceptions.IllegalMoveException;
 import models.game.Field;
 import models.game.Game;
 
-public class Player {
-    private Field color;
-    private String name;
-    private Game game;
-    private GameController gameController;
+public abstract class Player {
+    Field color;
+    String name;
+    Game game;
+    GameController gameController;
 
     public Player(String name, Field color, GameController gameController) {
         this.name = name;
@@ -22,6 +22,12 @@ public class Player {
         return color;
     }
 
+    public void setController(GameController gameController) throws IllegalGamePlayerException
+    {
+        this.gameController = gameController;
+        this.setGame(gameController.getGame());
+    }
+
     public String getName() {
         return name;
     }
@@ -31,11 +37,14 @@ public class Player {
         game.register(this);
     }
 
-    public void notifyPlayer() {
-        gameController.requestInput(this);
-    }
+    public abstract void notifyPlayer();
 
     public void move(int target) throws IllegalMoveException {
         game.move(this, target);
+    }
+
+    @Override
+    public Player clone() throws CloneNotSupportedException {
+        return (Player)super.clone();
     }
 }

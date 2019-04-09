@@ -8,6 +8,7 @@ import models.game.Game;
 import models.game.GameInfo;
 import javafx.application.Platform;
 import javafx.scene.layout.Pane;
+import models.player.PhysicalPlayer;
 import models.player.Player;
 import models.servercom.ServerWorker;
 
@@ -43,9 +44,12 @@ public class ServerGameController implements Runnable, GameController, ServerCon
     }
 
     @Override
+    public Game getGame() { return game; }
+
+    @Override
     public void run() {
 
-        ServerWorker worker = new ServerWorker("145.37.172.171", 7789, this);
+        ServerWorker worker = new ServerWorker("localhost", 7789, this);
         Thread thread = new Thread(worker);
         thread.start();
 
@@ -120,12 +124,12 @@ public class ServerGameController implements Runnable, GameController, ServerCon
         }
 
         if (myTurn) {
-            player = new Player(name, Field.BLACK, this);
-            opponent = new Player(opponentName, Field.WHITE, this);
+            player = new PhysicalPlayer(name, Field.BLACK, this);
+            opponent = new PhysicalPlayer(opponentName, Field.WHITE, this);
             minimax = new ReversiMinimax(Field.BLACK);
         } else {
-            player = new Player(name, Field.WHITE, this);
-            opponent = new Player(opponentName, Field.BLACK, this);
+            player = new PhysicalPlayer(name, Field.WHITE, this);
+            opponent = new PhysicalPlayer(opponentName, Field.BLACK, this);
             minimax = new ReversiMinimax(Field.WHITE);
         }
         synchronized (waitForGameStart) { waitForGameStart.notifyAll(); }
