@@ -26,7 +26,7 @@ public class LocalVersusGameContoller implements Runnable, GameController {
     public LocalVersusGameContoller() {
         this.game = new Game(GameInfo.REVERSI);
         this.player1 = new PhysicalPlayer("Frieso", Field.BLACK, this);
-        this.player2 = new PhysicalPlayer("Bommeltje", Field.BLACK, this);
+        this.player2 = new PhysicalPlayer("Bommeltje", Field.WHITE, this);
     }
 
     public Game getGame() {
