@@ -87,10 +87,41 @@ public class ServerWorker implements Runnable {
             case "YOURTURN":
                 handleYourTurn(response[3]);
                 break;
+            case "CHALLENGE":
+                handleChallenge(response[3]);
+                break;
             default:
                 // TODO: Handle unknown response
                 System.out.println("Unknown SVR GAME {} argument: " + response[2]);
                 break;
+        }
+    }
+
+    private void handleChallenge(String response) {
+        if (response.startsWith("CANCELLED")) return;
+
+        if (controller.acceptChallenge()) {
+            String[] arguments = response.substring(response.indexOf("{") + 1, response.lastIndexOf("}")).split(", ");
+            String challenger = "";
+            String gametype = "";
+            int challengeID = 0;
+
+            for (String arg : arguments) {
+                if (arg.startsWith("CHALLENGER")) {
+                    int index = arg.indexOf("\"", arg.indexOf("CHALLENGER") + 10) + 1;
+                    challenger = arg.substring(index, arg.indexOf("\"", index));
+                } else if (arg.startsWith("GAMETYPE")) {
+                    int index = arg.indexOf("\"", arg.indexOf("GAMETYPE") + 8) + 1;
+                    gametype = arg.substring(index, arg.indexOf("\"", index));
+                } else if (arg.startsWith("CHALLENGENUMBER")) {
+                    int index = arg.indexOf("\"", arg.indexOf("CHALLENGENUMBER") + 15) + 1;
+                    challengeID = parseInt(arg.substring(index, arg.indexOf("\"", index)));
+                } else {
+                    // TODO: Handle unknown argument
+                    System.out.println("match end err: " + arg);
+                }
+            }
+            sendMessage("challenge accept " + challengeID);
         }
     }
 

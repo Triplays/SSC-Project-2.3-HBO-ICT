@@ -17,7 +17,7 @@ public class LocalShowdownGameController  implements Runnable, GameController {
 
     public LocalShowdownGameController() {
         this.game = new Game(GameInfo.REVERSI);
-        this.player1 = new MinimaxPlayer("Frieso", Field.BLACK, this, 5);
+        this.player1 = new MinimaxPlayer("Frieso", Field.BLACK, this, 4);
         IndicatorSet indicatorSet = new IndicatorSet(6, 0.35, 4.0, 3.5);
         this.player2 = new ComputerPlayer("Bommeltje", Field.WHITE, this, indicatorSet);
     }

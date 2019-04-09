@@ -10,4 +10,6 @@ public interface ServerController {
     void performMove(String playerName, int target, String details);
 
     void matchEnd(MatchResult result, int scoreOne, int scoreTwo, String comment);
+
+    boolean acceptChallenge();
 }
