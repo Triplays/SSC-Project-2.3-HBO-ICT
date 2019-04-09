@@ -10,7 +10,7 @@ public class OponentController extends Controller {
 
     public void show(ActionEvent event, String view, String game) throws IOException {
         game_type = game;
-        get_stage(event).setScene(new_scene(view));
+        get_stage(event).setScene(new_scene(view, event));
     }
 
     public void game_start(ActionEvent event) {
@@ -20,5 +20,9 @@ public class OponentController extends Controller {
         } else {
             new OthelloController().show(event);
         }
+    }
+
+    public void back(ActionEvent event) throws IOException{
+        get_stage(event).setScene(new_scene("home", event));
     }
 }
