@@ -2,15 +2,18 @@ package controllers;
 
 import models.User;
 import javafx.event.ActionEvent;
-import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
-import models.controller.LocalVersusGameContoller;
+import models.controller.LocalGameController;
+import models.game.GameInfo;
 
 import java.io.IOException;
 
-public class OthelloController extends Controller {
-    void show(ActionEvent event) {
+public class ReversiController extends Controller
+{
+
+    void show(ActionEvent event)
+    {
         Stage stage = get_stage(event);
         try {
             stage.setScene(new_scene("othello"));
@@ -18,7 +21,7 @@ public class OthelloController extends Controller {
             e.printStackTrace();
         }
 
-        LocalVersusGameContoller controller = new LocalVersusGameContoller();
+        LocalGameController controller = new LocalGameController(GameInfo.REVERSI);
         Thread thread = new Thread(controller);
         thread.start();
 
@@ -29,16 +32,9 @@ public class OthelloController extends Controller {
         System.out.println("username: " + User.get_username());
     }
 
-    public void home_start(ActionEvent event) throws IOException {
+    public void home_start(ActionEvent event) throws IOException
+    {
         get_stage(event).setScene(new_scene("home"));
-    }
-
-
-    public void board() {
-        LocalVersusGameContoller controller = new LocalVersusGameContoller();
-        Thread thread = new Thread(controller);
-        thread.start();
-        Scene scene = new Scene(controller.getGame().getDisplay().getWrapperPane());
     }
 
 }

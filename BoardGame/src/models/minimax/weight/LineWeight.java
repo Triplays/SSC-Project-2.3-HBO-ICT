@@ -1,30 +1,21 @@
-package models.algorithm;
+package models.minimax.weight;
 
 import models.helper.PositionHelper;
 import models.game.Field;
-import models.game.Game;
-import models.player.Player;
 
 import java.util.function.Function;
 
-public class LineWeight
+public class LineWeight extends Weight
 {
-
-    private Double indicator;
-
-    private Algorithm algorithm;
-
-    private Player me;
 
     private Function<Integer, Boolean> hasFrom;
     private Function<Integer, Integer> from;
     private Function<Integer, Boolean> inversedHasFrom;
     private Function<Integer, Integer> inversedFrom;
 
-    public LineWeight(Algorithm algorithm, Player me)
+    public LineWeight(Field[] board, Field me)
     {
-        this.algorithm = algorithm;
-        this.me = me;
+        super(board, me);
     }
 
     public void setIndicator(Double indicator)
@@ -127,18 +118,18 @@ public class LineWeight
         while(this.hasFrom.apply(pos)) {
             pos = this.from.apply(pos);
 
-            if (this.algorithm.getBoard()[pos].equals(Field.EMPTY)) {
+            if (this.board[pos].equals(Field.EMPTY)) {
                 break;
             }
 
             if (! valid) {
-                if (this.algorithm.getBoard()[pos].equals(this.me.getColor())) {
+                if (this.board[pos].equals(this.me)) {
                     valid = true;
                     break;
                 }
             }
 
-            if (this.algorithm.getBoard()[pos].equals(this.algorithm.getGame().getOpponent(this.me).getColor())) {
+            if (this.board[pos].equals(this.opponent)) {
                 valid = false;
             }
         }
@@ -147,11 +138,11 @@ public class LineWeight
             while (this.inversedHasFrom.apply(pos)) {
                 pos = this.inversedFrom.apply(pos);
 
-                if (this.algorithm.getBoard()[pos].equals(this.algorithm.getGame().getOpponent(this.me).getColor())) {
+                if (this.board[pos].equals(this.opponent)) {
                     break;
                 }
 
-                if (this.algorithm.getBoard()[pos].equals(Field.EMPTY)) {
+                if (this.board[pos].equals(Field.EMPTY)) {
                     return this.indicator;
                 }
             }

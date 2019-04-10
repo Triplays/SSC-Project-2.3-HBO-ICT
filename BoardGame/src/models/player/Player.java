@@ -1,6 +1,7 @@
 package models.player;
 
 import models.controller.GameController;
+import models.exception.UnknownGameException;
 import models.exceptions.IllegalGamePlayerException;
 import models.exceptions.IllegalMoveException;
 import models.game.Field;
@@ -12,9 +13,13 @@ public abstract class Player {
     Game game;
     GameController gameController;
 
-    public Player(String name, Field color, GameController gameController) {
+    public Player(String name)
+    {
         this.name = name;
-        this.gameController = gameController;
+    }
+
+    public void setColor(Field color)
+    {
         this.color = color;
     }
 
@@ -22,10 +27,9 @@ public abstract class Player {
         return color;
     }
 
-    public void setController(GameController gameController) throws IllegalGamePlayerException
+    public void setController(GameController gameController) throws UnknownGameException
     {
         this.gameController = gameController;
-        this.setGame(gameController.getGame());
     }
 
     public String getName() {

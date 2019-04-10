@@ -1,23 +1,14 @@
-package models.algorithm;
+package models.minimax.weight;
 
 import models.helper.PositionHelper;
 import models.game.Field;
-import models.game.Game;
-import models.player.Player;
 
-public class BorderFirstWeight
+public class BorderFirstWeight extends Weight
 {
 
-    private Double indicator;
-
-    private Algorithm algorithm;
-
-    private Player me;
-
-    public BorderFirstWeight(Algorithm algorithm, Player me)
+    public BorderFirstWeight(Field[] board, Field me)
     {
-        this.algorithm = algorithm;
-        this.me = me;
+        super(board, me);
     }
 
     public void setIndicator(Double indicator)
@@ -27,11 +18,11 @@ public class BorderFirstWeight
 
     public Double execute(Integer field)
     {
-        if (PositionHelper.getX(field) == 1 || PositionHelper.getX(field) == 8) {
+        if (PositionHelper.getX(field) == 0 || PositionHelper.getX(field) == 7) {
             return this.doExecuteVertical(field);
         }
 
-        if (PositionHelper.getY(field) == 1 || PositionHelper.getY(field) == 8) {
+        if (PositionHelper.getY(field) == 0 || PositionHelper.getY(field) == 7) {
             return this.doExecuteHorizontal(field);
         }
 
@@ -46,22 +37,22 @@ public class BorderFirstWeight
             try {
                 pos = PositionHelper.upFrom(pos);
 
-                if (this.algorithm.getBoard()[pos] == Field.EMPTY) {
+                if (this.board[pos] == Field.EMPTY) {
                     break;
                 }
 
-                if (this.algorithm.getBoard()[pos] == algorithm.getGame().getOpponent(this.me).getColor()) {
+                if (this.board[pos] == this.opponent) {
                     pos = field;
 
                     while (PositionHelper.hasDownFrom(pos)) {
                         try {
                             pos = PositionHelper.downFrom(pos);
 
-                            if (algorithm.getGame().getBoard()[pos] == Field.EMPTY) {
+                            if (this.board[pos] == Field.EMPTY) {
                                 break;
                             }
 
-                            if (algorithm.getGame().getBoard()[pos] == algorithm.getGame().getOpponent(this.me).getColor()) {
+                            if (this.board[pos] == this.opponent) {
                                 valid = false;
                             }
 
@@ -89,22 +80,22 @@ public class BorderFirstWeight
             try {
                 pos = PositionHelper.leftFrom(pos);
 
-                if (algorithm.getBoard()[pos] == Field.EMPTY) {
+                if (this.board[pos] == Field.EMPTY) {
                     break;
                 }
 
-                if (algorithm.getBoard()[pos] == algorithm.getGame().getOpponent(this.me).getColor()) {
+                if (this.board[pos] == this.opponent) {
                     pos = field;
 
                     while (PositionHelper.hasRightFrom(pos)) {
                         try {
                             pos = PositionHelper.rightFrom(pos);
 
-                            if (algorithm.getBoard()[pos] == Field.EMPTY) {
+                            if (this.board[pos] == Field.EMPTY) {
                                 break;
                             }
 
-                            if (algorithm.getBoard()[pos] == algorithm.getGame().getOpponent(this.me).getColor()) {
+                            if (this.board[pos] == this.opponent) {
                                 valid = false;
                             }
 

@@ -1,16 +1,21 @@
 package models.minimax;
 
+import models.config.IndicatorSet;
 import models.game.Field;
 import models.game.GameInfo;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.function.Function;
 
-public abstract class Minimax {
+public abstract class Minimax<T extends IndicatorSet> {
 
-    private GameInfo gameInfo;
-    private Field self;
-    private Field opponent;
+    protected T indicatorSet;
+
+    protected GameInfo gameInfo;
+    protected Field self;
+    protected Field opponent;
 
     private final long timelimit = 6000;
     private long timestamp;
@@ -64,6 +69,7 @@ public abstract class Minimax {
                 for (Integer loc : move.getValue()) newBoard[loc] = self;
                 int result = minimax(newBoard, depth + 1, max, alpha, beta, false);
                 count++;
+
                 // Update alpha if the result is the new high, and store the move
                 if (result > alpha) {
                     alpha = result;
@@ -82,6 +88,7 @@ public abstract class Minimax {
                 for (Integer loc : move.getValue()) newBoard[loc] = opponent;
                 int result = minimax(newBoard, depth + 1, max, alpha, beta, true);
                 count++;
+
                 // Update beta if the result is the new low
                 if (result < beta) beta = result;
 
@@ -92,5 +99,11 @@ public abstract class Minimax {
         }
     }
 
+    public abstract void setIndicatorSet(T indicatorSet);
+
     abstract int calculateScore(Field[] board, Field self);
+
+    public GameInfo getGameInfo() {
+        return gameInfo;
+    }
 }

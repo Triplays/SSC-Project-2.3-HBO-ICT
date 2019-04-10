@@ -16,9 +16,9 @@ public class OponentController extends Controller {
     public void game_start(ActionEvent event) {
         System.out.println(game_type);
         if (game_type == "othello") {
-            new OthelloController().show(event);
+            new ReversiController().show(event);
         } else {
-            new OthelloController().show(event);
+            new ReversiController().show(event);
         }
     }
 }

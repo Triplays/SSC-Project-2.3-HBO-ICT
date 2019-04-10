@@ -1,5 +1,6 @@
 package models.controller;
 
+import models.exception.UnknownGameException;
 import models.minimax.Minimax;
 import models.minimax.ReversiMinimax;
 import models.exceptions.IllegalGamePlayerException;
@@ -123,15 +124,27 @@ public class ServerGameController implements Runnable, GameController, ServerCon
             }
         }
 
-        if (myTurn) {
-            player = new PhysicalPlayer(name, Field.BLACK, this);
-            opponent = new PhysicalPlayer(opponentName, Field.WHITE, this);
-            minimax = new ReversiMinimax(Field.BLACK);
-        } else {
-            player = new PhysicalPlayer(name, Field.WHITE, this);
-            opponent = new PhysicalPlayer(opponentName, Field.BLACK, this);
-            minimax = new ReversiMinimax(Field.WHITE);
+        player = new PhysicalPlayer(name);
+        opponent = new PhysicalPlayer(opponentName);
+
+        try {
+            if (myTurn) {
+                player.setColor(Field.BLACK);
+                player.setController(this);
+
+                opponent.setColor(Field.WHITE);
+                opponent.setController(this);
+            } else {
+                player.setColor(Field.WHITE);
+                player.setController(this);
+
+                opponent.setColor(Field.BLACK);
+                opponent.setController(this);
+            }
+        } catch (UnknownGameException e) {
+            e.printStackTrace();
         }
+
         synchronized (waitForGameStart) { waitForGameStart.notifyAll(); }
     }
 

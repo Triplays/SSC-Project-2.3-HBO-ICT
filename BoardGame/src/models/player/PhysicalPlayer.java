@@ -4,8 +4,8 @@ import models.controller.GameController;
 import models.game.Field;
 
 public class PhysicalPlayer extends Player {
-    public PhysicalPlayer(String name, Field color, GameController gameController) {
-        super(name, color, gameController);
+    public PhysicalPlayer(String name) {
+        super(name);
     }
 
     @Override
