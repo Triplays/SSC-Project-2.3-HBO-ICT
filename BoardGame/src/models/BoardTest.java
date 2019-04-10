@@ -1,11 +1,10 @@
 package models;
 
-import models.controller.LocalComputerGameController;
-import models.controller.LocalShowdownGameController;
-import models.controller.LocalVersusGameContoller;
+import models.controller.LocalGameController;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import models.game.GameInfo;
 
 public class BoardTest extends Application {
 
@@ -15,9 +14,7 @@ public class BoardTest extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-        //LocalVersusGameContoller controller = new LocalVersusGameContoller();
-        //LocalComputerGameController controller = new LocalComputerGameController();
-        LocalShowdownGameController controller = new LocalShowdownGameController();
+        LocalGameController controller = new LocalGameController(GameInfo.REVERSI, 5, 6);
         Thread thread = new Thread(controller);
         thread.start();
         Scene scene = new Scene(controller.getGame().getDisplay().getWrapperPane());

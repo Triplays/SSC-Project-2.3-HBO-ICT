@@ -4,7 +4,9 @@ import javafx.event.ActionEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import models.User;
-import models.controller.LocalVersusGameContoller;
+import models.controller.LocalGameController;
+import models.game.Field;
+import models.game.GameInfo;
 
 import java.io.IOException;
 
@@ -17,7 +19,7 @@ public class TicTacToeController extends Controller {
             e.printStackTrace();
         }
 
-        LocalVersusGameContoller controller = new LocalVersusGameContoller();
+        LocalGameController controller = new LocalGameController(GameInfo.TICTACTOE, User.get_username(), Field.BLACK, 5);
         Thread thread = new Thread(controller);
         thread.start();
 

@@ -22,8 +22,7 @@ public abstract class Player {
         return color;
     }
 
-    public void setController(GameController gameController) throws IllegalGamePlayerException
-    {
+    public void setController(GameController gameController) throws IllegalGamePlayerException {
         this.gameController = gameController;
         this.setGame(gameController.getGame());
     }

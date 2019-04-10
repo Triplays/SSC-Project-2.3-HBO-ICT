@@ -5,7 +5,9 @@ import javafx.event.ActionEvent;
 import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
-import models.controller.LocalVersusGameContoller;
+import models.controller.LocalGameController;
+import models.game.Field;
+import models.game.GameInfo;
 
 import java.io.IOException;
 
@@ -18,7 +20,7 @@ public class OthelloController extends Controller {
             e.printStackTrace();
         }
 
-        LocalVersusGameContoller controller = new LocalVersusGameContoller();
+        LocalGameController controller = new LocalGameController(GameInfo.REVERSI, User.get_username(), Field.BLACK, 5);
         Thread thread = new Thread(controller);
         thread.start();
 
@@ -35,7 +37,7 @@ public class OthelloController extends Controller {
 
 
     public void board() {
-        LocalVersusGameContoller controller = new LocalVersusGameContoller();
+        LocalGameController controller = new LocalGameController(GameInfo.REVERSI, User.get_username(), Field.BLACK, 5);
         Thread thread = new Thread(controller);
         thread.start();
         Scene scene = new Scene(controller.getGame().getDisplay().getWrapperPane());

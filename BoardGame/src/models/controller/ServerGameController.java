@@ -1,47 +1,50 @@
 package models.controller;
 
-import models.minimax.Minimax;
-import models.minimax.ReversiMinimax;
 import models.exceptions.IllegalGamePlayerException;
 import models.game.Field;
 import models.game.Game;
 import models.game.GameInfo;
 import javafx.application.Platform;
 import javafx.scene.layout.Pane;
+import models.minimax.Minimax;
 import models.player.PhysicalPlayer;
 import models.player.Player;
 import models.servercom.ServerWorker;
 
-import java.util.Scanner;
-
-public class ServerGameController implements Runnable, GameController, ServerController {
+public class ServerGameController implements Runnable, GameController {
 
     private Player player;
     private Player opponent;
     private Game game;
-    private Pane pane;
+    private Pane pane = new Pane();
 
     private boolean active = true;
     private boolean playing = false;
     private boolean pending = false;
-
     private boolean confirm = false;
 
-    private String name = "";
+    private String name;
+    private int computerStrength = 0;
+    private GameInfo gameInfo;
+    private Minimax minimax;
 
     private final Object waitForPlayerInput = new Object();
     private final Object waitForServerConfirmation = new Object();
     private final Object waitForGameStart = new Object();
 
-    private Minimax minimax;
-
-    public ServerGameController() {
-        pane = new Pane();
+    public ServerGameController(GameInfo gameInfo, String name) {
+        this.name = name;
+        this.gameInfo = gameInfo;
     }
 
-    public Pane getPane() {
-        return pane;
+    public ServerGameController(GameInfo gameInfo, String name, int computerStrength) {
+        this.name = name;
+        this.gameInfo = gameInfo;
+        this.computerStrength = computerStrength;
     }
+
+    @Override
+    public Pane getPane() { return pane; }
 
     @Override
     public Game getGame() { return game; }
@@ -54,17 +57,13 @@ public class ServerGameController implements Runnable, GameController, ServerCon
         thread.start();
 
         try {
-            Scanner scanner = new Scanner(System.in);
             while (!confirm) {
-                // TODO: Obtain input on what name to use
-                name = scanner.nextLine();
                 worker.loginPlayer(name);
                 synchronized (waitForServerConfirmation) { waitForServerConfirmation.wait(); }
             }
             confirm = false;
             while (!confirm) {
-                // TODO: Obtain input on what game to play
-                worker.subscribeToGame(GameInfo.REVERSI.gameName);
+                worker.subscribeToGame(gameInfo.gameName);
                 synchronized (waitForServerConfirmation) { waitForServerConfirmation.wait(); }
             }
             confirm = false;
@@ -101,19 +100,16 @@ public class ServerGameController implements Runnable, GameController, ServerCon
     @Override
     public void requestInput(Player player) {}
 
-    @Override
     public void requestInput() {
         pending = true;
         synchronized (waitForPlayerInput) { waitForPlayerInput.notifyAll(); }
     }
 
-    @Override
     public void confirmation (boolean result) {
         confirm = result;
         synchronized (waitForServerConfirmation) { waitForServerConfirmation.notifyAll(); }
     }
 
-    @Override
     public void matchStart(String opponentName, boolean myTurn, String gameName) {
         playing = true;
         for (GameInfo gameInfo : GameInfo.values()) {
@@ -126,16 +122,13 @@ public class ServerGameController implements Runnable, GameController, ServerCon
         if (myTurn) {
             player = new PhysicalPlayer(name, Field.BLACK, this);
             opponent = new PhysicalPlayer(opponentName, Field.WHITE, this);
-            minimax = new ReversiMinimax(Field.BLACK);
         } else {
             player = new PhysicalPlayer(name, Field.WHITE, this);
             opponent = new PhysicalPlayer(opponentName, Field.BLACK, this);
-            minimax = new ReversiMinimax(Field.WHITE);
         }
         synchronized (waitForGameStart) { waitForGameStart.notifyAll(); }
     }
 
-    @Override
     public void performMove(String playerName, int target, String details) {
         // TODO: Something useful with details?
         if (details.length() > 0 ) System.out.println("Details: " + details);
@@ -149,7 +142,6 @@ public class ServerGameController implements Runnable, GameController, ServerCon
         catch (Exception e) { e.printStackTrace(); }
     }
 
-    @Override
     public void matchEnd(MatchResult result, int scoreOne, int scoreTwo, String comment) {
         playing = false;
 
@@ -168,7 +160,6 @@ public class ServerGameController implements Runnable, GameController, ServerCon
         synchronized (waitForServerConfirmation) { waitForServerConfirmation.notifyAll(); }
     }
 
-    @Override
     public boolean acceptChallenge() {
         return !playing;
     }

@@ -1,7 +1,7 @@
 package models.servercom;
 
 import models.controller.MatchResult;
-import models.controller.ServerController;
+import models.controller.ServerGameController;
 
 import java.io.*;
 import java.net.Socket;
@@ -17,9 +17,9 @@ public class ServerWorker implements Runnable {
     private OutputStream out;
 
     private byte[] bytes = new byte[3200];
-    private ServerController controller;
+    private ServerGameController controller;
 
-    public ServerWorker(String address, int port, ServerController controller) {
+    public ServerWorker(String address, int port, ServerGameController controller) {
         this.address = address;
         this.port = port;
         this.controller = controller;
