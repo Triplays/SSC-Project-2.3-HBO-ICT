@@ -8,4 +8,6 @@ public interface GameController {
     void requestInput(Player player);
 
     Game getGame();
+
+    //void closeController();
 }

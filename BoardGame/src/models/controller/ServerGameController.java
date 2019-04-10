@@ -50,7 +50,7 @@ public class ServerGameController implements Runnable, GameController, ServerCon
     @Override
     public void run() {
 
-        ServerWorker worker = new ServerWorker("localhost", 7789, this);
+        ServerWorker worker = new ServerWorker("145.33.225.170", 7789, this);
         Thread thread = new Thread(worker);
         thread.start();
 
@@ -179,5 +179,10 @@ public class ServerGameController implements Runnable, GameController, ServerCon
         synchronized (waitForGameStart) { waitForGameStart.notifyAll(); }
         synchronized (waitForPlayerInput) { waitForPlayerInput.notifyAll(); }
         synchronized (waitForServerConfirmation) { waitForServerConfirmation.notifyAll(); }
+    }
+
+    @Override
+    public boolean acceptChallenge() {
+        return !playing;
     }
 }

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane prefHeight="550.0" prefWidth="825.0" style="-fx-background-color: #6FB06E;" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.TicTacToeController">
+   <children>
+      <Button alignment="CENTER" contentDisplay="BOTTOM" layoutX="14.0" layoutY="499.0" mnemonicParsing="false" onAction="#home_start" prefHeight="37.0" prefWidth="207.0" style="-fx-background-color: #440E0E; -fx-background-radius: 50;" styleClass="btn-primary" text="Opgeven" textFill="WHITE">
+         <padding>
+            <Insets bottom="10.0" left="60.0" right="60.0" top="10.0" />
+         </padding>
+      </Button>
+   </children>
+</AnchorPane>
