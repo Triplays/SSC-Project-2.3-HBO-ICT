@@ -1,6 +1,6 @@
 package models.player;
 
-import models.controller.GameController;
+import models.gamecontroller.GameController;
 import models.game.Field;
 
 public class PhysicalPlayer extends Player {

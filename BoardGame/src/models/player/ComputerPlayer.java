@@ -1,10 +1,9 @@
 package models.player;
 
-import models.exceptions.IllegalMoveException;
 import models.helper.PositionHelper;
 import models.algorithm.Algorithm;
 import models.config.IndicatorSet;
-import models.controller.GameController;
+import models.gamecontroller.GameController;
 import models.exceptions.IllegalGamePlayerException;
 import models.game.Field;
 

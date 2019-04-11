@@ -1,6 +1,6 @@
 package models.player;
 
-import models.controller.GameController;
+import models.gamecontroller.GameController;
 import models.exceptions.IllegalGamePlayerException;
 import models.exceptions.IllegalMoveException;
 import models.game.Field;
