@@ -13,9 +13,9 @@ public class LineWeight extends Weight
     private Function<Integer, Boolean> inversedHasFrom;
     private Function<Integer, Integer> inversedFrom;
 
-    public LineWeight(Field[] board, Field me)
+    public LineWeight(Field[] board)
     {
-        super(board, me);
+        super(board);
     }
 
     public void setIndicator(Double indicator)
@@ -110,42 +110,52 @@ public class LineWeight extends Weight
         return score;
     }
 
-    private Double doExecute(Integer field)
+    private Double doExecute(int field)
     {
-        Boolean valid = true;
+        Field me = this.board[field];
+        Field opponent = (me == Field.BLACK ? Field.WHITE : Field.BLACK);
 
-        Integer pos = field;
-        while(this.hasFrom.apply(pos)) {
-            pos = this.from.apply(pos);
+        int pos = field;
+        Field above = Field.EMPTY;
+        Field below = Field.EMPTY;
 
-            if (this.board[pos].equals(Field.EMPTY)) {
-                break;
-            }
+        while (this.hasFrom.apply(pos)) {
+            try {
+                pos = this.from.apply(pos);
+                above = this.board[pos];
 
-            if (! valid) {
-                if (this.board[pos].equals(this.me)) {
-                    valid = true;
-                    break;
+                if (above == me) {
+                    continue;
                 }
-            }
 
-            if (this.board[pos].equals(this.opponent)) {
-                valid = false;
-            }
+                break;
+
+            } catch (Exception e) {}
         }
 
-        if (! valid) {
-            while (this.inversedHasFrom.apply(pos)) {
+        pos = field;
+        while (this.inversedHasFrom.apply(pos)) {
+            try {
                 pos = this.inversedFrom.apply(pos);
+                below = this.board[pos];
 
-                if (this.board[pos].equals(this.opponent)) {
-                    break;
+                if (below == me) {
+                    continue;
                 }
 
-                if (this.board[pos].equals(Field.EMPTY)) {
-                    return this.indicator;
-                }
-            }
+                break;
+
+            } catch (Exception e) {}
+        }
+
+        // When we are surrounded by the opponent, its good because we cant get beaten here
+        if (above == below) {
+            return this.indicator;
+        }
+
+        // When we are surrounded by the opponent on one side, its bad because they can take this over
+        if (above == opponent || below == opponent) {
+            return 1.0 / this.indicator;
         }
 
         return 1.0;

@@ -1,5 +1,6 @@
 package models.game;
 
+import models.controller.LocalGameController;
 import models.display.Display;
 import models.exceptions.IllegalGamePlayerException;
 import models.exceptions.IllegalMoveException;
@@ -98,9 +99,23 @@ public class Game implements Cloneable {
                 currentPlayer.notifyPlayer();
                 break;
             case WINWHITE:
+                int whiteCount = 0;
+                for (Field field : board) {
+                    if(field == Field.WHITE) whiteCount++;
+                }
+
+                System.out.println("Score: " + whiteCount);
+
                 endGame(players[1].getName());
                 break;
             case WINBLACK:
+                int blackCount = 0;
+                for (Field field : board) {
+                    if(field == Field.BLACK) blackCount++;
+                }
+
+                System.out.println("Score: " + blackCount);
+
                 endGame(players[0].getName());
                 break;
             case DRAW:
@@ -144,6 +159,7 @@ public class Game implements Cloneable {
     private void endGame(String winner) {
         // TODO: Proper closure
         System.out.println(winner + " has won!");
+        LocalGameController.active = false;
     }
 
     public Display getDisplay() {

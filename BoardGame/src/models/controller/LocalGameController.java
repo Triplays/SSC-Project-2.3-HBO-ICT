@@ -13,7 +13,7 @@ public class LocalGameController implements Runnable, GameController {
     private Player player2;
     private Player activePlayer;
     private Game game;
-    private boolean active = true;
+    public static boolean active = true;
     private boolean pending = false;
     private final Object o = new Object();
 

@@ -17,7 +17,7 @@ public abstract class Minimax<T extends IndicatorSet> {
     protected Field self;
     protected Field opponent;
 
-    private final long timelimit = 6000;
+    private final long timelimit = 9000;
     private long timestamp;
     private int count;
 
@@ -31,7 +31,7 @@ public abstract class Minimax<T extends IndicatorSet> {
         timestamp = System.currentTimeMillis();
         count = 0;
         int result = minimax(board, 0, max, Integer.MIN_VALUE, Integer.MAX_VALUE, true);
-        System.out.println("Depth " + max + " took " + (System.currentTimeMillis() - timestamp) + "ms to analyse " + count + " possible moves.");
+        //System.out.println("Depth " + max + " took " + (System.currentTimeMillis() - timestamp) + "ms to analyse " + count + " possible moves.");
         return result;
     }
 

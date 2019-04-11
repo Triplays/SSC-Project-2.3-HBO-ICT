@@ -3,42 +3,41 @@ package models.config;
 public class ReversiIndicatorSet extends IndicatorSet
 {
 
-    private Double lineIndicator;
+    private double lineIndicator;
 
-    private Double cornerIndicator;
-
-    private Double borderFirstIndicator;
+    private double cornerIndicator;
 
     public ReversiIndicatorSet(Integer depth) {
         super(depth);
     }
 
-    public Double getLineIndicator() {
+    public Boolean hasLineIndicator()
+    {
+        return lineIndicator > 0;
+    }
+
+    public double getLineIndicator()
+    {
         return lineIndicator;
     }
 
-    public void setLineIndicator(Double lineIndicator)
+    public void setLineIndicator(double lineIndicator)
     {
         this.lineIndicator = lineIndicator;
     }
 
-    public Double getCornerIndicator()
+    public Boolean hasCornerIndicator()
+    {
+        return cornerIndicator > 0;
+    }
+
+    public double getCornerIndicator()
     {
         return cornerIndicator;
     }
 
-    public void setCornerIndicator(Double cornerIndicator)
+    public void setCornerIndicator(double cornerIndicator)
     {
         this.cornerIndicator = cornerIndicator;
-    }
-
-    public Double getBorderFirstIndicator()
-    {
-        return borderFirstIndicator;
-    }
-
-    public void setBorderFirstIndicator(Double borderFirstIndicator)
-    {
-        this.borderFirstIndicator = borderFirstIndicator;
     }
 }

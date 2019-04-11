@@ -1,10 +1,8 @@
 package models.minimax;
 
 import models.config.ReversiIndicatorSet;
-import models.minimax.weight.BorderFirstWeight;
 import models.minimax.weight.CornerWeight;
 import models.minimax.weight.LineWeight;
-import models.config.IndicatorSet;
 import models.game.Field;
 import models.game.GameInfo;
 
@@ -28,7 +26,7 @@ public class ReversiMinimax extends Minimax<ReversiIndicatorSet>
     };
 
     private final int[] scoreMatrixTwo = {
-            100,  -25,  25,  10,  10,   40,  -25,  100,
+            100,  -25,  25,  10,  10,   25,  -25,  100,
             -25,  -50,  -5,   0,   0,   -5,  -50,  -25,
             25,   -5,   10,   2,   2,   10,   -5,   25,
             10,    0,    2,   5,   5,    2,    0,   10,
@@ -56,8 +54,11 @@ public class ReversiMinimax extends Minimax<ReversiIndicatorSet>
         int white = 0;
         int black = 0;
         for (int i =0; i < board.length; i++) {
-            if(board[i] == Field.WHITE) white += (scoreMatrixTwo[i] * weightMatrix[i]);
-            if(board[i] == Field.BLACK) black += (scoreMatrixTwo[i] * weightMatrix[i]);
+            boolean negative = scoreMatrixTwo[i] < 0;
+            double score = scoreMatrixTwo[i] * (negative ? 1 / weightMatrix[i] : weightMatrix[i]);
+
+            if(board[i] == Field.WHITE) white += score;
+            if(board[i] == Field.BLACK) black += score;
         }
 
         return self == Field.BLACK ? (black - white) : (white - black);
@@ -84,30 +85,23 @@ public class ReversiMinimax extends Minimax<ReversiIndicatorSet>
 
         // Line Algorithm
 
-        LineWeight lineWeight = new LineWeight(board, this.self);
+        if (indicatorSet.hasLineIndicator()) {
+            LineWeight lineWeight = new LineWeight(board);
 
-        lineWeight.setIndicator(indicatorSet.getLineIndicator());
+            lineWeight.setIndicator(indicatorSet.getLineIndicator());
 
-        this.addWeightStatement(lineWeight::execute);
-
+            this.addWeightStatement(lineWeight::execute);
+        }
 
         // Corner Algorithm
 
-        CornerWeight cornerWeight = new CornerWeight(board, this.self);
+        if (indicatorSet.hasCornerIndicator()) {
+            CornerWeight cornerWeight = new CornerWeight(board);
 
-        cornerWeight.setIndicator(indicatorSet.getCornerIndicator());
+            cornerWeight.setIndicator(indicatorSet.getCornerIndicator());
 
-        this.addWeightStatement(cornerWeight::execute);
-
-
-        // Border First Algorithm
-
-        BorderFirstWeight borderFirstWeight = new BorderFirstWeight(board, this.self);
-
-        borderFirstWeight.setIndicator(indicatorSet.getBorderFirstIndicator());
-
-        this.addWeightStatement(borderFirstWeight::execute);
-
+            this.addWeightStatement(cornerWeight::execute);
+        }
 
         double[] weightMatrix = new double[64];
 

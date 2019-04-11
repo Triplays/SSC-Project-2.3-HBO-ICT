@@ -9,15 +9,9 @@ public abstract class Weight
 
     protected Field[] board;
 
-    protected Field me;
-
-    protected Field opponent;
-
-    public Weight(Field[] board, Field me)
+    public Weight(Field[] board)
     {
         this.board = board;
-        this.me = me;
-        this.opponent = me == Field.BLACK ? Field.WHITE : Field.BLACK;
     }
 
     public void setIndicator(Double indicator) {

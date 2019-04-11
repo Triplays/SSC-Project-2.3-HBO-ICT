@@ -3,7 +3,7 @@
 //import models.config.IndicatorSet;
 //import models.game.Field;
 //import models.game.Game;
-//import models.minimax.weight.BorderFirstWeight;
+//import models.minimax.weight.BorderWeight;
 //import models.minimax.weight.CornerWeight;
 //import models.minimax.weight.LineWeight;
 //import models.player.Player;
@@ -150,7 +150,7 @@
 //
 //        // Border First Algorithm
 //
-//        BorderFirstWeight borderFirstWeight = new BorderFirstWeight(this, this.me);
+//        BorderWeight borderFirstWeight = new BorderWeight(this, this.me);
 //
 //        borderFirstWeight.setIndicator(indicatorSet.getBorderFirstIndicator());
 //
