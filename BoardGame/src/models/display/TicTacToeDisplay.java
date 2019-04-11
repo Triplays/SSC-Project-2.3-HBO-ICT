@@ -1,5 +1,6 @@
 package models.display;
 
+import javafx.scene.input.MouseEvent;
 import models.gamecontroller.GameController;
 import models.game.Field;
 import javafx.application.Platform;
@@ -13,30 +14,7 @@ public class TicTacToeDisplay extends Display {
 
     public TicTacToeDisplay(GameController gameController) {
         super(gameController);
-        initiateComponents();
-    }
-
-    private void initiateComponents() {
-        boardPane.setPrefSize(300, 300);
-        this.setPrefSize(300, 300);
-
-        for (int i = 0; i < boardSize; i++){
-            for (int j = 0; j < boardSize; j++){
-                Rectangle box = new Rectangle();
-                box.widthProperty().bind(boardPane.widthProperty().divide(boardSize));
-                box.heightProperty().bind(boardPane.heightProperty().divide(boardSize));
-                box.xProperty().bind(boardPane.widthProperty().divide(boardSize).multiply(i));
-                box.yProperty().bind(boardPane.heightProperty().divide(boardSize).multiply(j));
-                if((i%2==0 && j%2==1) || (i%2==1 && j%2==0)){
-                    box.setFill(Color.LIGHTGREEN);
-                }else{
-                    box.setFill(Color.DARKGREEN);
-                }
-                boardPane.getChildren().add(box);
-            }
-        }
-        this.getChildren().add(boardPane);
-        this.getChildren().add(piecesPane);
+        initiateComponents(boardSize, 200, Color.LIGHTGREEN, Color.DARKGREEN);
     }
 
     @Override
@@ -57,7 +35,7 @@ public class TicTacToeDisplay extends Display {
                     piecesPane.getChildren().add(circle);
                 }
             }
-
+            eventPane.toFront();
         });
     }
 }

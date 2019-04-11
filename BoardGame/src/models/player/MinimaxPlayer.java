@@ -5,6 +5,7 @@ import models.exceptions.IllegalMoveException;
 import models.game.Field;
 import models.minimax.Minimax;
 import models.minimax.ReversiMinimax;
+import models.minimax.TicTacToeMinimax;
 
 public class MinimaxPlayer extends Player {
 
@@ -14,8 +15,14 @@ public class MinimaxPlayer extends Player {
     public MinimaxPlayer(String name, Field color, GameController gameController, int depth) {
         super(name, color, gameController);
         this.depth = depth;
-        // TODO: Check which game is being played
-        minimax = new ReversiMinimax(color);
+        switch (gameController.getGame().getGameInfo()) {
+            case REVERSI:
+                minimax = new ReversiMinimax(color);
+                break;
+            case TICTACTOE:
+                minimax = new TicTacToeMinimax(color);
+                break;
+        }
     }
 
     @Override
