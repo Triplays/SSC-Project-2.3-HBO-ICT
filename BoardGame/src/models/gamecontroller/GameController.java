@@ -1,16 +1,13 @@
-package models.controller;
+package models.gamecontroller;
 
-import javafx.scene.layout.Pane;
+import models.display.Display;
 import models.game.Game;
 import models.player.Player;
 
 public interface GameController {
-
     void requestInput(Player player);
-
     Game getGame();
-
-    Pane getPane();
-
-    //void closeController();
+    Display getDisplay();
+    void sendInput(int move);
+    void closeController();
 }

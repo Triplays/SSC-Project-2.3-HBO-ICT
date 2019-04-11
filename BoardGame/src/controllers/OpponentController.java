@@ -18,7 +18,7 @@ public class OpponentController extends Controller {
         System.out.println(game_type);
         switch (game_type){
             case REVERSI:
-                new OthelloController().show(event);
+                new ReversiController().show(event);
                 break;
             case TICTACTOE:
                 new TicTacToeController().show(event);

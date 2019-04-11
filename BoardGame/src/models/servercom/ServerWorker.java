@@ -1,7 +1,7 @@
 package models.servercom;
 
-import models.controller.MatchResult;
-import models.controller.ServerGameController;
+import models.gamecontroller.MatchResult;
+import models.gamecontroller.ServerGameController;
 
 import java.io.*;
 import java.net.Socket;
@@ -11,7 +11,7 @@ import static java.lang.Integer.parseInt;
 
 public class ServerWorker implements Runnable {
 
-    private String address ;
+    private String address;
     private int port;
     private InputStream in;
     private OutputStream out;
@@ -31,6 +31,7 @@ public class ServerWorker implements Runnable {
             Socket connection = new Socket(address, port);
             in = connection.getInputStream();
             out = connection.getOutputStream();
+            controller.connectionSuccesful();
             int count;
             while ((count = in.read(bytes)) > 0) {
                 String[] lines = new String((Arrays.copyOfRange(bytes, 0, count))).split("\n");
@@ -100,7 +101,7 @@ public class ServerWorker implements Runnable {
     private void handleChallenge(String response) {
         if (response.startsWith("CANCELLED")) return;
 
-        if (controller.acceptChallenge()) {
+        if (controller.isAvaiable()) {
             String[] arguments = response.substring(response.indexOf("{") + 1, response.lastIndexOf("}")).split(", ");
             String challenger = "";
             String gametype = "";
@@ -121,7 +122,8 @@ public class ServerWorker implements Runnable {
                     System.out.println("match end err: " + arg);
                 }
             }
-            sendMessage("challenge accept " + challengeID);
+            if (controller.acceptChallenge(gametype))
+                sendMessage("challenge accept " + challengeID);
         }
     }
 

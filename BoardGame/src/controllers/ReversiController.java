@@ -5,13 +5,13 @@ import javafx.event.ActionEvent;
 import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
-import models.controller.LocalGameController;
+import models.gamecontroller.LocalGameController;
 import models.game.Field;
 import models.game.GameInfo;
 
 import java.io.IOException;
 
-public class OthelloController extends Controller {
+public class ReversiController extends Controller {
     void show(ActionEvent event) {
         Stage stage = get_stage(event);
         try {
@@ -26,7 +26,7 @@ public class OthelloController extends Controller {
 
         AnchorPane pane = (AnchorPane) stage.getScene().lookup("#board");
 
-        pane.getChildren().add(controller.getGame().getDisplay().getWrapperPane());
+        pane.getChildren().add(controller.getDisplay());
 
         System.out.println("username: " + User.get_username());
     }
@@ -40,7 +40,7 @@ public class OthelloController extends Controller {
         LocalGameController controller = new LocalGameController(GameInfo.REVERSI, User.get_username(), Field.BLACK, 5);
         Thread thread = new Thread(controller);
         thread.start();
-        Scene scene = new Scene(controller.getGame().getDisplay().getWrapperPane());
+        Scene scene = new Scene(controller.getDisplay());
     }
 
 }

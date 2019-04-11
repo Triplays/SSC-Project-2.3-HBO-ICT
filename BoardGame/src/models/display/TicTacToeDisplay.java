@@ -1,8 +1,8 @@
 package models.display;
 
+import models.gamecontroller.GameController;
 import models.game.Field;
 import javafx.application.Platform;
-import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
@@ -11,14 +11,14 @@ public class TicTacToeDisplay extends Display {
 
     final int boardSize = 3;
 
-    public TicTacToeDisplay() {
-        super();
+    public TicTacToeDisplay(GameController gameController) {
+        super(gameController);
         initiateComponents();
     }
 
     private void initiateComponents() {
         boardPane.setPrefSize(300, 300);
-        wrapperPane.setPrefSize(300, 300);
+        this.setPrefSize(300, 300);
 
         for (int i = 0; i < boardSize; i++){
             for (int j = 0; j < boardSize; j++){
@@ -35,8 +35,8 @@ public class TicTacToeDisplay extends Display {
                 boardPane.getChildren().add(box);
             }
         }
-        wrapperPane.getChildren().add(boardPane);
-        wrapperPane.getChildren().add(piecesPane);
+        this.getChildren().add(boardPane);
+        this.getChildren().add(piecesPane);
     }
 
     @Override
@@ -59,10 +59,5 @@ public class TicTacToeDisplay extends Display {
             }
 
         });
-    }
-
-    @Override
-    public Pane getWrapperPane() {
-        return wrapperPane;
     }
 }

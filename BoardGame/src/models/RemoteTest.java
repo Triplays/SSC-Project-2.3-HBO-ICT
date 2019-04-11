@@ -1,6 +1,6 @@
 package models;
 
-import models.controller.ServerGameController;
+import models.gamecontroller.ServerGameController;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
@@ -14,10 +14,10 @@ public class RemoteTest extends Application {
 
         @Override
         public void start(Stage primaryStage) {
-            ServerGameController controller = new ServerGameController(GameInfo.REVERSI, "Quetzal", 6);
+            ServerGameController controller = new ServerGameController(GameInfo.REVERSI, "Quetzal", 7);
             Thread thread = new Thread(controller);
             thread.start();
-            Scene scene = new Scene(controller.getPane());
+            Scene scene = new Scene(controller.getDisplay());
             primaryStage.setScene(scene);
             primaryStage.show();
         }

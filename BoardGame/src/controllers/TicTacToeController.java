@@ -4,7 +4,7 @@ import javafx.event.ActionEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import models.User;
-import models.controller.LocalGameController;
+import models.gamecontroller.LocalGameController;
 import models.game.Field;
 import models.game.GameInfo;
 
@@ -25,7 +25,7 @@ public class TicTacToeController extends Controller {
 
         AnchorPane pane = (AnchorPane) stage.getScene().lookup("#board");
 
-        pane.getChildren().add(controller.getGame().getDisplay().getWrapperPane());
+        pane.getChildren().add(controller.getDisplay());
 
         System.out.println("username: " + User.get_username());
     }

@@ -23,10 +23,10 @@ public class Game implements Cloneable {
 
     private Random random = new Random();
 
-    public Game(GameInfo gameInfo) {
+    public Game(GameInfo gameInfo, Display display) {
         this.gameInfo = gameInfo;
         this.board = gameInfo.getInitialBoard();
-        this.display = gameInfo.getDisplay();
+        this.display = display;
         players = new Player[2];
     }
 
@@ -35,6 +35,7 @@ public class Game implements Cloneable {
      */
     public void start() {
         started = true;
+        display.update(board);
         currentPlayer = players[0];
         currentPlayer.notifyPlayer();
     }
@@ -122,8 +123,11 @@ public class Game implements Cloneable {
         display.update(board);
     }
 
-
-
+    /**
+     * DEPRECATED
+     * @param field
+     * @return
+     */
     public int giveMove(Field field) {
         int[] moves = gameInfo.ruleset.allLegalMoves(board, field);
         ArrayList<Integer> temp = new ArrayList<>();
@@ -133,9 +137,6 @@ public class Game implements Cloneable {
         return temp.get(random.nextInt(temp.size()));
     }
 
-    public Field[] getBoard() {
-        return board;
-    }
 
     private void switchPlayers() {
         currentPlayer = currentPlayer == players[0] ? players[1] : players[0];
@@ -146,18 +147,12 @@ public class Game implements Cloneable {
         System.out.println(winner + " has won!");
     }
 
-    public Display getDisplay() {
-        return display;
-    }
-
-    public String getGameName() { return gameInfo.gameName; }
-
-    public Player getOpponent(Player player)
-    {
+    public Player getOpponent(Player player) {
         return player.equals(players[0]) ? players[1] : players[0];
     }
 
-    public GameInfo getGameInfo() {
-        return gameInfo;
-    }
+    public Field[] getBoard() { return board; }
+    public GameInfo getGameInfo() { return gameInfo; }
+    public Display getDisplay() { return display; }
+    public String getGameName() { return gameInfo.gameName; }
 }

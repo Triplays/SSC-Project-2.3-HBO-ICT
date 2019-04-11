@@ -1,4 +1,4 @@
-package models.controller;
+package models.gamecontroller;
 
 public interface ServerController {
     void requestInput();
@@ -11,5 +11,6 @@ public interface ServerController {
 
     void matchEnd(MatchResult result, int scoreOne, int scoreTwo, String comment);
 
+    boolean isAvaiable();
     boolean acceptChallenge();
 }

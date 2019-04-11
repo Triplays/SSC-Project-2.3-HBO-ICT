@@ -1,6 +1,6 @@
 package models;
 
-import models.controller.ServerGameController;
+import models.gamecontroller.ServerGameController;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
@@ -14,10 +14,10 @@ public class DuplicateRemoteTest extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-        ServerGameController controller = new ServerGameController(GameInfo.REVERSI, "Ijsbeertje", 7);
+        ServerGameController controller = new ServerGameController(GameInfo.REVERSI, "Ijsbeertje", 6);
         Thread thread = new Thread(controller);
         thread.start();
-        Scene scene = new Scene(controller.getPane());
+        Scene scene = new Scene(controller.getDisplay());
         primaryStage.setScene(scene);
         primaryStage.show();
     }

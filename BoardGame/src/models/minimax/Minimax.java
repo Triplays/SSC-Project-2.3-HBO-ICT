@@ -12,7 +12,7 @@ public abstract class Minimax {
     private Field self;
     private Field opponent;
 
-    private final long timelimit = 6000;
+    private final long timelimit = 8000;
     private long timestamp;
     private int count;
 
@@ -45,14 +45,14 @@ public abstract class Minimax {
         if (moves.size() == 0) {
             switch(gameInfo.ruleset.checkWinCondition(board, maximizing ? self : opponent)){
                 case WINWHITE:
-                    return self == Field.WHITE ? 1024 : -1024;
+                    return self == Field.WHITE ? 4096 : -4096;
                 case WINBLACK:
-                    return self == Field.BLACK ? 1024 : -1024;
+                    return self == Field.BLACK ? 4096 : -4096;
                 case DRAW:
                     return 0;
                 case STAY:
                     // TODO: continue recursion?
-                    return 5;
+                    return 1024;
             }
         }
 

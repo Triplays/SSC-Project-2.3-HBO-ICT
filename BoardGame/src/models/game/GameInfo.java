@@ -1,5 +1,6 @@
 package models.game;
 
+import models.gamecontroller.GameController;
 import models.display.Display;
 import models.display.ReversiDisplay;
 import models.display.TicTacToeDisplay;
@@ -12,7 +13,7 @@ import java.util.Arrays;
 public enum GameInfo {
     TICTACTOE("Tic-tac-toe", 3, new TicTacToeRuleset()) {
         @Override
-        public Display getDisplay() { return new TicTacToeDisplay(); }
+        public Display getDisplay(GameController gamecontroller) { return new TicTacToeDisplay(gamecontroller); }
 
         @Override
         public Field[] getInitialBoard() {
@@ -23,7 +24,7 @@ public enum GameInfo {
     },
     REVERSI("Reversi", 8, new ReversiRuleset()) {
         @Override
-        public Display getDisplay() { return  new ReversiDisplay(); }
+        public Display getDisplay(GameController gamecontroller) { return  new ReversiDisplay(gamecontroller); }
 
         @Override
         public Field[] getInitialBoard() {
@@ -47,6 +48,6 @@ public enum GameInfo {
         this.ruleset = ruleset;
     }
 
-    public abstract Display getDisplay();
+    public abstract Display getDisplay(GameController gamecontroller);
     public abstract Field[] getInitialBoard();
 }
