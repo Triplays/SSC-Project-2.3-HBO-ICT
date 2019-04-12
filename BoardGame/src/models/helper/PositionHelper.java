@@ -3,99 +3,99 @@ package models.helper;
 public class PositionHelper
 {
 
-    public static Boolean hasLeftFrom(Integer field)
+    public static Boolean hasLeftFrom(int field)
     {
-        Integer x = PositionHelper.getX(field);
+        int x = PositionHelper.getX(field);
 
         return x > 0;
     }
 
-    public static Boolean hasRightFrom(Integer field)
+    public static Boolean hasRightFrom(int field)
     {
-        Integer x = PositionHelper.getX(field);
+        int x = PositionHelper.getX(field);
 
         return x < 7;
     }
 
 
-    public static Boolean hasUpFrom(Integer field)
+    public static Boolean hasUpFrom(int field)
     {
-        Integer y = PositionHelper.getY(field);
+        int y = PositionHelper.getY(field);
 
         return y > 0;
     }
 
-    public static Boolean hasDownFrom(Integer field)
+    public static Boolean hasDownFrom(int field)
     {
-        Integer y = PositionHelper.getY(field);
+        int y = PositionHelper.getY(field);
 
         return y < 7;
     }
 
-    public static Boolean hasUpperLeftFrom(Integer field)
+    public static Boolean hasUpperLeftFrom(int field)
     {
         return PositionHelper.hasUpFrom(field) && PositionHelper.hasLeftFrom(field);
     }
 
-    public static Boolean hasUpperRightFrom(Integer field)
+    public static Boolean hasUpperRightFrom(int field)
     {
         return PositionHelper.hasUpFrom(field) && PositionHelper.hasRightFrom(field);
     }
 
-    public static Boolean hasDownLeftFrom(Integer field)
+    public static Boolean hasDownLeftFrom(int field)
     {
         return PositionHelper.hasDownFrom(field) && PositionHelper.hasLeftFrom(field);
     }
 
-    public static Boolean hasDownRightFrom(Integer field)
+    public static Boolean hasDownRightFrom(int field)
     {
         return PositionHelper.hasDownFrom(field) && PositionHelper.hasRightFrom(field);
     }
 
-    public static Integer leftFrom(Integer field)
+    public static int leftFrom(int field)
     {
-        Integer x = PositionHelper.getX(field);
-        Integer y = PositionHelper.getY(field);
+        int x = PositionHelper.getX(field);
+        int y = PositionHelper.getY(field);
 
         x--;
 
         return (y * 8) + x;
     }
 
-    public static Integer rightFrom(Integer field)
+    public static int rightFrom(int field)
     {
-        Integer x = PositionHelper.getX(field);
-        Integer y = PositionHelper.getY(field);
+        int x = PositionHelper.getX(field);
+        int y = PositionHelper.getY(field);
 
         x++;
 
         return (y * 8) + x;
     }
 
-    public static Integer upFrom(Integer field)
+    public static int upFrom(int field)
     {
-        Integer x = PositionHelper.getX(field);
-        Integer y = PositionHelper.getY(field);
+        int x = PositionHelper.getX(field);
+        int y = PositionHelper.getY(field);
 
         y--;
 
         return (y * 8) + x;
     }
 
-    public static Integer downFrom(Integer field)
+    public static int downFrom(int field)
     {
-        Integer x = PositionHelper.getX(field);
-        Integer y = PositionHelper.getY(field);
+        int x = PositionHelper.getX(field);
+        int y = PositionHelper.getY(field);
 
         y++;
 
         return (y * 8) + x;
     }
 
-    public static Integer upperLeftFrom(Integer field)
+    public static int upperLeftFrom(int field)
     {
-        Integer x = PositionHelper.getX(field);
-        Integer y = PositionHelper.getY(field);
+        int x = PositionHelper.getX(field);
+        int y = PositionHelper.getY(field);
 
         x--;
         y--;
@@ -103,10 +103,10 @@ public class PositionHelper
         return (y * 8) + x;
     }
 
-    public static Integer upperRightFrom(Integer field)
+    public static int upperRightFrom(int field)
     {
-        Integer x = PositionHelper.getX(field);
-        Integer y = PositionHelper.getY(field);
+        int x = PositionHelper.getX(field);
+        int y = PositionHelper.getY(field);
 
         x++;
         y--;
@@ -114,10 +114,10 @@ public class PositionHelper
         return (y * 8) + x;
     }
 
-    public static Integer downLeftFrom(Integer field)
+    public static int downLeftFrom(int field)
     {
-        Integer x = PositionHelper.getX(field);
-        Integer y = PositionHelper.getY(field);
+        int x = PositionHelper.getX(field);
+        int y = PositionHelper.getY(field);
 
         x--;
         y++;
@@ -125,10 +125,10 @@ public class PositionHelper
         return (y * 8) + x;
     }
 
-    public static Integer downRightFrom(Integer field)
+    public static int downRightFrom(int field)
     {
-        Integer x = PositionHelper.getX(field);
-        Integer y = PositionHelper.getY(field);
+        int x = PositionHelper.getX(field);
+        int y = PositionHelper.getY(field);
 
         x++;
         y++;
@@ -136,19 +136,19 @@ public class PositionHelper
         return (y * 8) + x;
     }
 
-    public static Integer getX(Integer field)
+    public static int getX(int field)
     {
         return field % 8;
     }
 
-    public static Integer getY(Integer field)
+    public static int getY(int field)
     {
         return (int)Math.floor(field / 8);
     }
 
-    public static Boolean isPosition(Integer field, Integer statementX, Integer statementY)
+    public static Boolean isPosition(int field, int statementX, int statementY)
     {
-        return PositionHelper.getX(field).equals(statementX) && PositionHelper.getY(field).equals(statementY);
+        return PositionHelper.getX(field) == statementX && PositionHelper.getY(field) == statementY;
     }
 
 }

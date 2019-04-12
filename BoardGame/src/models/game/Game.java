@@ -99,9 +99,23 @@ public class Game implements Cloneable {
                 currentPlayer.notifyPlayer();
                 break;
             case WINWHITE:
+                int whiteCount = 0;
+                for (Field field : board) {
+                    if(field == Field.WHITE) whiteCount++;
+                }
+
+                System.out.println("Score: " + whiteCount);
+
                 endGame(players[1].getName());
                 break;
             case WINBLACK:
+                int blackCount = 0;
+                for (Field field : board) {
+                    if(field == Field.BLACK) blackCount++;
+                }
+
+                System.out.println("Score: " + blackCount);
+
                 endGame(players[0].getName());
                 break;
             case DRAW:

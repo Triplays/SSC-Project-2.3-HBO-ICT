@@ -1,30 +1,21 @@
-package models.algorithm;
+package models.minimax.weight;
 
 import models.helper.PositionHelper;
 import models.game.Field;
-import models.game.Game;
-import models.player.Player;
 
 import java.util.function.Function;
 
-public class LineWeight
+public class LineWeight extends Weight
 {
-
-    private Double indicator;
-
-    private Algorithm algorithm;
-
-    private Player me;
 
     private Function<Integer, Boolean> hasFrom;
     private Function<Integer, Integer> from;
     private Function<Integer, Boolean> inversedHasFrom;
     private Function<Integer, Integer> inversedFrom;
 
-    public LineWeight(Algorithm algorithm, Player me)
+    public LineWeight(Field[] board)
     {
-        this.algorithm = algorithm;
-        this.me = me;
+        super(board);
     }
 
     public void setIndicator(Double indicator)
@@ -119,42 +110,52 @@ public class LineWeight
         return score;
     }
 
-    private Double doExecute(Integer field)
+    private Double doExecute(int field)
     {
-        Boolean valid = true;
+        Field me = this.board[field];
+        Field opponent = (me == Field.BLACK ? Field.WHITE : Field.BLACK);
 
-        Integer pos = field;
-        while(this.hasFrom.apply(pos)) {
-            pos = this.from.apply(pos);
+        int pos = field;
+        Field above = Field.EMPTY;
+        Field below = Field.EMPTY;
 
-            if (this.algorithm.getBoard()[pos].equals(Field.EMPTY)) {
-                break;
-            }
+        while (this.hasFrom.apply(pos)) {
+            try {
+                pos = this.from.apply(pos);
+                above = this.board[pos];
 
-            if (! valid) {
-                if (this.algorithm.getBoard()[pos].equals(this.me.getColor())) {
-                    valid = true;
-                    break;
+                if (above == me) {
+                    continue;
                 }
-            }
 
-            if (this.algorithm.getBoard()[pos].equals(this.algorithm.getGame().getOpponent(this.me).getColor())) {
-                valid = false;
-            }
+                break;
+
+            } catch (Exception e) {}
         }
 
-        if (! valid) {
-            while (this.inversedHasFrom.apply(pos)) {
+        pos = field;
+        while (this.inversedHasFrom.apply(pos)) {
+            try {
                 pos = this.inversedFrom.apply(pos);
+                below = this.board[pos];
 
-                if (this.algorithm.getBoard()[pos].equals(this.algorithm.getGame().getOpponent(this.me).getColor())) {
-                    break;
+                if (below == me) {
+                    continue;
                 }
 
-                if (this.algorithm.getBoard()[pos].equals(Field.EMPTY)) {
-                    return this.indicator;
-                }
-            }
+                break;
+
+            } catch (Exception e) {}
+        }
+
+        // When we are surrounded by the opponent, its good because we cant get beaten here
+        if (above == below) {
+            return this.indicator;
+        }
+
+        // When we are surrounded by the opponent on one side, its bad because they can take this over
+        if (above == opponent || below == opponent) {
+            return 1.0 / this.indicator;
         }
 
         return 1.0;

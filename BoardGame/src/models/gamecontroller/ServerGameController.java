@@ -1,12 +1,13 @@
 package models.gamecontroller;
 
 import models.display.Display;
+import models.minimax.Minimax;
+import models.minimax.ReversiMinimax;
 import models.exceptions.IllegalGamePlayerException;
 import models.game.Field;
 import models.game.Game;
 import models.game.GameInfo;
-import models.minimax.Minimax;
-import models.minimax.ReversiMinimax;
+import models.player.MinimaxPlayer;
 import models.player.PhysicalPlayer;
 import models.player.Player;
 import models.servercom.ServerWorker;
@@ -50,7 +51,7 @@ public class ServerGameController implements Runnable, GameController {
 
     @Override
     public void run() {
-        ServerWorker worker = new ServerWorker("145.33.225.170", 7789, this);
+        ServerWorker worker = new ServerWorker("145.37.148.200", 7789, this);
         Thread thread = new Thread(worker);
         thread.start();
 
@@ -144,14 +145,17 @@ public class ServerGameController implements Runnable, GameController {
 
         // Assign correct player models according to the starting player
         if (myTurn) {
-            player = new PhysicalPlayer(name, Field.BLACK, this);
+            //player = new PhysicalPlayer(name, Field.BLACK, this);
+            player = new MinimaxPlayer(name, Field.BLACK, this, 8);
             opponent = new PhysicalPlayer(opponentName, Field.WHITE, this);
             minimax = new ReversiMinimax(Field.BLACK);
         } else {
-            player = new PhysicalPlayer(name, Field.WHITE, this);
+            //player = new PhysicalPlayer(name, Field.WHITE, this);
+            player = new MinimaxPlayer(name, Field.WHITE, this, 8);
             opponent = new PhysicalPlayer(opponentName, Field.BLACK, this);
             minimax = new ReversiMinimax(Field.WHITE);
         }
+
         synchronized (waitForGameStart) { waitForGameStart.notifyAll(); }
     }
 

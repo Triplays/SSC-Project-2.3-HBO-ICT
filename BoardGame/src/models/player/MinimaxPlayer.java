@@ -1,5 +1,6 @@
 package models.player;
 
+import models.exception.UnknownGameException;
 import models.gamecontroller.GameController;
 import models.exceptions.IllegalMoveException;
 import models.game.Field;
@@ -13,7 +14,15 @@ public class MinimaxPlayer extends Player {
     private int depth;
 
     public MinimaxPlayer(String name, Field color, GameController gameController, int depth) {
-        super(name, color, gameController);
+        super(name);
+
+        try {
+            this.setController(gameController);
+            this.setColor(color);
+        } catch (UnknownGameException e) {
+            System.out.println("Unable to load player.");
+        }
+
         this.depth = depth;
         switch (gameController.getGame().getGameInfo()) {
             case REVERSI:

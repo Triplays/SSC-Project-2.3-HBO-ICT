@@ -1,47 +1,75 @@
 package models.player;
 
-import models.helper.PositionHelper;
-import models.algorithm.Algorithm;
 import models.config.IndicatorSet;
 import models.gamecontroller.GameController;
-import models.exceptions.IllegalGamePlayerException;
-import models.game.Field;
+import models.config.ReversiIndicatorSet;
+import models.config.TicTacToeIndicatorSet;
+import models.exception.UnknownGameException;
+import models.exceptions.IllegalMoveException;
+import models.game.GameInfo;
+import models.minimax.Minimax;
+import models.minimax.ReversiMinimax;
+import models.minimax.TicTacToeMinimax;
 
-public class ComputerPlayer extends Player
-{
+public class ComputerPlayer extends Player {
 
-    private Algorithm algorithm;
+    private Minimax minimax;
+
+    private int depth;
 
     private IndicatorSet indicatorSet;
 
-    public ComputerPlayer(String name, Field color, GameController gameController, IndicatorSet indicatorSet) {
-        super("Computer " + name, color, gameController);
-        this.indicatorSet = indicatorSet;
+    public ComputerPlayer(String name, int depth) {
+        super(name);
+        this.depth = depth;
+    }
 
-        this.algorithm = new Algorithm(gameController.getGame().getBoard(), this.indicatorSet, this);
-        this.algorithm.setGame(gameController.getGame());
+    public ComputerPlayer(String name, IndicatorSet indicatorSet) {
+        super(name);
+        this.indicatorSet = indicatorSet;
     }
 
     @Override
-    public void setController(GameController gameController) throws IllegalGamePlayerException {
+    public void setController(GameController gameController) throws UnknownGameException
+    {
         super.setController(gameController);
-        this.algorithm = new Algorithm(gameController.getGame().getBoard(), this.indicatorSet, this);
-        this.algorithm.setGame(gameController.getGame());
-    }
 
-    public Integer getMove() throws Exception {
-        Long tmp = System.currentTimeMillis();
-        Integer move = this.algorithm.getMove();
+        if (gameController.getGame().getGameInfo() == GameInfo.REVERSI) {
 
-        System.out.println("Calculation time: " + (System.currentTimeMillis() - tmp) + " ms");
-        System.out.println("Move: x-" + PositionHelper.getX(move) + ", y-" + PositionHelper.getY(move));
+            minimax = new ReversiMinimax(this.getColor());
 
-        return move;
+            if (! (this.indicatorSet instanceof ReversiIndicatorSet)) {
+                if (this.indicatorSet != null) {
+                    this.depth = this.indicatorSet.getDepth();
+                }
+
+                this.indicatorSet = new ReversiIndicatorSet(this.depth);
+            }
+
+            minimax.setIndicatorSet(this.indicatorSet);
+
+        } else if(gameController.getGame().getGameInfo() == GameInfo.TICTACTOE) {
+
+            minimax = new TicTacToeMinimax(this.getColor());
+
+            if (! (this.indicatorSet instanceof TicTacToeIndicatorSet)) {
+                if (this.indicatorSet != null) {
+                    this.depth = this.indicatorSet.getDepth();
+                }
+
+                this.indicatorSet = new TicTacToeIndicatorSet(this.depth);
+            }
+
+            minimax.setIndicatorSet(this.indicatorSet);
+
+        } else {
+            throw new UnknownGameException();
+        }
     }
 
     @Override
     public void notifyPlayer() {
-        try { move(getMove()); }
-        catch (Exception exc) { exc.printStackTrace(); }
+        try { move(minimax.minimax(game.getBoard(), this.indicatorSet.getDepth())); }
+        catch (IllegalMoveException exc) { exc.printStackTrace(); }
     }
 }

@@ -1,8 +1,8 @@
 package controllers;
 
+import javafx.scene.Scene;
 import models.User;
 import javafx.event.ActionEvent;
-import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import models.gamecontroller.LocalGameController;
@@ -11,8 +11,11 @@ import models.game.GameInfo;
 
 import java.io.IOException;
 
-public class ReversiController extends Controller {
-    void show(ActionEvent event) {
+public class ReversiController extends Controller
+{
+
+    void show(ActionEvent event)
+    {
         Stage stage = get_stage(event);
         try {
             stage.setScene(new_scene("othello", event));
@@ -31,10 +34,10 @@ public class ReversiController extends Controller {
         System.out.println("username: " + User.get_username());
     }
 
-    public void home_start(ActionEvent event) throws IOException {
+    public void home_start(ActionEvent event) throws IOException
+    {
         get_stage(event).setScene(new_scene("home", event));
     }
-
 
     public void board() {
         LocalGameController controller = new LocalGameController(GameInfo.REVERSI, User.get_username(), Field.BLACK, 5);
