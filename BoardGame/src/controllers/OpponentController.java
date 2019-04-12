@@ -3,6 +3,7 @@ package controllers;
 
 import javafx.event.ActionEvent;
 import models.game.GameInfo;
+import models.game.Opponent;
 
 import java.io.IOException;
 
@@ -14,9 +15,9 @@ public class OpponentController extends Controller {
         get_stage(event).setScene(new_scene(view, event));
     }
 
-    public void game_start(ActionEvent event) {
+    public void pvai(ActionEvent event) {
         System.out.println(game_type);
-        new GUIGameController().show(event, game_type);
+        new GUIGameController().show(event, game_type, Opponent.AI);
 
         /* redacted
         switch (game_type){
@@ -30,6 +31,11 @@ public class OpponentController extends Controller {
                 //needs exception
                 break;
         }*/
+    }
+
+    public void pvp(ActionEvent event){
+        System.out.println(game_type);
+        new GUIGameController().show(event, game_type, Opponent.Human);
     }
 
     public void back(ActionEvent event) throws IOException{
