@@ -12,7 +12,7 @@
          </padding>
       </Button>
       <AnchorPane fx:id="board" layoutX="178.0" layoutY="145.0" prefHeight="200.0" prefWidth="200.0" />
-      <Button alignment="CENTER" contentDisplay="BOTTOM" layoutX="14.0" layoutY="450.0" mnemonicParsing="false" onAction="#reset" prefHeight="37.0" prefWidth="207.0" style="-fx-background-color: #440E0E; -fx-background-radius: 50;" styleClass="btn-primary" text="Reset" textFill="WHITE">
+      <Button alignment="CENTER" contentDisplay="BOTTOM" layoutX="14.0" layoutY="450.0" mnemonicParsing="false" onAction="#reset" prefHeight="37.0" prefWidth="207.0" style="-fx-background-color: #440E0E; -fx-background-radius: 50;" styleClass="btn-primary" text="Terug" textFill="WHITE">
          <padding>
             <Insets bottom="10.0" left="60.0" right="60.0" top="10.0" />
          </padding>
