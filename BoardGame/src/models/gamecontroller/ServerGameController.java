@@ -1,5 +1,6 @@
 package models.gamecontroller;
 
+import models.config.ReversiIndicatorSet;
 import models.display.Display;
 import models.minimax.Minimax;
 import models.minimax.ReversiMinimax;
@@ -143,15 +144,20 @@ public class ServerGameController implements Runnable, GameController {
             }
         }
 
+        ReversiIndicatorSet reversiIndicatorSet = new ReversiIndicatorSet(8);
+        reversiIndicatorSet.setLineIndicator(2.7);
+
         // Assign correct player models according to the starting player
         if (myTurn) {
             //player = new PhysicalPlayer(name, Field.BLACK, this);
-            player = new MinimaxPlayer(name, Field.BLACK, this, 8);
+            player = new PhysicalPlayer(name, Field.BLACK, this);
             opponent = new PhysicalPlayer(opponentName, Field.WHITE, this);
+            minimax = new ReversiMinimax(Field.BLACK, reversiIndicatorSet);
         } else {
             //player = new PhysicalPlayer(name, Field.WHITE, this);
-            player = new MinimaxPlayer(name, Field.WHITE, this, 8);
+            player = new PhysicalPlayer(name, Field.WHITE, this);
             opponent = new PhysicalPlayer(opponentName, Field.BLACK, this);
+            minimax = new ReversiMinimax(Field.WHITE, reversiIndicatorSet);
         }
 
         synchronized (waitForGameStart) { waitForGameStart.notifyAll(); }

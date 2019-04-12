@@ -9,7 +9,7 @@ public class PhysicalPlayer extends Player {
         super(name);
 
         try {
-            this.setController(gameController);
+            this.setController(controller);
             this.setColor(color);
         } catch (UnknownGameException e) {
             System.out.println("Unable to load player.");

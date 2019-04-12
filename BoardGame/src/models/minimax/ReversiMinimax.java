@@ -58,7 +58,6 @@ public class ReversiMinimax extends Minimax<ReversiIndicatorSet>
         for (int i =0; i < board.length; i++) {
             boolean negative = scoreMatrixTwo[i] < 0;
             double score = scoreMatrixTwo[i] * (negative ? 1 / weightMatrix[i] : weightMatrix[i]);
-
             if(board[i] == Field.WHITE) white += score;
             if(board[i] == Field.BLACK) black += score;
         }
