@@ -3,3 +3,10 @@
     -fx-background-radius: 50;
     -fx-fill: #440E0E;
 }
+.bg-primary {
+    -fx-background-color:  rgba(174, 148, 115, 0.81);
+}
+
+.bg-primary-dark {
+    -fx-background-color:  rgb(174, 148, 115);
+}
