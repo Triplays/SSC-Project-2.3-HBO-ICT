@@ -9,7 +9,7 @@
 <?import javafx.scene.shape.Circle?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="550.0" prefWidth="825.0" style="-fx-background-color: rgba(174, 148, 115, 0.81);" stylesheets="@../css/app.css" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.ReversiController">
+<AnchorPane prefHeight="550.0" prefWidth="825.0" style="-fx-background-color: rgba(174, 148, 115, 0.81);" stylesheets="@../css/app.css" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.GUIGameController">
    <children>
       <Label layoutX="14.0" layoutY="14.0" prefHeight="47.0" prefWidth="89.0" text="Score">
          <font>
@@ -33,7 +33,12 @@
             <AnchorPane fx:id="board" prefHeight="200.0" prefWidth="200.0" />
              <VBox alignment="CENTER" layoutX="625.0" layoutY="478.0" prefHeight="41.0" prefWidth="184.0" spacing="20.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1">
                  <children>
-                     <Button alignment="CENTER" contentDisplay="BOTTOM" mnemonicParsing="false" onAction="#home_start" prefHeight="37.0" prefWidth="207.0" styleClass="btn-primary" text="Opgeven" textFill="WHITE">
+                     <Button alignment="CENTER" contentDisplay="BOTTOM" mnemonicParsing="false" onAction="#reset" prefHeight="37.0" prefWidth="207.0" styleClass="btn-primary" text="Reset" textFill="WHITE">
+                         <padding>
+                             <Insets bottom="10.0" left="60.0" right="60.0" top="10.0" />
+                         </padding>
+                     </Button>
+                     <Button alignment="CENTER" contentDisplay="BOTTOM" mnemonicParsing="false" onAction="#opgeven" prefHeight="37.0" prefWidth="207.0" styleClass="btn-primary" text="Opgeven" textFill="WHITE">
                          <padding>
                              <Insets bottom="10.0" left="60.0" right="60.0" top="10.0" />
                          </padding>

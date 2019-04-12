@@ -1,16 +1,15 @@
 package models;
 
-public class User {
+public class Opponent {
     private static String username;
 
     public static void create(String name) {
         if(name.equals("")){
-            name = "Speler 1";
+            name = "Speler 2";
         }
         username = name;
     }
 
-    public static String get_username() {
-        return username;
-    }
+    public static String get_username() { return username; }
+
 }
