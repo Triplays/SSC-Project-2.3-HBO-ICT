@@ -30,7 +30,7 @@ public class TicTacToeController extends Controller {
         System.out.println("username: " + User.get_username());
     }
 
-    public void home_start(ActionEvent event) throws IOException {
-        get_stage(event).setScene(new_scene("home", event));
+    public void opgeven(ActionEvent event) throws IOException {
+        get_stage(event).setScene(new_scene("opponent", event));
     }
 }

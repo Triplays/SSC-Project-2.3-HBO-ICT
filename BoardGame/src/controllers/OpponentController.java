@@ -16,6 +16,9 @@ public class OpponentController extends Controller {
 
     public void game_start(ActionEvent event) {
         System.out.println(game_type);
+        new GUIGameController().show(event, game_type);
+
+        /* redacted
         switch (game_type){
             case REVERSI:
                 new ReversiController().show(event);
@@ -26,8 +29,7 @@ public class OpponentController extends Controller {
             default:
                 //needs exception
                 break;
-
-        }
+        }*/
     }
 
     public void back(ActionEvent event) throws IOException{
