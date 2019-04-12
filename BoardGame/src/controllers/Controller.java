@@ -17,7 +17,10 @@ class Controller {
      * Getting te primary stage of the game, we need this to go to a new scene
      */
     Stage get_stage(ActionEvent event) {
-        return (Stage) ((Node)event.getSource()).getScene().getWindow();
+        Stage stage =(Stage) ((Node)event.getSource()).getScene().getWindow();
+        stage.setMinHeight(590);
+        stage.setMinWidth(825);
+        return stage;
     }
 
 
