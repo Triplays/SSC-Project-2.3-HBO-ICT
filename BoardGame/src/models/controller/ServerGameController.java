@@ -50,7 +50,7 @@ public class ServerGameController implements Runnable, GameController, ServerCon
     @Override
     public void run() {
 
-        ServerWorker worker = new ServerWorker("145.33.225.170", 7789, this);
+        ServerWorker worker = new ServerWorker("145.37.148.200", 7789, this);
         Thread thread = new Thread(worker);
         thread.start();
 

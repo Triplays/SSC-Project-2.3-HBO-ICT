@@ -17,7 +17,7 @@ public abstract class Minimax<T extends IndicatorSet> {
     protected Field self;
     protected Field opponent;
 
-    private final long timelimit = 9000;
+    private final long timelimit = 6000;
     private long timestamp;
     private int count;
 

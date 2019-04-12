@@ -26,57 +26,61 @@ public class BoardTest extends Application {
 
         ReversiIndicatorSet indicatorSet = new ReversiIndicatorSet(8);
 
-        indicatorSet.setLineIndicator(0.9);
+        indicatorSet.setLineIndicator(2.7);
 
         Player player2 = new ComputerPlayer("Computer WHITE", indicatorSet);
 
-        int bestScore = 0;
-        double indicator = 0.0;
+        LocalGameController controller = new LocalGameController(GameInfo.REVERSI, player1, player2);
+        Thread thread = new Thread(controller);
+        thread.start();
 
-        for (double i = 0.0; i < 4.00; i+=0.1) {
-
-            try {
-                indicatorSet.setLineIndicator(i);
-
-                System.out.println("-------------------------");
-                System.out.println("Indicator: " + i);
-
-                LocalGameController controller = new LocalGameController(GameInfo.REVERSI, player1, player2);
-                Thread thread = new Thread(controller);
-                thread.start();
-
-                thread.join();
-
-                int score = 0;
-                for (Field field : controller.getGame().getBoard()) {
-                    if(field == Field.WHITE) score++;
-                }
-
-                controller = new LocalGameController(GameInfo.REVERSI, player2, player1);
-                thread = new Thread(controller);
-                thread.start();
-
-                thread.join();
-
-                for (Field field : controller.getGame().getBoard()) {
-                    if(field == Field.BLACK) score++;
-                }
-
-                score /= 2;
-
-                System.out.println("Measured score: " + score);
-
-                if (score > bestScore) {
-                    bestScore = score;
-                    indicator = i;
-                }
-
-            } catch (InterruptedException e) {
-                System.out.println(e.getMessage());
-            }
-
-        }
-
-        System.out.println("Best indicator: " + indicator);
+//        int bestScore = 0;
+//        double indicator = 0.0;
+//
+//        for (double i = 0.0; i < 4.00; i+=0.1) {
+//
+//            try {
+//                indicatorSet.setLineIndicator(i);
+//
+//                System.out.println("-------------------------");
+//                System.out.println("Indicator: " + i);
+//
+//                LocalGameController controller = new LocalGameController(GameInfo.REVERSI, player1, player2);
+//                Thread thread = new Thread(controller);
+//                thread.start();
+//
+//                thread.join();
+//
+//                int score = 0;
+//                for (Field field : controller.getGame().getBoard()) {
+//                    if(field == Field.WHITE) score++;
+//                }
+//
+//                controller = new LocalGameController(GameInfo.REVERSI, player2, player1);
+//                thread = new Thread(controller);
+//                thread.start();
+//
+//                thread.join();
+//
+//                for (Field field : controller.getGame().getBoard()) {
+//                    if(field == Field.BLACK) score++;
+//                }
+//
+//                score /= 2;
+//
+//                System.out.println("Measured score: " + score);
+//
+//                if (score > bestScore) {
+//                    bestScore = score;
+//                    indicator = i;
+//                }
+//
+//            } catch (InterruptedException e) {
+//                System.out.println(e.getMessage());
+//            }
+//
+//        }
+//
+//        System.out.println("Best indicator: " + indicator);
     }
 }
