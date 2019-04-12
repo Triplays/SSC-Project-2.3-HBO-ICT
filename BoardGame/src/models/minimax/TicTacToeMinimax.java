@@ -1,11 +1,17 @@
 package models.minimax;
 
+import models.config.ReversiIndicatorSet;
+import models.config.TicTacToeIndicatorSet;
 import models.game.Field;
 import models.game.GameInfo;
 
-public class TicTacToeMinimax extends Minimax {
+public class TicTacToeMinimax extends Minimax<TicTacToeIndicatorSet>
+{
 
-    public TicTacToeMinimax(Field field){ super(GameInfo.TICTACTOE, field); }
+    public TicTacToeMinimax(Field field, TicTacToeIndicatorSet indicatorSet){
+        super(GameInfo.TICTACTOE, field);
+        this.indicatorSet = indicatorSet;
+    }
 
     @Override
     int calculateScore(Field[] board, Field self) {
@@ -20,5 +26,11 @@ public class TicTacToeMinimax extends Minimax {
                 return 0;
         }
         return 0;
+    }
+
+    @Override
+    public void setIndicatorSet(TicTacToeIndicatorSet indicatorSet)
+    {
+        this.indicatorSet = indicatorSet;
     }
 }

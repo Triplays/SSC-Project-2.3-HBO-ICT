@@ -20,12 +20,12 @@
       </Label>
       <VBox alignment="CENTER" layoutY="209.0" prefHeight="78.0" prefWidth="138.0" spacing="20.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
          <children>
-            <Button alignment="CENTER" maxWidth="250.0" mnemonicParsing="false" onAction="#game_start" prefHeight="37.0" prefWidth="241.0" styleClass="btn-primary" text="Tegen andere speler" textFill="WHITE">
+            <Button alignment="CENTER" maxWidth="250.0" mnemonicParsing="false" onAction="#pvp" prefHeight="37.0" prefWidth="241.0" styleClass="btn-primary" text="Tegen andere speler" textFill="WHITE">
                <padding>
                   <Insets bottom="10.0" left="65.0" right="65.0" top="10.0" />
                </padding>
             </Button>
-            <Button alignment="CENTER" mnemonicParsing="false" onAction="#game_start" prefHeight="37.0" prefWidth="251.0" styleClass="btn-primary" text="Tegen een computer" textFill="WHITE">
+            <Button alignment="CENTER" mnemonicParsing="false" onAction="#pvai" prefHeight="37.0" prefWidth="251.0" styleClass="btn-primary" text="Tegen een computer" textFill="WHITE">
                <padding>
                   <Insets bottom="10.0" left="60.0" right="60.0" top="10.0" />
                </padding>
