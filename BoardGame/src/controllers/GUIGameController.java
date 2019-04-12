@@ -43,7 +43,7 @@ public class GUIGameController extends Controller{
             controller = new LocalGameController(game_type, User.get_username(), Field.BLACK, 5);
         }
         else{
-            controller = new LocalGameController(game_type, User.get_username(), Field.BLACK, "Speler_2");
+            controller = new LocalGameController(game_type, User.get_username(), Field.BLACK, "Speler 2");
         }
         Thread thread = new Thread(controller);
         thread.start();
@@ -52,7 +52,8 @@ public class GUIGameController extends Controller{
 
         pane.getChildren().add(controller.getDisplay());
 
-        System.out.println("username: " + User.get_username());
+        System.out.println("Username: " + User.get_username());
+        System.out.println("Opponent: " + controller.getOpponentname());
     }
 
 

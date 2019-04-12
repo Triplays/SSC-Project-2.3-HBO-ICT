@@ -117,4 +117,8 @@ public class LocalGameController implements Runnable, GameController {
         active = false;
         synchronized (awaitGame) { awaitGame.notify(); }
     }
+
+    public String getOpponentname(){
+        return opponent.getName();
+    }
 }
