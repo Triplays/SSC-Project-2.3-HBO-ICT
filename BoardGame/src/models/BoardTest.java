@@ -15,7 +15,7 @@ public class BoardTest extends Application {
     @Override
     public void start(Stage primaryStage)
     {
-        LocalGameController controller = new LocalGameController(GameInfo.REVERSI, 8, 8);
+        LocalGameController controller = new LocalGameController(GameInfo.REVERSI, 6, 3);
         Thread thread = new Thread(controller);
         thread.start();
 

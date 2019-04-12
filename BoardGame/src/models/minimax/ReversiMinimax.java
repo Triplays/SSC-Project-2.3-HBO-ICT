@@ -1,5 +1,6 @@
 package models.minimax;
 
+import models.config.IndicatorSet;
 import models.config.ReversiIndicatorSet;
 import models.minimax.weight.CornerWeight;
 import models.minimax.weight.LineWeight;
@@ -36,8 +37,9 @@ public class ReversiMinimax extends Minimax<ReversiIndicatorSet>
             200,  -25,  25,  10,  10,   25,  -25,  200
     };
 
-    public ReversiMinimax(Field field){
+    public ReversiMinimax(Field field, ReversiIndicatorSet indicatorSet){
         super(GameInfo.REVERSI, field);
+        this.indicatorSet = indicatorSet;
     }
 
     @Override

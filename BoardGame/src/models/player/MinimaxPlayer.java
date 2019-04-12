@@ -1,5 +1,7 @@
 package models.player;
 
+import models.config.ReversiIndicatorSet;
+import models.config.TicTacToeIndicatorSet;
 import models.exception.UnknownGameException;
 import models.gamecontroller.GameController;
 import models.exceptions.IllegalMoveException;
@@ -26,10 +28,15 @@ public class MinimaxPlayer extends Player {
         this.depth = depth;
         switch (gameController.getGame().getGameInfo()) {
             case REVERSI:
-                minimax = new ReversiMinimax(color);
+                ReversiIndicatorSet reversiIndicatorSet = new ReversiIndicatorSet(8);
+                reversiIndicatorSet.setLineIndicator(2.7);
+
+                minimax = new ReversiMinimax(color, reversiIndicatorSet);
                 break;
             case TICTACTOE:
-                minimax = new TicTacToeMinimax(color);
+                TicTacToeIndicatorSet tttIndicatorSet = new TicTacToeIndicatorSet(8);
+
+                minimax = new TicTacToeMinimax(color, tttIndicatorSet);
                 break;
         }
     }

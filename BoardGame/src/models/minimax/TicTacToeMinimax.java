@@ -8,7 +8,10 @@ import models.game.GameInfo;
 public class TicTacToeMinimax extends Minimax<TicTacToeIndicatorSet>
 {
 
-    public TicTacToeMinimax(Field field){ super(GameInfo.TICTACTOE, field); }
+    public TicTacToeMinimax(Field field, TicTacToeIndicatorSet indicatorSet){
+        super(GameInfo.TICTACTOE, field);
+        this.indicatorSet = indicatorSet;
+    }
 
     @Override
     int calculateScore(Field[] board, Field self) {

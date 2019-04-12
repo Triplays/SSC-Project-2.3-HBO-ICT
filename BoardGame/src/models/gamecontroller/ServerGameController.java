@@ -148,12 +148,10 @@ public class ServerGameController implements Runnable, GameController {
             //player = new PhysicalPlayer(name, Field.BLACK, this);
             player = new MinimaxPlayer(name, Field.BLACK, this, 8);
             opponent = new PhysicalPlayer(opponentName, Field.WHITE, this);
-            minimax = new ReversiMinimax(Field.BLACK);
         } else {
             //player = new PhysicalPlayer(name, Field.WHITE, this);
             player = new MinimaxPlayer(name, Field.WHITE, this, 8);
             opponent = new PhysicalPlayer(opponentName, Field.BLACK, this);
-            minimax = new ReversiMinimax(Field.WHITE);
         }
 
         synchronized (waitForGameStart) { waitForGameStart.notifyAll(); }
