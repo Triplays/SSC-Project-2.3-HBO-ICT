@@ -15,25 +15,12 @@ public class OpponentController extends Controller {
         get_stage(event).setScene(new_scene(view, event));
     }
 
-    public void pvai(ActionEvent event) {
+    public void pvai(ActionEvent event) throws IOException {
         System.out.println(game_type);
         new GUIGameController().show(event, game_type, Opponent.AI);
-
-        /* redacted
-        switch (game_type){
-            case REVERSI:
-                new ReversiController().show(event);
-                break;
-            case TICTACTOE:
-                new TicTacToeController().show(event);
-                break;
-            default:
-                //needs exception
-                break;
-        }*/
     }
 
-    public void pvp(ActionEvent event){
+    public void pvp(ActionEvent event) throws IOException {
         System.out.println(game_type);
         new GUIGameController().show(event, game_type, Opponent.Human);
     }

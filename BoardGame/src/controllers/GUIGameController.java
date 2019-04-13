@@ -14,33 +14,17 @@ import models.gamecontroller.LocalGameController;
 import java.io.IOException;
 
 public class GUIGameController extends Controller{
-    private static GameInfo last_game_type;
-    private static Opponent last_opponent;
+    private GameInfo last_game_type;
+    private Opponent last_opponent;
     private Field color;
 
-    void show(ActionEvent event, GameInfo game_type,Opponent opponent) {
+    void show(ActionEvent event, GameInfo game_type,Opponent opponent) throws IOException {
         last_game_type = game_type;
         last_opponent = opponent;
 
         Stage stage = get_stage(event);
-        try {
-            switch (game_type){
-                case REVERSI:
-                    stage.setScene(new_scene("othello", event));
-                    break;
-                case TICTACTOE:
-                    stage.setScene(new_scene("tictactoe", event));
-                    break;
-                default:
-                    //needs exception
-                    break;
-            }
 
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        LocalGameController controller;
+        stage.setScene(new_scene("game", event));
 
         if(opponent != Opponent.AI){
             stage.getScene().lookup("#difficulty").getScene().getWindow().hide();
@@ -82,7 +66,7 @@ public class GUIGameController extends Controller{
 
         remove_item("difficulty", stage);
 
-        LocalGameController controller = new LocalGameController(GameInfo.REVERSI, User.get_username(), color, get_button_id(event));
+        LocalGameController controller = new LocalGameController(last_game_type, User.get_username(), color, get_button_id(event));
 
         Thread thread = new Thread(controller);
         thread.start();
