@@ -4,9 +4,9 @@
     -fx-fill: #440E0E;
 }
 .bg-primary {
-    -fx-background-color:  rgba(174, 148, 115, 0.81);
+    -fx-background-color:  #6FB06E;
 }
 
 .bg-primary-dark {
-    -fx-background-color:  rgb(174, 148, 115);
+    -fx-background-color:  #6FB06E;
 }
