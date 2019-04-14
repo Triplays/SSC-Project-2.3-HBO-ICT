@@ -1,17 +1,20 @@
 package models.gamecontroller;
 
-import models.config.ReversiIndicatorSet;
+import models.User;
 import models.display.Display;
-import models.minimax.Minimax;
-import models.minimax.ReversiMinimax;
 import models.exceptions.IllegalGamePlayerException;
 import models.game.Field;
 import models.game.Game;
 import models.game.GameInfo;
-import models.player.MinimaxPlayer;
 import models.player.PhysicalPlayer;
 import models.player.Player;
+import models.player.ServerMinimaxPlayer;
+import models.servercom.ServerView;
 import models.servercom.ServerWorker;
+
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
 
 public class ServerGameController implements Runnable, GameController {
 
@@ -23,36 +26,50 @@ public class ServerGameController implements Runnable, GameController {
     // Server communication verification and game state booleans
     private boolean active = true;
     private boolean playing = false;
-    private boolean pending = false;
+    private boolean serverpending = false;
     private boolean confirm = false;
     private boolean connected = false;
+    private int playerinput = -1;
+
+    private String targetServer;
+    private int targetPort;
 
     private String name;
-    private int computerStrength = 0;
+    private int computerStrength = -1;
     private GameInfo gameInfo;
-    private Minimax minimax;
+    private ServerWorker worker;
+
+    private HashSet<String> players = new HashSet<>();
+    private HashMap<Integer, String> challenges = new HashMap<>();
+    private ServerView serverView;
 
     // Synchronisation objects for awaiting events and input
     private final Object waitForPlayerInput = new Object();
     private final Object waitForServerConfirmation = new Object();
     private final Object waitForGameStart = new Object();
 
-    public ServerGameController(GameInfo gameInfo, String name) {
+    public ServerGameController(String targetServer, int targetPort, GameInfo gameInfo, String name) {
+        this.targetServer = targetServer;
+        this.targetPort = targetPort;
         this.name = name;
         this.gameInfo = gameInfo;
+        this.serverView = new ServerView(gameInfo, this);
         this.display = gameInfo.getDisplay(this);
     }
 
-    public ServerGameController(GameInfo gameInfo, String name, int computerStrength) {
+    public ServerGameController(String targetServer, int targetPort, GameInfo gameInfo, String name, int computerStrength) {
+        this.targetServer = targetServer;
+        this.targetPort = targetPort;
         this.name = name;
         this.gameInfo = gameInfo;
+        this.serverView = new ServerView(gameInfo, this);
         this.computerStrength = computerStrength;
         this.display = gameInfo.getDisplay(this);
     }
 
     @Override
     public void run() {
-        ServerWorker worker = new ServerWorker("145.37.148.200", 7789, this);
+        worker = new ServerWorker(targetServer, targetPort, this);
         Thread thread = new Thread(worker);
         thread.start();
 
@@ -80,9 +97,10 @@ public class ServerGameController implements Runnable, GameController {
                 }
                 startGame();
                 while (playing) {
-                    if (pending) {
-                        pending = false;
-                        worker.sendMove(minimax.minimax(game.getBoard(), computerStrength));
+                    if (serverpending && playerinput >= 0) {
+                        worker.sendMove(playerinput);
+                        serverpending = false;
+                        playerinput = -1;
                     } else {
                         synchronized (waitForPlayerInput) { waitForPlayerInput.wait(); }
                     }
@@ -114,7 +132,7 @@ public class ServerGameController implements Runnable, GameController {
      * Input request made by the server. Continue thread loop to acquire input
      */
     public void requestInput() {
-        pending = true;
+        serverpending = true;
         synchronized (waitForPlayerInput) { waitForPlayerInput.notifyAll(); }
     }
 
@@ -144,20 +162,17 @@ public class ServerGameController implements Runnable, GameController {
             }
         }
 
-        ReversiIndicatorSet reversiIndicatorSet = new ReversiIndicatorSet(8);
-        reversiIndicatorSet.setLineIndicator(2.7);
-
         // Assign correct player models according to the starting player
         if (myTurn) {
-            //player = new PhysicalPlayer(name, Field.BLACK, this);
-            player = new PhysicalPlayer(name, Field.BLACK, this);
+            player = computerStrength > 0
+                    ? new ServerMinimaxPlayer(name, Field.BLACK, this, computerStrength)
+                    : new PhysicalPlayer(name, Field.BLACK, this);
             opponent = new PhysicalPlayer(opponentName, Field.WHITE, this);
-            minimax = new ReversiMinimax(Field.BLACK, reversiIndicatorSet);
         } else {
-            //player = new PhysicalPlayer(name, Field.WHITE, this);
-            player = new PhysicalPlayer(name, Field.WHITE, this);
+            player = computerStrength > 0
+                    ? new ServerMinimaxPlayer(name, Field.WHITE, this, computerStrength)
+                    : new PhysicalPlayer(name, Field.WHITE, this);
             opponent = new PhysicalPlayer(opponentName, Field.BLACK, this);
-            minimax = new ReversiMinimax(Field.WHITE, reversiIndicatorSet);
         }
 
         synchronized (waitForGameStart) { waitForGameStart.notifyAll(); }
@@ -210,12 +225,18 @@ public class ServerGameController implements Runnable, GameController {
      * @param gameName the game that is requested
      * @return whether the client accepts the challenge
      */
-    public boolean acceptChallenge(String gameName) {
-        for (GameInfo gameInfo : GameInfo.values())
-            if (gameInfo.gameName.equals(gameName))
-                if (gameInfo == this.gameInfo && !playing)
-                    return true;
-        return false;
+    public void newChallenge(String gameName, String playerName, int challengeID) {
+        if (computerStrength >= 0) {
+            for (GameInfo gameInfo : GameInfo.values())
+                if (gameInfo.gameName.equals(gameName))
+                    if (gameInfo == this.gameInfo && !playing)
+                        worker.acceptChallenge(challengeID);
+        } else {
+            for (GameInfo gameInfo : GameInfo.values())
+                if (gameInfo.gameName.equals(gameName))
+                    challenges.put(challengeID, playerName);
+            serverView.update(players, challenges);
+        }
     }
 
     /**
@@ -234,14 +255,49 @@ public class ServerGameController implements Runnable, GameController {
 
     @Override
     public void sendInput(int move) {
-
+        playerinput = move;
+        if (serverpending) {
+            synchronized (waitForPlayerInput) { waitForPlayerInput.notifyAll(); }
+        }
     }
 
     @Override
     public void closeController() {
         active = false;
+        worker.closeConnection();
         synchronized (waitForGameStart) { waitForGameStart.notifyAll(); }
         synchronized (waitForPlayerInput) { waitForPlayerInput.notifyAll(); }
         synchronized (waitForServerConfirmation) { waitForServerConfirmation.notifyAll(); }
     }
+
+    public void updatePlayerList() { worker.getPlayers(); }
+
+    public void cancelChallenge(int challengeID) {
+        if (computerStrength < 0) {
+            if (challenges.get(challengeID) != null) {
+                challenges.remove(challengeID);
+                serverView.update(players, challenges);
+            }
+        }
+    }
+
+    public void sendChallenge(String playerName, GameInfo gameInfo) {
+        worker.sendChallenge(playerName, gameInfo);
+    }
+
+    public void acceptChallenge(int challengeID) {
+        worker.acceptChallenge(challengeID);
+        if (challenges.get(challengeID) != null) {
+            challenges.remove(challengeID);
+            serverView.update(players, challenges);
+        }
+    }
+
+    public void setPlayerlist(String[] names) {
+        players.clear();
+        for (String name : names) if (!name.equals(User.get_username())) players.add(name);
+        serverView.update(players, challenges);
+    }
+
+    public ServerView getServerView() { return serverView; }
 }

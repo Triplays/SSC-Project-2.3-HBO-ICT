@@ -6,7 +6,7 @@ import models.exceptions.IllegalMoveException;
 import models.game.Field;
 import models.game.Game;
 import models.game.GameInfo;
-import models.player.MinimaxPlayer;
+import models.player.LocalMinimaxPlayer;
 import models.player.PhysicalPlayer;
 import models.player.Player;
 
@@ -32,8 +32,8 @@ public class LocalGameController implements Runnable, GameController {
     public LocalGameController(GameInfo gameInfo, int computerOneStrenght, int computerTwoStrength) {
         this.display = gameInfo.getDisplay(this);
         this.game = new Game(gameInfo, display);
-        this.player = new MinimaxPlayer("Computer niveau " + computerOneStrenght, Field.BLACK, this, computerOneStrenght);
-        this.opponent = new MinimaxPlayer("Computer niveau " + computerTwoStrength, Field.WHITE, this, computerTwoStrength);
+        this.player = new LocalMinimaxPlayer("Computer niveau " + computerOneStrenght, Field.BLACK, this, computerOneStrenght);
+        this.opponent = new LocalMinimaxPlayer("Computer niveau " + computerTwoStrength, Field.WHITE, this, computerTwoStrength);
     }
 
     /**
@@ -47,7 +47,7 @@ public class LocalGameController implements Runnable, GameController {
         this.display = gameInfo.getDisplay(this);
         this.game = new Game(gameInfo, display);
         this.player = new PhysicalPlayer(playerName, color, this);
-        this.opponent = new MinimaxPlayer("Computer niveau " + computerStrenght, color == Field.WHITE ? Field.BLACK : Field.WHITE, this, computerStrenght);
+        this.opponent = new LocalMinimaxPlayer("Computer niveau " + computerStrenght, color == Field.WHITE ? Field.BLACK : Field.WHITE, this, computerStrenght);
     }
 
     /**

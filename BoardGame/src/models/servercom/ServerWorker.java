@@ -1,5 +1,6 @@
 package models.servercom;
 
+import models.game.GameInfo;
 import models.gamecontroller.MatchResult;
 import models.gamecontroller.ServerGameController;
 
@@ -13,6 +14,7 @@ public class ServerWorker implements Runnable {
 
     private String address;
     private int port;
+    private Socket connection;
     private InputStream in;
     private OutputStream out;
 
@@ -28,7 +30,7 @@ public class ServerWorker implements Runnable {
     @Override
     public void run() {
         try {
-            Socket connection = new Socket(address, port);
+            connection = new Socket(address, port);
             in = connection.getInputStream();
             out = connection.getOutputStream();
             controller.connectionSuccesful();
@@ -38,12 +40,12 @@ public class ServerWorker implements Runnable {
                 for (String line : lines) if (line.length() > 0) handleResponse(line.split(" ", 4));
             }
             System.out.println("Stream has closed");
-            in.close();
-            out.close();
-            connection.close();
         }
-        catch (java.io.IOException ioe) {
-            ioe.printStackTrace();
+        catch (java.io.IOException exc) {
+            exc.printStackTrace();
+        }
+        finally {
+            closeConnection();
         }
     }
 
@@ -51,21 +53,28 @@ public class ServerWorker implements Runnable {
         if (response[0].startsWith("OK")) {
             controller.confirmation(true);
         } else if (response[0].startsWith("ERR")) {
-            // TODO: Handle error response
-            System.out.println("Error");
-            System.out.println(Arrays.toString(response));
+            System.out.println("ERR: ");
             controller.confirmation(false);
         } else if (response[0].startsWith("SVR")) {
             if (response[1].equals("GAME")) {
                 handleGameResponse(response);
+            } else if (response[1].startsWith("PLAYERLIST")) {
+                handlePlayerList(response);
             } else {
                 // TODO: Handle unknown response (help should not be called here)
-                System.out.println("Unknown SVR {} argument: " + response[1]);
             }
         } else {
             // TODO: Handle unknown response
             System.out.println("Unknown first argument: " + response[0]);
         }
+    }
+
+    private void handlePlayerList(String[] response) {
+        String stitch = String.join(" ", response);
+        String[] names =
+                stitch.substring(stitch.indexOf("[") + 1, stitch.lastIndexOf("]")).replaceAll("\"", "").split(", ");
+        for (String name : names) name = name.substring(1, name.length() - 1);
+        controller.setPlayerlist(names);
     }
 
     private void handleGameResponse(String[] response) {
@@ -99,9 +108,12 @@ public class ServerWorker implements Runnable {
     }
 
     private void handleChallenge(String response) {
-        if (response.startsWith("CANCELLED")) return;
-
-        if (controller.isAvaiable()) {
+        if (response.startsWith("CANCELLED")) {
+            int index = response.indexOf("\"", response.indexOf("CHALLENGENUMBER") + 15) + 1;
+            int challengeID = parseInt(response.substring(index, response.indexOf("\"", index)));
+            controller.cancelChallenge(challengeID);
+        }
+        else if (controller.isAvaiable()) {
             String[] arguments = response.substring(response.indexOf("{") + 1, response.lastIndexOf("}")).split(", ");
             String challenger = "";
             String gametype = "";
@@ -122,8 +134,8 @@ public class ServerWorker implements Runnable {
                     System.out.println("match end err: " + arg);
                 }
             }
-            if (controller.acceptChallenge(gametype))
-                sendMessage("challenge accept " + challengeID);
+            controller.newChallenge(gametype, challenger, challengeID);
+
         }
     }
 
@@ -215,6 +227,10 @@ public class ServerWorker implements Runnable {
         }
     }
 
+    public void getPlayers() {
+        sendMessage("get playerlist");
+    }
+
     public void loginPlayer(String playerName) {
         sendMessage("login " + playerName);
     }
@@ -225,5 +241,24 @@ public class ServerWorker implements Runnable {
 
     public void sendMove(int pos) {
         sendMessage("move " + pos);
+    }
+
+    public void sendChallenge(String playerName, GameInfo gameInfo) {
+        sendMessage("Challenge \"" + playerName + "\" \"" + gameInfo.gameName + "\"");
+    }
+
+    public void acceptChallenge(int challengeID) {
+        sendMessage("challenge accept " + challengeID);
+    }
+
+    public void closeConnection() {
+        try {
+            in.close();
+            out.close();
+            connection.close();
+        }
+        catch (IOException exc) {
+            exc.printStackTrace();
+        }
     }
 }

@@ -1,6 +1,5 @@
 package models.minimax;
 
-import models.config.ReversiIndicatorSet;
 import models.config.TicTacToeIndicatorSet;
 import models.game.Field;
 import models.game.GameInfo;
@@ -26,11 +25,5 @@ public class TicTacToeMinimax extends Minimax<TicTacToeIndicatorSet>
                 return 0;
         }
         return 0;
-    }
-
-    @Override
-    public void setIndicatorSet(TicTacToeIndicatorSet indicatorSet)
-    {
-        this.indicatorSet = indicatorSet;
     }
 }

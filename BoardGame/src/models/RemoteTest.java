@@ -14,11 +14,12 @@ public class RemoteTest extends Application {
 
         @Override
         public void start(Stage primaryStage) {
-            ServerGameController controller = new ServerGameController(GameInfo.REVERSI, "Quetzal", 7);
+            ServerGameController controller = new ServerGameController("localhost", 7789, GameInfo.REVERSI, "Quetzal");
             Thread thread = new Thread(controller);
             thread.start();
-            Scene scene = new Scene(controller.getDisplay());
+            Scene scene = new Scene(controller.getServerView());
             primaryStage.setScene(scene);
             primaryStage.show();
+            controller.updatePlayerList();
         }
 }

@@ -30,7 +30,7 @@
                   <Insets bottom="10.0" left="60.0" right="60.0" top="10.0" />
                </padding>
             </Button>
-            <Button alignment="CENTER" maxWidth="250.0" mnemonicParsing="false" onAction="#pvp" prefHeight="37.0" prefWidth="241.0" styleClass="btn-primary" text="Online spelen" textFill="WHITE">
+            <Button alignment="CENTER" maxWidth="250.0" mnemonicParsing="false" onAction="#online" prefHeight="37.0" prefWidth="241.0" styleClass="btn-primary" text="Online spelen" textFill="WHITE">
                <padding>
                   <Insets bottom="10.0" left="65.0" right="65.0" top="10.0" />
                </padding>

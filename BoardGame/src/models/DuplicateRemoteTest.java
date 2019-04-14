@@ -14,7 +14,7 @@ public class DuplicateRemoteTest extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-        ServerGameController controller = new ServerGameController(GameInfo.REVERSI, "Ijsbeertje", 6);
+        ServerGameController controller = new ServerGameController("localhost", 7789, GameInfo.REVERSI, "Ijsbeertje", 6);
         Thread thread = new Thread(controller);
         thread.start();
         Scene scene = new Scene(controller.getDisplay());

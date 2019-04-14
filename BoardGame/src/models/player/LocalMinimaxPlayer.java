@@ -10,12 +10,12 @@ import models.minimax.Minimax;
 import models.minimax.ReversiMinimax;
 import models.minimax.TicTacToeMinimax;
 
-public class MinimaxPlayer extends Player {
+public class LocalMinimaxPlayer extends Player {
 
     private Minimax minimax;
     private int depth;
 
-    public MinimaxPlayer(String name, Field color, GameController gameController, int depth) {
+    public LocalMinimaxPlayer(String name, Field color, GameController gameController, int depth) {
         super(name);
 
         try {
@@ -28,14 +28,12 @@ public class MinimaxPlayer extends Player {
         this.depth = depth;
         switch (gameController.getGame().getGameInfo()) {
             case REVERSI:
-                ReversiIndicatorSet reversiIndicatorSet = new ReversiIndicatorSet(8);
+                ReversiIndicatorSet reversiIndicatorSet = new ReversiIndicatorSet(depth);
                 reversiIndicatorSet.setLineIndicator(2.7);
-
                 minimax = new ReversiMinimax(color, reversiIndicatorSet);
                 break;
             case TICTACTOE:
-                TicTacToeIndicatorSet tttIndicatorSet = new TicTacToeIndicatorSet(8);
-
+                TicTacToeIndicatorSet tttIndicatorSet = new TicTacToeIndicatorSet(depth);
                 minimax = new TicTacToeMinimax(color, tttIndicatorSet);
                 break;
         }

@@ -99,11 +99,5 @@ public abstract class Minimax<T extends IndicatorSet> {
         }
     }
 
-    public abstract void setIndicatorSet(T indicatorSet);
-
     abstract int calculateScore(Field[] board, Field self);
-
-    public GameInfo getGameInfo() {
-        return gameInfo;
-    }
 }
