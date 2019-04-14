@@ -38,6 +38,6 @@ public class TempServerController extends Controller {
 
     public void back(ActionEvent event) throws IOException{
         controller.closeController();
-        get_stage(event).setScene(new_scene("home", event));
+        get_stage(event).setScene(new_scene("opponent", event));
     }
 }
