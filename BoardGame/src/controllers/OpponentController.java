@@ -38,6 +38,11 @@ public class OpponentController extends Controller {
         new GUIGameController().show(event, game_type, Opponent.Human);
     }
 
+    public void online(ActionEvent event) throws IOException{
+        System.out.println(game_type);
+        new TempServerController().show(event, "tempserver", game_type);
+    }
+
     public void back(ActionEvent event) throws IOException{
         get_stage(event).setScene(new_scene("home", event));
     }
