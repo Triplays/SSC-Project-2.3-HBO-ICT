@@ -1,0 +1,32 @@
+2019/04/14 21:34:30 - Loaded game module: Reversi
+2019/04/14 21:34:30 - Loaded game module: Tic-tac-toe
+2019/04/14 21:34:30 - Server listening on port 7789
+2019/04/14 21:34:31 - Application started
+2019/04/14 21:35:42 - Handling command: action=login, argument=Wardog
+2019/04/14 21:35:42 - Client logged in: Wardog
+2019/04/14 21:35:42 - Handling command: action=subscribe, argument=Reversi
+2019/04/14 21:36:29 - Handling command: action=login, argument=Frits
+2019/04/14 21:36:29 - Client logged in: Frits
+2019/04/14 21:36:29 - Handling command: action=subscribe, argument=Reversi
+2019/04/14 21:36:29 - Handling command: action=move, argument=29
+2019/04/14 21:36:58 - Tournament match result: Wardog vs. Frits: -1, 1
+2019/04/14 21:37:22 - Tournament match result: Wardog vs. Frits: -1, 1
+2019/04/14 21:38:00 - Handling command: action=get, argument=playerlist
+2019/04/14 21:38:03 - Handling command: action=Challenge, argument="Wardog" "Reversi"
+2019/04/14 21:38:12 - Handling command: action=get, argument=playerlist
+2019/04/14 21:38:18 - Handling command: action=challenge, argument=accept 0
+2019/04/14 21:38:43 - Read -1 bytes, disconnecting client
+2019/04/14 21:38:43 - Disconnecting client
+2019/04/14 21:38:43 - Closing client socket connection
+2019/04/14 21:38:43 - Client disconnected, removing input buffer
+2019/04/14 21:38:55 - Started closing application
+2019/04/14 21:38:55 - Saving settings
+2019/04/14 21:38:55 - Closing GameServerGUI
+2019/04/14 21:38:55 - Closing GameServer
+2019/04/14 21:38:55 - Disconnecting client
+2019/04/14 21:38:55 - Closing client socket connection
+2019/04/14 21:38:55 - Client disconnected, removing input buffer
+2019/04/14 21:38:55 - Closing client input handler
+2019/04/14 21:38:55 - Closing server selector
+2019/04/14 21:38:55 - Closing server socket
+2019/04/14 21:38:55 - Application closed
