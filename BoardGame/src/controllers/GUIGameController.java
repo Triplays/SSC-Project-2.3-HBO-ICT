@@ -3,9 +3,11 @@ package controllers;
 import javafx.event.ActionEvent;
 import javafx.scene.control.Button;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import models.User;
+import models.display.Display;
 import models.game.Field;
 import models.game.GameInfo;
 import models.game.Opponent;
@@ -14,30 +16,31 @@ import models.gamecontroller.LocalGameController;
 import java.io.IOException;
 
 public class GUIGameController extends Controller{
-    private GameInfo last_game_type;
-    private Opponent last_opponent;
-    private Field color;
+    private static GameInfo game_type;
+    private Field color = Field.BLACK;
+    private int difficulty;
+    public static LocalGameController controller;
 
-    void show(ActionEvent event, GameInfo game_type,Opponent opponent) throws IOException {
-        last_game_type = game_type;
-        last_opponent = opponent;
+
+    private void remove_item(String mainId, String id, Stage stage) {
+        //get main pane to remove stackpane
+        AnchorPane main = (AnchorPane) stage.getScene().lookup("#" + mainId);
+
+        //remove stackpage difficulty
+        main.getChildren().remove(main.lookup("#" + id));
+    }
+
+    void show(ActionEvent event, GameInfo game_type, Opponent opponent) throws IOException {
+        this.game_type = game_type;
 
         Stage stage = get_stage(event);
 
         stage.setScene(new_scene("game", event));
 
         if(opponent != Opponent.AI){
-            stage.getScene().lookup("#difficulty").getScene().getWindow().hide();
-            new LocalGameController(game_type, User.get_username(), Field.BLACK, "Speler 2");
+            remove_item("main","difficulty", stage);
+            System.out.println("Speler tegen speler");
         }
-    }
-
-    private void remove_item(String id, Stage stage) {
-        //get main pane to remove stackpane
-        AnchorPane main = (AnchorPane) stage.getScene().lookup("#main");
-
-        //remove stackpage difficulty
-        main.getChildren().remove(main.lookup("#" + id));
     }
 
     private int get_button_id(ActionEvent event) {
@@ -50,7 +53,8 @@ public class GUIGameController extends Controller{
 
     public void set_color(ActionEvent event) {
         Stage stage = get_stage(event);
-        remove_item("colorPick", stage);
+        remove_item("main" +
+                "", "colorPick", stage);
         switch (get_button_id(event)) {
             case 1:
                 color = Field.WHITE;
@@ -64,16 +68,38 @@ public class GUIGameController extends Controller{
     public void set_difficulty(ActionEvent event) {
         Stage stage = get_stage(event);
 
-        remove_item("difficulty", stage);
+        difficulty = get_button_id(event);
 
-        LocalGameController controller = new LocalGameController(last_game_type, User.get_username(), color, get_button_id(event));
+        remove_item("main", "difficulty", stage);
+    }
+
+    private void add_board(Stage stage) {
+        AnchorPane pane = (AnchorPane) stage.getScene().lookup("#boardContainer");
+
+        if (difficulty != 0) {
+            controller = new LocalGameController(game_type, User.get_username(), color, difficulty);
+        } else {
+            controller = new LocalGameController(GameInfo.REVERSI, User.get_username(), Field.BLACK, "Speler 2");
+        }
+
 
         Thread thread = new Thread(controller);
         thread.start();
 
-        AnchorPane pane = (AnchorPane) stage.getScene().lookup("#board");
+        System.out.println(controller);
 
-        pane.getChildren().add(controller.getDisplay());
+        Pane board = controller.getDisplay();
+        board.setId("board");
+
+        pane.getChildren().add(board);
+    }
+
+    public void start(ActionEvent event) {
+        Stage stage = get_stage(event);
+
+        remove_item("main", "start", stage);
+
+        add_board(stage);
 
         System.out.println("Username: " + User.get_username());
         System.out.println("Opponent: " + controller.getOpponentname());
@@ -84,8 +110,12 @@ public class GUIGameController extends Controller{
         get_stage(event).setScene(new_scene("opponent", event));
     }
 
-    public void reset(ActionEvent event) throws IOException{
-        new GUIGameController().show(event, last_game_type, last_opponent);
-    }
+    public void reset(ActionEvent event) {
+        Stage stage = get_stage(event);
+        System.out.println(stage);
 
+        remove_item("boardContainer", "board", stage);
+
+        add_board(stage);
+    }
 }
