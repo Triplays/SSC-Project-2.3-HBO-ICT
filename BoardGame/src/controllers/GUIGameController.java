@@ -21,7 +21,14 @@ public class GUIGameController extends Controller{
     private int difficulty;
     public static LocalGameController controller;
 
-
+    /**
+     * @param event
+     * @param game_type
+     * @param opponent
+     * @throws IOException
+     *
+     * sets scene of the stage to the game scene
+     */
     void show(ActionEvent event, GameInfo game_type, Opponent opponent) throws IOException {
         this.game_type = game_type;
 
@@ -29,20 +36,30 @@ public class GUIGameController extends Controller{
 
         stage.setScene(new_scene("game", event));
 
+        //Checks the enum opponent is not set to AI, if true it removes the difficulty option
         if(opponent != Opponent.AI){
             remove_item("main","difficulty", stage);
             System.out.println("Speler tegen speler");
         }
     }
 
+    /**
+    * @param event
+    *
+    * gets button id from the button event and returns it as an Integer
+    */
     private int get_button_id(ActionEvent event) {
         //get id from clicked button
         Button clicked = (Button) event.getTarget();
 
-        //set difficulty
         return Integer.parseInt(clicked.getId());
     }
 
+    /**
+     * @param event
+     *
+     * sets the color the main player uses in the match
+     */
     public void set_color(ActionEvent event) {
         Stage stage = get_stage(event);
         remove_item("main" +
@@ -57,6 +74,11 @@ public class GUIGameController extends Controller{
         }
     }
 
+    /**
+     * @param event
+     *
+     * sets the instance variable difficulty (which is later used to set the algorithm it's depth) and it removes the difficulty fxml item from the stage
+     */
     public void set_difficulty(ActionEvent event) {
         Stage stage = get_stage(event);
 
@@ -65,6 +87,11 @@ public class GUIGameController extends Controller{
         remove_item("main", "difficulty", stage);
     }
 
+    /**
+     * @param stage
+     *
+     * gets the display of a new gamecontroller and adds it to the anchor pane of the stage
+     */
     private void add_board(Stage stage) {
         AnchorPane pane = (AnchorPane) stage.getScene().lookup("#boardContainer");
 
@@ -87,6 +114,11 @@ public class GUIGameController extends Controller{
         board.toFront();
     }
 
+    /**
+     * @param event
+     *
+     * removes start fxml item and adds board to the stage, which then places it in an anchor pane
+     */
     public void start(ActionEvent event) {
         Stage stage = get_stage(event);
 
@@ -98,11 +130,15 @@ public class GUIGameController extends Controller{
         System.out.println("Opponent: " + controller.getOpponentname());
     }
 
-
     public void opgeven(ActionEvent event) throws IOException {
         get_stage(event).setScene(new_scene("opponent", event));
     }
 
+    /**
+     * @param event
+     *
+     * removes old board and adds a new board (reset the board without resetting the settings)
+     */
     public void reset(ActionEvent event) {
         Stage stage = get_stage(event);
         System.out.println(stage);

@@ -13,13 +13,19 @@ public class MainController extends Application {
         launch(args);
     }
 
+    /**
+     * @param primaryStage
+     * @throws IOException
+     *
+     * loads the start screen of the GUI
+     */
     @Override
     public void start(Stage primaryStage) throws IOException {
         Parent root = FXMLLoader.load(getClass().getResource("/resources/Views/start.fxml"));
 
         primaryStage.setTitle("Bordspellen");
         primaryStage.setMinWidth(825);
-        primaryStage.setMinHeight(590);
+        primaryStage.setMinHeight(635);
 
         Scene scene = new Scene(root, 825, 625);
 

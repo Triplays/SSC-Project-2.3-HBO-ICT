@@ -11,6 +11,13 @@ import javafx.event.ActionEvent;
 import java.io.IOException;
 
 class Controller {
+    /**
+     * @param mainId
+     * @param id
+     * @param stage
+     *
+     * removes fxml item of a stage using its given id, used to set game settings
+     */
     void remove_item(String mainId, String id, Stage stage) {
         //get main pane to remove stackpane
         AnchorPane main = (AnchorPane) stage.getScene().lookup("#" + mainId);
@@ -21,24 +28,20 @@ class Controller {
 
     /**
      * @param event
-     * @return
      *
      * Getting te primary stage of the game, we need this to go to a new scene
      */
     Stage get_stage(ActionEvent event) {
-        Stage stage =(Stage) ((Node)event.getSource()).getScene().getWindow();
-        stage.setMinHeight(590);
-        stage.setMinWidth(825);
-        return stage;
+        return (Stage) ((Node)event.getSource()).getScene().getWindow();
     }
 
 
     /**
      * @param view
-     * @return
+     * @return a new Scene
      * @throws IOException
      *
-     * Method for going to a new scene
+     * Method for creating a new scene using view to select the right fxml to load
      */
     Scene new_scene(String view, ActionEvent event) throws IOException {
         Parent root = FXMLLoader.load(getClass().getResource("/resources/Views/" + view + ".fxml"));
@@ -50,10 +53,10 @@ class Controller {
     /**
      *
      * @param event
-     * @param view
+     * @param view used to select an fxml file
      * @throws IOException
      *
-     * Show new view
+     * sets the scene of the stage of a triggered event
      */
     void show(ActionEvent event, String view) throws IOException {
         get_stage(event).setScene(new_scene(view, event));
