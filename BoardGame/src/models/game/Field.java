@@ -1,7 +1,7 @@
 package models.game;
 
 public enum Field {
-    EMPTY("Leeg"),
+    EMPTY("Niemand"),
     WHITE("Wit"),
     BLACK("Zwart");
 
