@@ -84,6 +84,7 @@ public class GUIGameController extends Controller{
         board.setId("board");
 
         pane.getChildren().add(board);
+        board.toFront();
     }
 
     public void start(ActionEvent event) {

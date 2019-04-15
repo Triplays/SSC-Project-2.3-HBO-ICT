@@ -18,7 +18,7 @@ public class ReversiDisplay extends Display {
     }
 
     @Override
-    public void update(Field[] board) {
+    public void update(Field[] board, int scoreBlack, int scoreWhite, Field turn, String msg) {
         Platform.runLater(() -> {
             piecesPane.getChildren().clear();
             for (int i = 0; i < boardSize*boardSize; i++){
@@ -35,6 +35,11 @@ public class ReversiDisplay extends Display {
                     piecesPane.getChildren().add(circle);
                 }
             }
+
+            this.scoreBlack.setText("" + scoreBlack);
+            this.scoreWhite.setText("" + scoreWhite);
+            this.turnMessage.setText(turn.name + " is aan zet");
+            this.altMessage.setText(msg);
             eventPane.toFront();
         });
     }

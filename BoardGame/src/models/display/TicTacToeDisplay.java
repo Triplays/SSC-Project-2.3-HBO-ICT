@@ -1,6 +1,7 @@
 package models.display;
 
 import javafx.scene.input.MouseEvent;
+import models.game.Gamestate;
 import models.gamecontroller.GameController;
 import models.game.Field;
 import javafx.application.Platform;
@@ -18,7 +19,7 @@ public class TicTacToeDisplay extends Display {
     }
 
     @Override
-    public void update(Field[] board) {
+    public void update(Field[] board, int scoreBlack, int scoreWhite, Field turn, String msg) {
         Platform.runLater(() -> {
             piecesPane.getChildren().clear();
             for (int i = 0; i < boardSize*boardSize; i++){
@@ -35,6 +36,10 @@ public class TicTacToeDisplay extends Display {
                     piecesPane.getChildren().add(circle);
                 }
             }
+            this.scoreBlack.setText("" + scoreBlack);
+            this.scoreWhite.setText("" + scoreWhite);
+            this.turnMessage.setText(turn.name + " is aan zet");
+            this.altMessage.setText(msg);
             eventPane.toFront();
         });
     }
