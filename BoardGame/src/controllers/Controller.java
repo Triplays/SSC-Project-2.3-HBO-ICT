@@ -4,12 +4,21 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
 import javafx.event.ActionEvent;
 import java.io.IOException;
 
 class Controller {
+    void remove_item(String mainId, String id, Stage stage) {
+        //get main pane to remove stackpane
+        AnchorPane main = (AnchorPane) stage.getScene().lookup("#" + mainId);
+
+        //remove stackpage difficulty
+        main.getChildren().remove(main.lookup("#" + id));
+    }
+
     /**
      * @param event
      * @return

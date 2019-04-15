@@ -2,6 +2,7 @@ package controllers;
 
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import models.User;
@@ -18,9 +19,18 @@ public class TempServerController extends Controller {
         game_type = game;
         Stage stage = get_stage(event);
         stage.setScene(new_scene(view, event));
+    }
 
-        // TODO: User puts in IP and port
-        controller = new ServerGameController("localhost", 7789, game_type, User.get_username());
+    public void start(ActionEvent event) {
+        Stage stage = get_stage(event);
+
+        TextField ipadresField = (TextField) get_stage(event).getScene().lookup("#ipadres");
+        TextField portField = (TextField) get_stage(event).getScene().lookup("#port");
+
+        String targetServer = ipadresField.getText();
+        int port = Integer.valueOf(portField.getText());
+
+        controller = new ServerGameController(targetServer, port, game_type, User.get_username());
 
         Thread thread = new Thread(controller);
         thread.start();
@@ -30,6 +40,8 @@ public class TempServerController extends Controller {
 
         listPane.getChildren().add(controller.getServerView());
         boardPane.getChildren().add(controller.getDisplay());
+
+        remove_item("main", "ippane", stage);
     }
 
     public void refresh(ActionEvent event){

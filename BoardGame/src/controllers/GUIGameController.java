@@ -22,14 +22,6 @@ public class GUIGameController extends Controller{
     public static LocalGameController controller;
 
 
-    private void remove_item(String mainId, String id, Stage stage) {
-        //get main pane to remove stackpane
-        AnchorPane main = (AnchorPane) stage.getScene().lookup("#" + mainId);
-
-        //remove stackpage difficulty
-        main.getChildren().remove(main.lookup("#" + id));
-    }
-
     void show(ActionEvent event, GameInfo game_type, Opponent opponent) throws IOException {
         this.game_type = game_type;
 
