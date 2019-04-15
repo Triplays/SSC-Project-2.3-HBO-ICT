@@ -2,11 +2,14 @@ package models.servercom;
 
 import javafx.application.Platform;
 import javafx.event.EventHandler;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.scene.control.Button;
 import models.game.GameInfo;
@@ -25,17 +28,20 @@ public class ServerView extends VBox {
     public ServerView(GameInfo gameInfo, ServerGameController controller) {
         this.gameInfo = gameInfo;
         this.controller = controller;
+        this.setSpacing(5);
         initiateComponents();
     }
 
     private void initiateComponents() {
-        playerPane = new VBox();
-        challengePane = new VBox();
+        playerPane = new VBox(5);
+        playerPane.setPadding(new Insets(5));
+        challengePane = new VBox(5);
+        challengePane.setPadding(new Insets(5));
 
         this.setPrefSize(250, 600);
         playerPane.setPrefSize(250, 400);
         challengePane.setPrefSize(250, 200);
-        this.setStyle("-fx-background-color: #FF0000");
+        this.setStyle("-fx-background-color: #4F904E");
 
         this.getChildren().add(playerPane);
         this.getChildren().add(challengePane);
@@ -45,10 +51,13 @@ public class ServerView extends VBox {
         Platform.runLater(() -> {
             playerPane.getChildren().clear();
             players.forEach((player) -> {
-                HBox box = new HBox();
-                HBox textWrapper = new HBox();
+                HBox box = new HBox(5);
+                box.setPadding(new Insets(5));
+                HBox textWrapper = new HBox(5);
                 textWrapper.setPrefSize(150, 30);
+                textWrapper.setAlignment(Pos.CENTER_LEFT);
                 Text text = new Text(player);
+                text.setFont(Font.font("Calibri", 16));
                 textWrapper.getChildren().add(text);
                 box.getChildren().add(textWrapper);
                 Button but = new Button("Challenge");
@@ -61,10 +70,13 @@ public class ServerView extends VBox {
 
             challengePane.getChildren().clear();
             challenges.forEach((id, name) -> {
-                HBox box = new HBox();
-                HBox textWrapper = new HBox();
+                HBox box = new HBox(5);
+                box.setPadding(new Insets(5));
+                HBox textWrapper = new HBox(5);
                 textWrapper.setPrefSize(150, 30);
+                textWrapper.setAlignment(Pos.CENTER_LEFT);
                 Text text = new Text(name);
+                text.setFont(Font.font("Calibri", 16));
                 textWrapper.getChildren().add(text);
                 box.getChildren().add(textWrapper);
                 Button but = new Button("Accept");

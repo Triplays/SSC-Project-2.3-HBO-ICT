@@ -39,13 +39,13 @@ public class ServerWorker implements Runnable {
                 String[] lines = new String((Arrays.copyOfRange(bytes, 0, count))).split("\n");
                 for (String line : lines) if (line.length() > 0) handleResponse(line.split(" ", 4));
             }
-            System.out.println("Stream has closed");
         }
         catch (java.io.IOException exc) {
             exc.printStackTrace();
         }
         finally {
             closeConnection();
+            System.out.println("Stream has closed");
         }
     }
 

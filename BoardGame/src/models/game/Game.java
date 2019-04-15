@@ -5,9 +5,7 @@ import models.exceptions.IllegalGamePlayerException;
 import models.exceptions.IllegalMoveException;
 import models.player.Player;
 
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.Random;
 
 public class Game implements Cloneable {
 
@@ -18,10 +16,11 @@ public class Game implements Cloneable {
     private Player currentPlayer;
     private Player[] players;
 
+    private int scoreBlack;
+    private int scoreWhite;
+
     private Display display;
     private boolean started;
-
-    private Random random = new Random();
 
     public Game(GameInfo gameInfo, Display display) {
         this.gameInfo = gameInfo;
@@ -35,8 +34,9 @@ public class Game implements Cloneable {
      */
     public void start() {
         started = true;
-        display.update(board);
         currentPlayer = players[0];
+        updateScore();
+        display.update(board, scoreBlack, scoreWhite, currentPlayer.getColor(), "");
         currentPlayer.notifyPlayer();
     }
 
@@ -78,95 +78,65 @@ public class Game implements Cloneable {
      */
     public void move(Player player, int target) throws IllegalMoveException {
         if (!started) {
+            display.update(board, scoreBlack, scoreWhite, currentPlayer.getColor(), "Spel is nog niet begonnen");
             throw new IllegalMoveException("Game has not started yet");
         }
         if (player != currentPlayer) {
+            display.update(board, scoreBlack, scoreWhite, currentPlayer.getColor(), "Het is niet jouw beurt");
             throw new IllegalMoveException("It was not your turn");
         }
         HashSet<Integer> result = gameInfo.ruleset.legalMove(board, player.getColor(), target);
         if (result.size() == 0) {
+            display.update(board, scoreBlack, scoreWhite, currentPlayer.getColor(), "Ongeldige zet");
             throw new IllegalMoveException("Illegal move");
         }
         for (Integer integer : result) board[integer] = player.getColor();
-        display.update(board);
+        updateScore();
         switchPlayers();
-        switch(gameInfo.ruleset.checkWinCondition(board, currentPlayer.getColor())) {
+        Gamestate gamestate = gameInfo.ruleset.checkWinCondition(board, currentPlayer.getColor());
+        switch(gamestate) {
             case SWAP:
+                display.update(board, scoreBlack, scoreWhite, currentPlayer.getColor(), "");
                 currentPlayer.notifyPlayer();
                 break;
             case STAY:
                 switchPlayers();
+                display.update(board, scoreBlack, scoreWhite, currentPlayer.getColor(), "");
                 currentPlayer.notifyPlayer();
                 break;
             case WINWHITE:
-                int whiteCount = 0;
-                for (Field field : board) {
-                    if(field == Field.WHITE) whiteCount++;
-                }
-
-                System.out.println("Score: " + whiteCount);
-
-                endGame(players[1].getName());
+                endGame(players[1].getName(), "");
                 break;
             case WINBLACK:
-                int blackCount = 0;
-                for (Field field : board) {
-                    if(field == Field.BLACK) blackCount++;
-                }
-
-                System.out.println("Score: " + blackCount);
-
-                endGame(players[0].getName());
+                endGame(players[0].getName(), "");
                 break;
             case DRAW:
-                endGame("Nobody");
+                endGame("Niemand", "");
                 break;
             default:
                 break;
         }
     }
 
-    /**
-     * DEPRECATED
-     * Force an index on the board to the given Field. Performs no validity checks. Useful for initiation
-     * @param field the Field value to be set
-     * @param target the target location on the board
-     */
-    public void put(Field field, int target) {
-        board[target] = field;
-        display.update(board);
-    }
-
-    /**
-     * DEPRECATED
-     * @param field
-     * @return
-     */
-    public int giveMove(Field field) {
-        int[] moves = gameInfo.ruleset.allLegalMoves(board, field);
-        ArrayList<Integer> temp = new ArrayList<>();
-        for (int i = 0; i < gameInfo.boardSize*gameInfo.boardSize; i++) {
-            if (moves[i] != 0) temp.add(i);
+    private void updateScore() {
+        scoreBlack = 0;
+        scoreWhite = 0;
+        for (Field field : board) {
+            if(field == Field.BLACK) scoreBlack++;
+            if(field == Field.WHITE) scoreWhite++;
         }
-        return temp.get(random.nextInt(temp.size()));
     }
-
 
     private void switchPlayers() {
         currentPlayer = currentPlayer == players[0] ? players[1] : players[0];
     }
 
-    private void endGame(String winner) {
-        // TODO: Proper closure
-        System.out.println(winner + " has won!");
-    }
-
-    public Player getOpponent(Player player) {
-        return player.equals(players[0]) ? players[1] : players[0];
+    public void endGame(String winner, String comment) {
+        String message = winner + " heeft gewonnen.";
+        if (comment.length() > 0) message = message.concat(" Melding: " + comment);
+        display.update(board, scoreBlack, scoreWhite, currentPlayer.getColor(), message);
     }
 
     public Field[] getBoard() { return board; }
     public GameInfo getGameInfo() { return gameInfo; }
-    public Display getDisplay() { return display; }
-    public String getGameName() { return gameInfo.gameName; }
 }

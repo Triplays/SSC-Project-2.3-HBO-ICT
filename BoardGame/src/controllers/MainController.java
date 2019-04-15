@@ -17,11 +17,11 @@ public class MainController extends Application {
     public void start(Stage primaryStage) throws IOException {
         Parent root = FXMLLoader.load(getClass().getResource("/resources/Views/start.fxml"));
 
-        primaryStage.setTitle("Game");
+        primaryStage.setTitle("Bordspellen");
         primaryStage.setMinWidth(825);
         primaryStage.setMinHeight(590);
 
-        Scene scene = new Scene(root, 825, 600);
+        Scene scene = new Scene(root, 825, 625);
 
         primaryStage.setScene(scene);
         primaryStage.show();

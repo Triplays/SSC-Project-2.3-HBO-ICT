@@ -29,6 +29,7 @@ public class ServerGameController implements Runnable, GameController {
     private boolean serverpending = false;
     private boolean confirm = false;
     private boolean connected = false;
+    private boolean result = true;
     private int playerinput = -1;
 
     private String targetServer;
@@ -84,12 +85,15 @@ public class ServerGameController implements Runnable, GameController {
             }
             confirm = false;
             // Subscribe to the game of preference, given in the constructor
-            while (!confirm) {
-                worker.subscribeToGame(gameInfo.gameName);
-                synchronized (waitForServerConfirmation) { waitForServerConfirmation.wait(); }
+            // Do this only when the computer is playing, as matches will start automatically
+            if (computerStrength > 0) {
+                while (!confirm) {
+                    worker.subscribeToGame(gameInfo.gameName);
+                    synchronized (waitForServerConfirmation) { waitForServerConfirmation.wait(); }
+                }
             }
             confirm = false;
-
+            updatePlayerList();
             // Active loop for acquiring input and restarting games
             while (active) {
                 while (!playing) {
@@ -141,7 +145,8 @@ public class ServerGameController implements Runnable, GameController {
      * @param result whether the confirmation was valid
      */
     public void confirmation (boolean result) {
-        confirm = result;
+        this.result = result;
+        confirm = true;
         synchronized (waitForServerConfirmation) { waitForServerConfirmation.notifyAll(); }
     }
 
@@ -205,11 +210,9 @@ public class ServerGameController implements Runnable, GameController {
      */
     public void matchEnd(MatchResult result, int scoreOne, int scoreTwo, String comment) {
         playing = false;
-
-        System.out.println("Result: " + result.toString());
-        System.out.println("Player one: " + scoreOne);
-        System.out.println("Player two: " + scoreTwo);
-        System.out.println("Comment: " + comment);
+        if (result == MatchResult.DRAW) game.endGame("Niemand", comment);
+        if (result == MatchResult.WIN) game.endGame(player.getName(), comment);
+        if (result == MatchResult.LOSS) game.endGame(opponent.getName(), comment);
 
         synchronized (waitForPlayerInput) { waitForPlayerInput.notifyAll(); }
     }
@@ -255,9 +258,16 @@ public class ServerGameController implements Runnable, GameController {
 
     @Override
     public void sendInput(int move) {
-        playerinput = move;
-        if (serverpending) {
-            synchronized (waitForPlayerInput) { waitForPlayerInput.notifyAll(); }
+        if (computerStrength > 0) {
+            playerinput = move;
+            if (serverpending) {
+                synchronized (waitForPlayerInput) { waitForPlayerInput.notifyAll(); }
+            }
+        } else {
+            if (serverpending) {
+                playerinput = move;
+                synchronized (waitForPlayerInput) { waitForPlayerInput.notifyAll(); }
+            }
         }
     }
 
