@@ -15,12 +15,25 @@ public class TempServerController extends Controller {
     private static GameInfo game_type;
     private static ServerGameController controller;
 
+    /**
+     * @param event
+     * @param view
+     * @param game
+     * @throws IOException
+     *
+     * sets the static variable game_type and goes to new scene
+     */
     public void show(ActionEvent event, String view, GameInfo game) throws IOException {
         game_type = game;
         Stage stage = get_stage(event);
         stage.setScene(new_scene(view, event));
     }
 
+    /**
+     * @param event
+     *
+     * gets entered ipaddress and portnmbr and uses them to create a controller, which is then used to get the board and list from the server and to display them
+     */
     public void start(ActionEvent event) {
         Stage stage = get_stage(event);
 
