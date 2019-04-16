@@ -4,10 +4,8 @@ import models.config.IndicatorSet;
 import models.game.Field;
 import models.game.GameInfo;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.function.Function;
 
 public abstract class Minimax<T extends IndicatorSet> {
 
@@ -27,15 +25,32 @@ public abstract class Minimax<T extends IndicatorSet> {
         this.opponent = self == Field.BLACK ? Field.WHITE : Field.BLACK;
     }
 
+    /**
+     * Initialises a minimax analysis. Sets a timestamp as reference point.
+     * @param board the inital board to analyse.
+     * @param max the maximum depth to recurse.
+     * @return
+     */
     public int minimax(Field[] board, int max) {
         timestamp = System.currentTimeMillis();
         count = 0;
         int result = minimax(board, 0, max, Integer.MIN_VALUE, Integer.MAX_VALUE, true);
-        //System.out.println("Depth " + max + " took " + (System.currentTimeMillis() - timestamp) + "ms to analyse " + count + " possible moves.");
+        System.out.println("Depth " + max + " took " + (System.currentTimeMillis() - timestamp) + "ms to analyse " + count + " possible moves.");
         return result;
     }
 
-    public int minimax(Field[] board, int depth, int max, int alpha, int beta, boolean maximizing) {
+    /**
+     * Perform a minimax analysis. Calls itself recursively.
+     * Stops when the depth is reached, when the time limit is reached, or when the move set is depleted.
+     * @param board the board to analyse in this iteration.
+     * @param depth the current depth of the recursion.
+     * @param max the max depth of the recursion.
+     * @param alpha value for pruning maximizing decision paths.
+     * @param beta value for pruning minimizing decision paths.
+     * @param maximizing whether the current player is attempting to maximize or minimize the score.
+     * @return
+     */
+    private int minimax(Field[] board, int depth, int max, int alpha, int beta, boolean maximizing) {
 
         // Stop the recursion if time runs out
         if ((System.currentTimeMillis() - timestamp) > timelimit) return calculateScore(board, self);
@@ -44,11 +59,11 @@ public abstract class Minimax<T extends IndicatorSet> {
         if (depth > max) return calculateScore(board, self);
 
         // Get all possible moves with the corresponding captured fields
-        HashMap<Integer, HashSet<Integer>> moves = gameInfo.ruleset.allLegalMovesNew(board, maximizing ? self : opponent);
+        HashMap<Integer, HashSet<Integer>> moves = gameInfo.ruleset.allLegalMoves(board, maximizing ? self : opponent);
 
-        //
+        // Finalize scoring matrix when the move set is empty. Could be delegated to the subclasses in the future
         if (moves.size() == 0) {
-            switch(gameInfo.ruleset.checkWinCondition(board, maximizing ? self : opponent)){
+            switch(gameInfo.ruleset.checkGamestate(board, maximizing ? self : opponent)){
                 case WINWHITE:
                     return self == Field.WHITE ? 4096 : -4096;
                 case WINBLACK:
@@ -56,8 +71,7 @@ public abstract class Minimax<T extends IndicatorSet> {
                 case DRAW:
                     return 0;
                 case STAY:
-                    // TODO: continue recursion?
-                    return 1024;
+                    return maximizing ? 1024 : -1024;
             }
         }
 
@@ -99,5 +113,11 @@ public abstract class Minimax<T extends IndicatorSet> {
         }
     }
 
+    /**
+     * Calculate the score based on a subclass' implementation
+     * @param board the board to calculate the score onn
+     * @param self the player type
+     * @return the score from the maximizing player's perspective
+     */
     abstract int calculateScore(Field[] board, Field self);
 }

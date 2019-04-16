@@ -12,7 +12,6 @@ import models.player.ServerMinimaxPlayer;
 import models.servercom.ServerView;
 import models.servercom.ServerWorker;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 
@@ -49,6 +48,13 @@ public class ServerGameController implements Runnable, GameController {
     private final Object waitForServerConfirmation = new Object();
     private final Object waitForGameStart = new Object();
 
+    /**
+     * Constructor for a player controlled server connection.
+     * @param targetServer the IP to connect to.
+     * @param targetPort the target port to connect to.
+     * @param gameInfo the game to be played on this connection.
+     * @param name the name of the player to be send to the server.
+     */
     public ServerGameController(String targetServer, int targetPort, GameInfo gameInfo, String name) {
         this.targetServer = targetServer;
         this.targetPort = targetPort;
@@ -58,6 +64,14 @@ public class ServerGameController implements Runnable, GameController {
         this.display = gameInfo.getDisplay(this);
     }
 
+    /**
+     * Constructor for creating a computer controlled server connection.
+     * @param targetServer the IP to connect to.
+     * @param targetPort the target port to connect to.
+     * @param gameInfo the game to be played on this connection.
+     * @param name the name of the computer to be send to the server.
+     * @param computerStrength the strength of the computer.
+     */
     public ServerGameController(String targetServer, int targetPort, GameInfo gameInfo, String name, int computerStrength) {
         this.targetServer = targetServer;
         this.targetPort = targetPort;
@@ -68,6 +82,10 @@ public class ServerGameController implements Runnable, GameController {
         this.display = gameInfo.getDisplay(this);
     }
 
+    /**
+     * Thread loop.
+     * Establishes connection, logs the player in, subscribes to a game, and manages input to be send to the server.
+     */
     @Override
     public void run() {
         worker = new ServerWorker(targetServer, targetPort, this);
@@ -256,6 +274,13 @@ public class ServerGameController implements Runnable, GameController {
     @Override
     public Game getGame() { return game; }
 
+    public ServerView getServerView() { return serverView; }
+
+    /**
+     * Input received from the computer ot the GUI to be send to the server.
+     * Ignore input of the player unless the server is requesting its input.
+     * @param move the move to perform.
+     */
     @Override
     public void sendInput(int move) {
         if (computerStrength > 0) {
@@ -271,6 +296,9 @@ public class ServerGameController implements Runnable, GameController {
         }
     }
 
+    /**
+     * Notifies all synchronization objects to close off the controller, in order to end the Thread.
+     */
     @Override
     public void closeController() {
         active = false;
@@ -280,8 +308,15 @@ public class ServerGameController implements Runnable, GameController {
         synchronized (waitForServerConfirmation) { waitForServerConfirmation.notifyAll(); }
     }
 
+    /**
+     * Requests the server to update the list of players.
+     */
     public void updatePlayerList() { worker.getPlayers(); }
 
+    /**
+     * Handle a cancelled challenge by the server.
+     * @param challengeID
+     */
     public void cancelChallenge(int challengeID) {
         if (computerStrength < 0) {
             if (challenges.get(challengeID) != null) {
@@ -291,10 +326,19 @@ public class ServerGameController implements Runnable, GameController {
         }
     }
 
+    /**
+     * Send a challenge to another player on the server.
+     * @param playerName the name of the player to send the challenge to.
+     * @param gameInfo the game to be played.
+     */
     public void sendChallenge(String playerName, GameInfo gameInfo) {
         worker.sendChallenge(playerName, gameInfo);
     }
 
+    /**
+     * Send an acceptation for a previously received challenge.
+     * @param challengeID the challenge ID corresponding to the challenge.
+     */
     public void acceptChallenge(int challengeID) {
         worker.acceptChallenge(challengeID);
         if (challenges.get(challengeID) != null) {
@@ -303,11 +347,13 @@ public class ServerGameController implements Runnable, GameController {
         }
     }
 
+    /**
+     * Called by the server worker when a new player list is received. Updates the view.
+     * @param names the list of names of the players connected.
+     */
     public void setPlayerlist(String[] names) {
         players.clear();
         for (String name : names) if (!name.equals(User.get_username())) players.add(name);
         serverView.update(players, challenges);
     }
-
-    public ServerView getServerView() { return serverView; }
 }

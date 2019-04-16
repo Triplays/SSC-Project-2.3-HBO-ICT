@@ -2,27 +2,35 @@ package models.player;
 
 import models.config.ReversiIndicatorSet;
 import models.config.TicTacToeIndicatorSet;
-import models.exception.UnknownGameException;
 import models.game.Field;
 import models.gamecontroller.GameController;
 import models.minimax.Minimax;
 import models.minimax.ReversiMinimax;
 import models.minimax.TicTacToeMinimax;
 
+/**
+ * A minimax/computer player intended to be used with the server.
+ * This player does send the calculated input back to the controller, to send it to the server without updating
+ * the local game board and state. This will be done by the controller on confirmation.
+ * TODO: merge local en server minimax player to remove redundancy. Requires LocalGameController changes.
+ */
 public class ServerMinimaxPlayer extends Player {
 
     private Minimax minimax;
     private int depth;
 
+    /**
+     * Constructor for the minimax player playinng on a server
+     * @param name name of the computer player.
+     * @param color color of the computer player.
+     * @param gameController the game controller that manages this player.
+     * @param depth the depth, or difficulty, of the computer player.
+     */
     public ServerMinimaxPlayer(String name, Field color, GameController gameController, int depth) {
         super(name);
 
-        try {
-            this.setController(gameController);
-            this.setColor(color);
-        } catch (UnknownGameException e) {
-            System.out.println("Unable to load player.");
-        }
+        this.setController(gameController);
+        this.setColor(color);
 
         this.depth = depth;
         switch (gameController.getGame().getGameInfo()) {
@@ -38,6 +46,9 @@ public class ServerMinimaxPlayer extends Player {
         }
     }
 
+    /**
+     * Notify the controller with the result of the minimax analysis.
+     */
     @Override
     public void notifyPlayer() {
         gameController.sendInput(minimax.minimax(game.getBoard(), depth));

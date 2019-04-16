@@ -10,6 +10,9 @@ import models.player.LocalMinimaxPlayer;
 import models.player.PhysicalPlayer;
 import models.player.Player;
 
+/**
+ * Game controller to manage a game played locally.
+ */
 public class LocalGameController implements Runnable, GameController {
 
     private Player player;
@@ -64,6 +67,11 @@ public class LocalGameController implements Runnable, GameController {
         this.opponent = new PhysicalPlayer(opponentName, color == Field.WHITE ? Field.BLACK : Field.WHITE, this);
     }
 
+    /**
+     * Thread loop.
+     * Starts a new game, and manages player input. Intended for playing one game.
+     * TODO: Should be able to reset and start a new game within this loop, instead of creating a new instance of this.
+     */
     @Override
     public void run() {
         try {
@@ -93,6 +101,10 @@ public class LocalGameController implements Runnable, GameController {
         }
     }
 
+    /**
+     * Called when input is expected from a player. Updates the active player.
+     * @param player the player who's input is expected
+     */
     @Override
     public void requestInput(Player player) {
         activePlayer = player;
@@ -100,10 +112,23 @@ public class LocalGameController implements Runnable, GameController {
         synchronized (awaitGame) { awaitGame.notify(); }
     }
 
+    /**
+     * Input sent by a player or a display, to be performed by a player on the game.
+     * @param move the move to perform.
+     */
     @Override
     public void sendInput(int move) {
         input = move;
         synchronized (awaitInput) { awaitInput.notifyAll(); }
+    }
+
+    /**
+     * Close this controller in order to end the Thread.
+     */
+    @Override
+    public void closeController() {
+        active = false;
+        synchronized (awaitGame) { awaitGame.notify(); }
     }
 
     @Override
@@ -112,13 +137,5 @@ public class LocalGameController implements Runnable, GameController {
     @Override
     public Display getDisplay() { return display; }
 
-    @Override
-    public void closeController() {
-        active = false;
-        synchronized (awaitGame) { awaitGame.notify(); }
-    }
-
-    public String getOpponentname(){
-        return opponent.getName();
-    }
+    public String getOpponentname(){ return opponent.getName(); }
 }

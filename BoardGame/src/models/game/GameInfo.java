@@ -10,6 +10,9 @@ import models.ruleset.TicTacToeRuleset;
 
 import java.util.Arrays;
 
+/**
+ * Collection of supported games, with their initial game settings.
+ */
 public enum GameInfo {
     TICTACTOE("Tic-tac-toe", 3, new TicTacToeRuleset()) {
         @Override
@@ -42,12 +45,27 @@ public enum GameInfo {
     public final int boardSize;
     public final Ruleset ruleset;
 
+    /**
+     * @param gameName      name of the game.
+     * @param boardSize     board size for the game. Boards are always square.
+     * @param ruleset       rule set to be applied on this game.
+     */
     GameInfo(String gameName, int boardSize, Ruleset ruleset) {
         this.gameName = gameName;
         this.boardSize = boardSize;
         this.ruleset = ruleset;
     }
 
+    /**
+     * Obtain an instance of the default display of the game.
+     * @param gamecontroller the GameController that manages this Display
+     * @return the Display
+     */
     public abstract Display getDisplay(GameController gamecontroller);
+
+    /**
+     * Obtain the initial board for the game.
+     * @return board with the correct size and starting fields.
+     */
     public abstract Field[] getInitialBoard();
 }

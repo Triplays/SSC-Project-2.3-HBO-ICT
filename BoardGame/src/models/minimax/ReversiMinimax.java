@@ -14,6 +14,9 @@ public class ReversiMinimax extends Minimax<ReversiIndicatorSet>
 
     protected ArrayList<Function<Integer, Double>> weightStatements = new ArrayList<>();
 
+    /**
+     * Score matrix for calculation the score based off positions on the board.
+     */
     private final int[] scoreMatrix = {
             200,  -25,  25,  10,  10,   25,  -25,  200,
             -25,  -50,  -5,   0,   0,   -5,  -50,  -25,
@@ -25,11 +28,22 @@ public class ReversiMinimax extends Minimax<ReversiIndicatorSet>
             200,  -25,  25,  10,  10,   25,  -25,  200
     };
 
+    /**
+     * Configure this minimax to a player
+     * @param field the maximizing Player
+     * @param indicatorSet
+     */
     public ReversiMinimax(Field field, ReversiIndicatorSet indicatorSet){
         super(GameInfo.REVERSI, field);
         this.indicatorSet = indicatorSet;
     }
 
+    /**
+     * Calculate the score for the current player on the current board for Reversi
+     * @param board the board to calculate the score onn
+     * @param self the player type
+     * @return the score from the maximizing player's perspective
+     */
     @Override
     int calculateScore(Field[] board, Field self)
     {
@@ -47,6 +61,8 @@ public class ReversiMinimax extends Minimax<ReversiIndicatorSet>
         return self == Field.BLACK ? (black - white) : (white - black);
     }
 
+
+
     protected Double getScore(Integer field)
     {
         Double weight = 1.0;
@@ -58,31 +74,22 @@ public class ReversiMinimax extends Minimax<ReversiIndicatorSet>
         return weight;
     }
 
-    public void addWeightStatement(Function<Integer, Double> weightStatement)
-    {
+    public void addWeightStatement(Function<Integer, Double> weightStatement) {
         this.weightStatements.add(weightStatement);
     }
 
-    public double[] createWeightMatrix(Field[] board, ReversiIndicatorSet indicatorSet)
-    {
-
+    public double[] createWeightMatrix(Field[] board, ReversiIndicatorSet indicatorSet) {
         // Line Algorithm
-
         if (indicatorSet.hasLineIndicator()) {
             LineWeight lineWeight = new LineWeight(board);
-
             lineWeight.setIndicator(indicatorSet.getLineIndicator());
-
             this.addWeightStatement(lineWeight::execute);
         }
 
         // Corner Algorithm
-
         if (indicatorSet.hasCornerIndicator()) {
             CornerWeight cornerWeight = new CornerWeight(board);
-
             cornerWeight.setIndicator(indicatorSet.getCornerIndicator());
-
             this.addWeightStatement(cornerWeight::execute);
         }
 
@@ -95,7 +102,5 @@ public class ReversiMinimax extends Minimax<ReversiIndicatorSet>
         this.weightStatements.clear();
 
         return weightMatrix;
-
     }
-
 }

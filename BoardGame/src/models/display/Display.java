@@ -30,7 +30,6 @@ public abstract class Display extends VBox {
         @Override
         public void handle(MouseEvent event) {
             String id = ((Node)event.getSource()).getId();
-            System.out.println(id);
             if (id.startsWith("Field"))
                 gameController.sendInput(Integer.parseInt(id.substring(5)));
         }

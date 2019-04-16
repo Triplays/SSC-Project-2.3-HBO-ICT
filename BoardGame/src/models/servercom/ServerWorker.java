@@ -10,6 +10,11 @@ import java.util.Arrays;
 
 import static java.lang.Integer.parseInt;
 
+/**
+ * Handles connectivity to the server.
+ * Reads input stream and sends processed data to the bound controller.
+ * Sends messages over the output stream on request from the controller.
+ */
 public class ServerWorker implements Runnable {
 
     private String address;
@@ -21,12 +26,22 @@ public class ServerWorker implements Runnable {
     private byte[] bytes = new byte[3200];
     private ServerGameController controller;
 
+    /**
+     * The constructor sets the communication information
+     * @param address the IP address to connect to
+     * @param port the target port to connect to
+     * @param controller the controller to pass the results to after processing
+     */
     public ServerWorker(String address, int port, ServerGameController controller) {
         this.address = address;
         this.port = port;
         this.controller = controller;
     }
 
+    /**
+     * Thread loop.
+     * Establishes the connection, and delegates the input to the handlers once received.
+     */
     @Override
     public void run() {
         try {
@@ -49,6 +64,10 @@ public class ServerWorker implements Runnable {
         }
     }
 
+    /**
+     * Handles the initial processing of the response, and delegates the processing
+     * @param response the response from the server, separated on spaces into maximal 4 chunks
+     */
     private void handleResponse(String[] response) {
         if (response[0].startsWith("OK")) {
             controller.confirmation(true);
@@ -69,6 +88,11 @@ public class ServerWorker implements Runnable {
         }
     }
 
+    /**
+     * Processes the list of players received.
+     * Stitches the received response back together as it splits the first name off the others
+     * @param response the response from the server, separated on spaces into maximal 4 chunks
+     */
     private void handlePlayerList(String[] response) {
         String stitch = String.join(" ", response);
         String[] names =
@@ -77,6 +101,10 @@ public class ServerWorker implements Runnable {
         controller.setPlayerlist(names);
     }
 
+    /**
+     * Handles the response if it is a server game response. Delegates the processing based on the third argument
+     * @param response the response from the server, separated on spaces into maximal 4 chunks
+     */
     private void handleGameResponse(String[] response) {
         switch (response[2]) {
             case "WIN":
@@ -107,6 +135,11 @@ public class ServerWorker implements Runnable {
         }
     }
 
+    /**
+     * Handles the processing of challenge invites and cancellations
+     * Updates these challenges on the controller.
+     * @param response the server response stripped from its prefixes
+     */
     private void handleChallenge(String response) {
         if (response.startsWith("CANCELLED")) {
             int index = response.indexOf("\"", response.indexOf("CHALLENGENUMBER") + 15) + 1;
@@ -139,6 +172,11 @@ public class ServerWorker implements Runnable {
         }
     }
 
+    /**
+     * Handles the end of a game by sending it to the controller. Result is determined in the prefix
+     * @param result the result of the game as of given in the prefix
+     * @param response the server response stripped from its prefixes
+     */
     private void handleMatchResult(MatchResult result, String response) {
         System.out.println(response);
 
@@ -165,10 +203,20 @@ public class ServerWorker implements Runnable {
         controller.matchEnd(result, scoreOne, scoreTwo, comment);
     }
 
+    /**
+     * Handles a turn notification. Controller will be notified to obtain input.
+     * Response could be removed for now, as the details won't matter as its destined for this end user anyway.
+     * @param response the server response stripped from its prefixes.
+     */
     private void handleYourTurn(String response) {
         controller.requestInput();
     }
 
+    /**
+     * Handles a confirmed move as sent by the server. Can be either the client or the opponent that moved.
+     * Sends the move data to the controller
+     * @param response the server response stripped from its prefixes.
+     */
     private void handleMove(String response) {
         String[] arguments = response.substring(response.indexOf("{") + 1, response.lastIndexOf("}")).split(", ");
         String playerName = "";
@@ -193,6 +241,10 @@ public class ServerWorker implements Runnable {
         controller.performMove(playerName, target, details);
     }
 
+    /**
+     * Handles the start of a new match. Assigns opponent, starting player, and gametype.
+     * @param response the server response stripped from its prefixes.
+     */
     private void handleMatchStart(String response) {
         String[] arguments = response.substring(response.indexOf("{") + 1, response.lastIndexOf("}")).split(", ");
         String opponentName = "";
@@ -216,6 +268,10 @@ public class ServerWorker implements Runnable {
         controller.matchStart(opponentName, myTurn, gameName);
     }
 
+    /**
+     * Send a message to the server. Usually called from the controller or through helper functions below.
+     * @param s the message to be sent.
+     */
     public void sendMessage(String s) {
         try {
             out.write(s.getBytes());
@@ -227,38 +283,65 @@ public class ServerWorker implements Runnable {
         }
     }
 
+    /**
+     * Update the playerlist. The controller will be notified with the result.
+     */
     public void getPlayers() {
         sendMessage("get playerlist");
     }
 
+    /**
+     * Login a player to the server.
+     * @param playerName name of the player
+     */
     public void loginPlayer(String playerName) {
         sendMessage("login " + playerName);
     }
 
+    /**
+     * Subscribe to a game type. This will automatically start a game when an opponent subscribes as well.
+     * @param gameName name of the game to subscribe to.
+     */
     public void subscribeToGame(String gameName) {
         sendMessage("subscribe " + gameName);
     }
 
+    /**
+     * Send a move to the server.
+     * @param pos the position to move to.
+     */
     public void sendMove(int pos) {
         sendMessage("move " + pos);
     }
 
+    /**
+     * Send a challenge to a player.
+     * @param playerName the player to be challenged.
+     * @param gameInfo the game to be played.
+     */
     public void sendChallenge(String playerName, GameInfo gameInfo) {
-        sendMessage("Challenge \"" + playerName + "\" \"" + gameInfo.gameName + "\"");
+        sendMessage("challenge \"" + playerName + "\" \"" + gameInfo.gameName + "\"");
     }
 
+    /**
+     * Accept a previously received challenge.
+     * @param challengeID the challenge ID that was attached to the challenge invite.
+     */
     public void acceptChallenge(int challengeID) {
         sendMessage("challenge accept " + challengeID);
     }
 
+    /**
+     * Close input and output streams, and the socket.
+     */
     public void closeConnection() {
         try {
             in.close();
             out.close();
             connection.close();
         }
-        catch (IOException exc) {
-            exc.printStackTrace();
-        }
+        // TODO: Something when this throws an exception? It is expected if the connection was refused.
+        catch (IOException exc) { exc.printStackTrace(); }
+        catch (NullPointerException exc) { exc.printStackTrace(); }
     }
 }
