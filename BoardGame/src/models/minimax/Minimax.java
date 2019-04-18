@@ -11,8 +11,8 @@ public abstract class Minimax<T extends IndicatorSet> {
 
     protected T indicatorSet;
 
-    protected GameInfo gameInfo;
-    protected Field self;
+    private GameInfo gameInfo;
+    private Field self;
     protected Field opponent;
 
     private final long timelimit = 8000;
@@ -63,7 +63,7 @@ public abstract class Minimax<T extends IndicatorSet> {
 
         // Finalize scoring matrix when the move set is empty. Could be delegated to the subclasses in the future
         if (moves.size() == 0) {
-            switch(gameInfo.ruleset.checkGamestate(board, maximizing ? self : opponent)){
+            switch(gameInfo.ruleset.checkGameState(board, maximizing ? self : opponent)){
                 case WINWHITE:
                     return self == Field.WHITE ? 4096 : -4096;
                 case WINBLACK:

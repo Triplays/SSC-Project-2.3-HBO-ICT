@@ -11,12 +11,10 @@ public class PhysicalPlayer extends Player {
      * Constructor for a physical player.
      * @param name the name of the player.
      * @param color the color of the player.
-     * @param controller the game controller that manages this player.
+     * @param gameController the game controller that manages this player.
      */
-    public PhysicalPlayer(String name, Field color, GameController controller) {
-        super(name);
-        this.setController(controller);
-        this.setColor(color);
+    public PhysicalPlayer(String name, Field color, GameController gameController) {
+        super(name, color, gameController);
     }
 
     /**

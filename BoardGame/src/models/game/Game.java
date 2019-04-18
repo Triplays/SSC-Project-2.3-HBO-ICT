@@ -93,7 +93,7 @@ public class Game implements Cloneable {
         for (Integer integer : result) board[integer] = player.getColor();
         updateScore();
         switchPlayers();
-        Gamestate gamestate = gameInfo.ruleset.checkGamestate(board, currentPlayer.getColor());
+        GameState gamestate = gameInfo.ruleset.checkGameState(board, currentPlayer.getColor());
         switch(gamestate) {
             case SWAP:
                 display.update(board, scoreBlack, scoreWhite, currentPlayer.getColor(), "");

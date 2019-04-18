@@ -45,7 +45,13 @@ public abstract class Display extends VBox {
         this.setSpacing(20);
     }
 
-
+    /**
+     * Initiate the initals panels, and set their sizes. Add panes to each other.
+     * @param boardSize the size of the board to be drawn.
+     * @param prefSize the preferred size of the board.
+     * @param primaryColor the primary color of the files.
+     * @param secondaryColor the secondary color of the tiles.
+     */
     void initiateComponents(int boardSize, int prefSize, Color primaryColor, Color secondaryColor) {
         wrapperPane.setPrefSize(prefSize, prefSize);
         boardPane.setPrefSize(prefSize, prefSize);
@@ -64,6 +70,9 @@ public abstract class Display extends VBox {
         eventPane.toFront();
     }
 
+    /**
+     * Draw the score and text interface to the display.
+     */
     private void drawScore() {
         Circle circle = new Circle(16);
         circle.setFill(Color.BLACK);
@@ -100,6 +109,12 @@ public abstract class Display extends VBox {
         scorePane.getChildren().add(box);
     }
 
+    /**
+     * Draw the board en add event listeners to each field.
+     * @param boardSize the size of the board to be drawn.
+     * @param primaryColor the primary color of the files.
+     * @param secondaryColor the secondary color of the tiles.
+     */
     private void drawBoards(int boardSize, Color primaryColor, Color secondaryColor) {
         for (int i = 0; i < boardSize; i++){
             for (int j = 0; j < boardSize; j++){
@@ -130,6 +145,14 @@ public abstract class Display extends VBox {
         }
     }
 
+    /**
+     * Update the fields of the board according to the display implementation of the subclasses.
+     * @param board the board to be displayed.
+     * @param scoreBlack the score of black
+     * @param scoreWhite the score of white
+     * @param turn the color who's turn it is.
+     * @param msg optional message to be displayed.
+     */
     public abstract void update(Field[] board, int scoreBlack, int scoreWhite, Field turn, String msg);
 
 }

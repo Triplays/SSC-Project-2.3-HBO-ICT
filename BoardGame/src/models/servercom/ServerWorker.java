@@ -272,7 +272,7 @@ public class ServerWorker implements Runnable {
      * Send a message to the server. Usually called from the controller or through helper functions below.
      * @param s the message to be sent.
      */
-    public void sendMessage(String s) {
+    private void sendMessage(String s) {
         try {
             out.write(s.getBytes());
             out.write("\r\n".getBytes());

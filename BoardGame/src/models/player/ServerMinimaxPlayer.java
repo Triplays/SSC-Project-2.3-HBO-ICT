@@ -27,10 +27,7 @@ public class ServerMinimaxPlayer extends Player {
      * @param depth the depth, or difficulty, of the computer player.
      */
     public ServerMinimaxPlayer(String name, Field color, GameController gameController, int depth) {
-        super(name);
-
-        this.setController(gameController);
-        this.setColor(color);
+        super(name, color, gameController);
 
         this.depth = depth;
         switch (gameController.getGame().getGameInfo()) {

@@ -1,7 +1,7 @@
 package models.ruleset;
 
 import models.game.Field;
-import models.game.Gamestate;
+import models.game.GameState;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -28,7 +28,7 @@ public abstract class Ruleset {
      * @param opponent the color of the assumed new player.
      * @return the state as determined by this method. Actions should be taken by the caller.
      */
-    public abstract Gamestate checkGamestate(Field[] board, Field opponent);
+    public abstract GameState checkGameState(Field[] board, Field opponent);
 
     /**
      * Looks up all the legal moves on the board for a given player.
@@ -47,16 +47,16 @@ public abstract class Ruleset {
     }
 
     /**
-     * Converts a Field to a Gamestate in case of a win determined by the method checkGamestate.
+     * Converts a Field to a GameState in case of a win determined by the method checkGameState.
      * @param field the Field to convert.
-     * @return the corresponding winning Gamestate.
+     * @return the corresponding winning GameState.
      */
-    Gamestate fieldToGamestate(Field field) {
+    GameState fieldToGameState(Field field) {
         switch (field) {
             case WHITE:
-                return Gamestate.WINWHITE;
+                return GameState.WINWHITE;
             case BLACK:
-                return Gamestate.WINBLACK;
+                return GameState.WINBLACK;
             default:
                 return null;
         }

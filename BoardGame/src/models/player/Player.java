@@ -10,17 +10,19 @@ import models.game.Game;
  *
  */
 public abstract class Player {
-    Field color;
-    String name;
+    private Field color;
+    private String name;
     Game game;
     GameController gameController;
 
-    public Player(String name) { this.name = name; }
+    public Player(String name, Field color, GameController gameController) {
+        this.name = name;
+        this.gameController = gameController;
+        this.color = color;
+    }
 
-    public void setColor(Field color) { this.color = color; }
     public Field getColor() { return color; }
     public String getName() { return name; }
-    public void setController(GameController gameController) { this.gameController = gameController;}
 
     /**
      * Bind this player to a game, and register to that game.

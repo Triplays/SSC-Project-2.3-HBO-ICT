@@ -1,8 +1,7 @@
 package models.ruleset;
 
-import models.game.Direction;
 import models.game.Field;
-import models.game.Gamestate;
+import models.game.GameState;
 
 import java.util.HashSet;
 
@@ -44,7 +43,7 @@ public class ReversiRuleset extends Ruleset {
      * @param target the target location.
      * @param direction the direction to traverse to.
      */
-    public void directionalHelper(Field[] board, Field field, int target, Direction direction) {
+    private void directionalHelper(Field[] board, Field field, int target, Direction direction) {
         if (direction.limit(target)) return;
         int next = target + direction.dir;
         if (board[next] == Field.EMPTY || board[next] == field) return;
@@ -70,11 +69,11 @@ public class ReversiRuleset extends Ruleset {
      * @return the state of the game.
      */
     @Override
-    public Gamestate checkGamestate(Field[] board, Field opponent) {
-        if (allLegalMoves(board, opponent).size() > 0) return Gamestate.SWAP;
+    public GameState checkGameState(Field[] board, Field opponent) {
+        if (allLegalMoves(board, opponent).size() > 0) return GameState.SWAP;
 
         Field field = opponent == Field.BLACK ? Field.WHITE : Field.BLACK;
-        if (allLegalMoves(board, field).size() > 0)  return Gamestate.STAY;
+        if (allLegalMoves(board, field).size() > 0)  return GameState.STAY;
 
         return countFields(board);
     }
@@ -84,7 +83,7 @@ public class ReversiRuleset extends Ruleset {
      * @param board the board to evaluate.
      * @return the ending game state.
      */
-    private Gamestate countFields(Field[] board) {
+    private GameState countFields(Field[] board) {
         int white = 0;
         int black = 0;
         for (Field field : board) {
@@ -92,8 +91,8 @@ public class ReversiRuleset extends Ruleset {
             if(field == Field.BLACK) black++;
         }
 
-        if (white > black) return Gamestate.WINWHITE;
-        else if (black > white) return Gamestate.WINBLACK;
-        else return Gamestate.DRAW;
+        if (white > black) return GameState.WINWHITE;
+        else if (black > white) return GameState.WINBLACK;
+        else return GameState.DRAW;
     }
 }

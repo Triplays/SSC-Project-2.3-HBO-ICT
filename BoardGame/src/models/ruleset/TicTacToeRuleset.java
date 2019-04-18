@@ -1,7 +1,7 @@
 package models.ruleset;
 
 import models.game.Field;
-import models.game.Gamestate;
+import models.game.GameState;
 
 import java.util.Arrays;
 import java.util.HashSet;
@@ -34,23 +34,23 @@ public class TicTacToeRuleset extends Ruleset {
      * @return the state as determined by this method.
      */
     @Override
-    public Gamestate checkGamestate(Field[] board, Field opponent) {
+    public GameState checkGameState(Field[] board, Field opponent) {
         for(int i = 0; i < 3; i++) {
             if (board[i] != Field.EMPTY && board[i] == board[i+3] && board[i+3] == board[i+6])
-                return fieldToGamestate(board[i]);
+                return fieldToGameState(board[i]);
         }
         for(int i = 0; i < 8; i+=3) {
             if (board[i] != Field.EMPTY && board[i] == board[i+1] && board[i+1] == board[i+2])
-                return fieldToGamestate(board[i]);
+                return fieldToGameState(board[i]);
         }
         if (board[0] != Field.EMPTY && board[0] == board[4] && board[4] == board[8])
-            return  fieldToGamestate(board[0]);
+            return  fieldToGameState(board[0]);
         if (board[2] != Field.EMPTY && board[2] == board[4] && board[4] == board[6])
-            return  fieldToGamestate(board[2]);
+            return  fieldToGameState(board[2]);
 
         if (!Arrays.asList(board).contains(Field.EMPTY)) {
-            return Gamestate.DRAW;
+            return GameState.DRAW;
         }
-        return Gamestate.SWAP;
+        return GameState.SWAP;
     }
 }

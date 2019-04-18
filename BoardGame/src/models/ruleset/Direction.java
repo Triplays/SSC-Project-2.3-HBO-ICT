@@ -1,4 +1,4 @@
-package models.game;
+package models.ruleset;
 
 /**
  * Directions made for an eight by eight board.

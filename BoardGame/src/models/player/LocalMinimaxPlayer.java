@@ -26,10 +26,7 @@ public class LocalMinimaxPlayer extends Player {
      * @param depth the depth, or difficulty, of the computer player.
      */
     public LocalMinimaxPlayer(String name, Field color, GameController gameController, int depth) {
-        super(name);
-
-        this.setController(gameController);
-        this.setColor(color);
+        super(name, color, gameController);
         this.depth = depth;
 
         switch (gameController.getGame().getGameInfo()) {

@@ -25,7 +25,7 @@ public class TicTacToeMinimax extends Minimax<TicTacToeIndicatorSet>
      */
     @Override
     int calculateScore(Field[] board, Field self) {
-        switch(GameInfo.TICTACTOE.ruleset.checkGamestate(board, self)){
+        switch(GameInfo.TICTACTOE.ruleset.checkGameState(board, self)){
             case WINWHITE:
                 return self == Field.WHITE ? 64 : -64;
             case WINBLACK:

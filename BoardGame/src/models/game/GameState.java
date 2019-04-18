@@ -5,6 +5,6 @@ package models.game;
  * WINWHITE, WINBLACK, and DRAW mean that the game has ended with the given result.
  * SWAP and STAY describe what action to take after this move.
  */
-public enum Gamestate {
+public enum GameState {
     SWAP, STAY, WINWHITE, WINBLACK, DRAW
 }
